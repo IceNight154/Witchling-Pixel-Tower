@@ -82,6 +82,7 @@ import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.watabou.utils.DeviceCompat;
 
+
 public enum HeroClass {
 
 	WARRIOR( HeroSubClass.BERSERKER, HeroSubClass.GLADIATOR ),
@@ -94,9 +95,11 @@ public enum HeroClass {
 
 	private HeroSubClass[] subClasses;
 
+
 	HeroClass( HeroSubClass...subClasses ) {
 		this.subClasses = subClasses;
 	}
+
 
 	public void initHero( Hero hero ) {
 
@@ -268,17 +271,21 @@ public enum HeroClass {
 	}
 
 	private static void initAria( Hero hero ) {
+		(hero.belongings.weapon = new WornShortsword()).identify();
+		ThrowingStone stones = new ThrowingStone();
+		stones.identify().collect();
 
-		staff = new MagesStaff(new WandOfMagicMissile());
+		Dungeon.quickslot.setSlot(0, stones);
 
-		(hero.belongings.weapon = staff).identify();
-		hero.belongings.weapon.activate(hero);
+		if (hero.belongings.armor != null) {
+			hero.belongings.armor.affixSeal(new BrokenSeal());
+			Catalog.setSeen(BrokenSeal.class); //as it's not added to the inventory
+		}
 
-		Dungeon.quickslot.setSlot(0, staff);
-
-		new ScrollOfUpgrade().identify();
-		new PotionOfLiquidFlame().identify();
+		new PotionOfHealing().identify();
+		new ScrollOfRage().identify();
 	}
+
 
 	public String title() {
 		return Messages.get(HeroClass.class, name());
@@ -310,6 +317,8 @@ public enum HeroClass {
 				return new ArmorAbility[]{new Challenge(), new ElementalStrike(), new Feint()};
 			case CLERIC:
 				return new ArmorAbility[]{new AscendedForm(), new Trinity(), new PowerOfMany()};
+			case ARIA:
+				return new ArmorAbility[]{new HeroicLeap(), new Shockwave(), new Endure()};
 		}
 	}
 
@@ -327,6 +336,8 @@ public enum HeroClass {
 				return Assets.Sprites.DUELIST;
 			case CLERIC:
 				return Assets.Sprites.CLERIC;
+			case ARIA:
+				return Assets.Sprites.ARIA;
 		}
 	}
 
@@ -344,6 +355,8 @@ public enum HeroClass {
 				return Assets.Splashes.DUELIST;
 			case CLERIC:
 				return Assets.Splashes.CLERIC;
+			case ARIA:
+				return Assets.Splashes.ARIA;
 		}
 	}
 	
@@ -364,6 +377,8 @@ public enum HeroClass {
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_DUELIST);
 			case CLERIC:
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
+			case ARIA:
+				return Badges.isUnlocked(Badges.Badge.UNLOCK_ARIA);
 		}
 	}
 	

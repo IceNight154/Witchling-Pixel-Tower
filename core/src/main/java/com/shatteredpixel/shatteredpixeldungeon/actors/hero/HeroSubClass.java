@@ -59,7 +59,7 @@ public enum HeroSubClass {
 	HeroSubClass(int icon){
 		this.icon = icon;
 	}
-	
+
 	public String title() {
 		return Messages.get(this, name());
 	}
