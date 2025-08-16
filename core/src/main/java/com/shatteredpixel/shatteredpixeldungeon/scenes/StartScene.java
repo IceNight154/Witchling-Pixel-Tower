@@ -217,8 +217,8 @@ public class StartScene extends PixelScene {
 				}
 				
 				if (hero == null){
-					hero = new Image(info.heroClass.spritesheet(), 0, 15*info.armorTier, 12, 15);
-					add(hero);
+					Image image = new Image(info.heroClass.spritesheet(), 0, 60*info.armorTier, 48, 60);
+					image.scale.set(0.35f, 0.35f);
 					
 					steps = new Image(Icons.get(Icons.STAIRS));
 					add(steps);
@@ -230,8 +230,8 @@ public class StartScene extends PixelScene {
 					level = new BitmapText(PixelScene.pixelFont);
 					add(level);
 				} else {
-					hero.copy(new Image(info.heroClass.spritesheet(), 0, 15*info.armorTier, 12, 15));
-					
+					Image image = new Image(info.heroClass.spritesheet(), 0, 60*info.armorTier, 48, 60);
+					image.scale.set(0.35f, 0.35f);
 					classIcon.copy(Icons.get(info.heroClass));
 				}
 

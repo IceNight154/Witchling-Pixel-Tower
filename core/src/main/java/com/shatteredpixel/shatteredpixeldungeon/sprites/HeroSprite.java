@@ -51,7 +51,7 @@ public class HeroSprite extends CharSprite {
 
 	public HeroSprite() {
 		super();
-		this.scale.set(0.25f, 0.25f);
+		this.scale.set(0.35f, 0.35f);
 		
 		texture( Dungeon.hero.heroClass.spritesheet() );
 		updateArmor();
@@ -193,7 +193,7 @@ public class HeroSprite extends CharSprite {
 
 public static TextureFilm tiers() {
 		if (tiers == null) {
-			SmartTexture texture = TextureCache.get( Assets.Sprites.ROGUE );
+			SmartTexture texture = TextureCache.get( Assets.Sprites.ARIA );
 			tiers = new TextureFilm( texture, texture.width, FRAME_HEIGHT );
 		}
 
@@ -206,7 +206,9 @@ public static TextureFilm tiers() {
 		if (hero.buff(HeroDisguise.class) != null){
 			return avatar(hero.buff(HeroDisguise.class).getDisguise(), hero.tier());
 		} else {
-			return avatar(hero.heroClass, hero.tier());
+			Image image = avatar(hero.heroClass, hero.tier());
+			image.scale.set(0.35f, 0.35f);
+			return image;
 		}
 	}
 	
