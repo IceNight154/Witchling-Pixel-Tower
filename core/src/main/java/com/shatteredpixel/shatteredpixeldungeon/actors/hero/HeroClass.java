@@ -279,7 +279,7 @@ public enum HeroClass {
 
 		if (hero.belongings.armor != null) {
 			hero.belongings.armor.affixSeal(new BrokenSeal());
-			Catalog.setSeen(BrokenSeal.class); //as it's not added to the inventory
+			Catalog.setSeen(BrokenSeal.class);
 		}
 
 		new PotionOfHealing().identify();

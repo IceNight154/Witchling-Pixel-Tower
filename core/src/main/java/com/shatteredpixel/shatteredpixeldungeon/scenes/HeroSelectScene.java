@@ -548,7 +548,9 @@ public class HeroSelectScene extends PixelScene {
 
 			this.cl = cl;
 
-			icon(new Image(cl.spritesheet(), 0, 90, 48, 48));
+			Image image = new Image(cl.spritesheet(), 0, 65, 48, 60);
+			image.scale.set(0.35f, 0.35f);
+			icon(image);
 
 		}
 

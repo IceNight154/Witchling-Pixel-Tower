@@ -184,8 +184,8 @@ public class StatusPane extends Component {
 
 		heroInfo.setRect( x, y+(large ? 0 : 1), 30, large ? 40 : 30 );
 
-		compass.x = avatar.x + avatar.width / 2f - compass.origin.x;
-		compass.y = avatar.y + avatar.height / 2f - compass.origin.y;
+		compass.x = avatar.x + avatar.width / 8f - compass.origin.x;
+		compass.y = avatar.y + avatar.height / 8f - compass.origin.y;
 		PixelScene.align(compass);
 
 		if (large) {

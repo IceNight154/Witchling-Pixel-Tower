@@ -80,6 +80,16 @@ public class Image extends Visual {
 		updateFrame();
 		updateVertices();
 	}
+
+	public void scaledFrame( RectF frame ) {
+		this.frame = frame;
+
+		width = frame.width() * texture.width/2;
+		height = frame.height() * texture.height/2;
+
+		updateFrame();
+		updateVertices();
+	}
 	
 	public void frame( int left, int top, int width, int height ) {
 		frame( texture.uvRect( left, top, left + width, top + height ) );

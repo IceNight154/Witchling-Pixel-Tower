@@ -80,21 +80,24 @@ public class HeroSprite extends CharSprite {
 		run.frames( film, 2, 3, 4, 5, 6, 7 );
 		
 		die = new Animation( 20, false );
-		die.frames( film, 8, 9, 10, 11, 12, 11 );
-		
-		attack = new Animation( 15, false );
-		attack.frames( film, 13, 14, 15, 0 );
+		die.frames( film, 8, 9, 10, 11, 12 );
+		die = new Animation( 10, true );
+		die.frames( film, 13, 14, 15, 12 );
+
+
+		attack = new Animation( 16, false );
+		attack.frames( film, 16 , 17, 18, 19, 18, 17, 16, 0 );
 		
 		zap = attack.clone();
 		
 		operate = new Animation( 8, false );
-		operate.frames( film, 16, 17, 16, 17 );
+		operate.frames( film, 20, 21, 20, 21 );
 		
-		fly = new Animation( 1, true );
-		fly.frames( film, 18 );
+		fly = new Animation( 16, true );
+		fly.frames( film, 22, 24, 22, 23 );
 
 		read = new Animation( 20, false );
-		read.frames( film, 19, 20, 20, 20, 20, 20, 20, 20, 20, 19 );
+		read.frames( film, 22, 23, 23, 23, 23, 23, 23, 23, 23, 22 );
 		/*
 		idle = new Animation( 1, true );
 		idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
