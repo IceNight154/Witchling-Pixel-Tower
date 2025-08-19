@@ -1294,6 +1294,9 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
 				break;
+			case ARIA:
+				Collections.addAll(tierTalents,HEARTY_MEAL, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL );
+				break;
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1322,6 +1325,9 @@ public enum Talent {
 				break;
 			case CLERIC:
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
+				break;
+			case ARIA:
+				Collections.addAll(tierTalents,IRON_STOMACH, LIQUID_WILLPOWER, RUNIC_TRANSFERENCE, LETHAL_MOMENTUM, IMPROVISED_PROJECTILES );
 				break;
 		}
 		for (Talent talent : tierTalents){

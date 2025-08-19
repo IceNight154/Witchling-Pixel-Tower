@@ -271,11 +271,9 @@ public enum HeroClass {
 	}
 
 	private static void initAria( Hero hero ) {
-		(hero.belongings.weapon = new WornShortsword()).identify();
-		ThrowingStone stones = new ThrowingStone();
-		stones.identify().collect();
-
-		Dungeon.quickslot.setSlot(0, stones);
+		(hero.belongings.weapon = new Gloves()).identify();
+		SpiritBow bow = new SpiritBow();
+		bow.identify().collect();
 
 		if (hero.belongings.armor != null) {
 			hero.belongings.armor.affixSeal(new BrokenSeal());
