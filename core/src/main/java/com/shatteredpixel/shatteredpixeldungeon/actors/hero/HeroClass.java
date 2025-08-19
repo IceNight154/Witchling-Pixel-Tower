@@ -280,6 +280,8 @@ public enum HeroClass {
 			Catalog.setSeen(BrokenSeal.class);
 		}
 
+		// new PotionOfHealing().identify();
+
 		new PotionOfHealing().identify();
 		new ScrollOfRage().identify();
 	}
