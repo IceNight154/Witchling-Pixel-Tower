@@ -75,7 +75,7 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
-public class SAGE_OF_ELEMENTS extends ArmorAbility {
+public class Aria_Ab_2 extends ArmorAbility {
 
 	{
 		baseChargeUse = 25;
@@ -107,8 +107,8 @@ public class SAGE_OF_ELEMENTS extends ArmorAbility {
 	public class WndUseTrinity extends WndTitledMessage {
 
 		public WndUseTrinity(ClassArmor armor) {
-			super(new HeroIcon(SAGE_OF_ELEMENTS.this),
-					Messages.titleCase(SAGE_OF_ELEMENTS.this.name()),
+			super(new HeroIcon(Aria_Ab_2.this),
+					Messages.titleCase(Aria_Ab_2.this.name()),
 					Messages.get(WndUseTrinity.class, "text"));
 
 			int top = height;
@@ -125,7 +125,7 @@ public class SAGE_OF_ELEMENTS extends ArmorAbility {
 							if (Dungeon.hero.belongings.weapon() != null &&
 									((Weapon)Dungeon.hero.belongings.weapon()).enchantment != null &&
 									((Weapon)Dungeon.hero.belongings.weapon()).enchantment.getClass().equals(bodyForm.getClass())){
-								GLog.w(Messages.get(SAGE_OF_ELEMENTS.class, "no_duplicate"));
+								GLog.w(Messages.get(Aria_Ab_2.class, "no_duplicate"));
 								hide();
 							} else {
 								Buff.prolong(Dungeon.hero, BodyForm.BodyFormBuff.class, BodyForm.duration()).setEffect(bodyForm);
@@ -159,7 +159,7 @@ public class SAGE_OF_ELEMENTS extends ArmorAbility {
 							if (Dungeon.hero.belongings.armor() != null &&
 									Dungeon.hero.belongings.armor().glyph != null &&
 									(Dungeon.hero.belongings.armor()).glyph.getClass().equals(bodyForm.getClass())){
-								GLog.w(Messages.get(SAGE_OF_ELEMENTS.class, "no_duplicate"));
+								GLog.w(Messages.get(Aria_Ab_2.class, "no_duplicate"));
 								hide();
 							} else {
 								Buff.prolong(Dungeon.hero, BodyForm.BodyFormBuff.class, BodyForm.duration()).setEffect(bodyForm);
@@ -235,7 +235,7 @@ public class SAGE_OF_ELEMENTS extends ArmorAbility {
 						if ((Dungeon.hero.belongings.ring() != null && Dungeon.hero.belongings.ring().getClass().equals(spiritForm.getClass()))
 								|| (Dungeon.hero.belongings.misc() != null && Dungeon.hero.belongings.misc().getClass().equals(spiritForm.getClass()))
 								|| (Dungeon.hero.belongings.artifact() != null && Dungeon.hero.belongings.artifact().getClass().equals(spiritForm.getClass()))){
-							GLog.w(Messages.get(SAGE_OF_ELEMENTS.class, "no_duplicate"));
+							GLog.w(Messages.get(Aria_Ab_2.class, "no_duplicate"));
 							hide();
 							return;
 						}
@@ -298,12 +298,12 @@ public class SAGE_OF_ELEMENTS extends ArmorAbility {
 
 	@Override
 	public int icon() {
-		return HeroIcon.SAGE_OF_ELEMENTS;
+		return HeroIcon.ARIA_AB_2;
 	}
 
 	@Override
 	public Talent[] talents() {
-		return new Talent[]{Talent.STONE_READING, Talent.DEEP_WELLS, Talent.ANCIENT_STANCE};
+		return new Talent[]{Talent.TAUT_STRINGS, Talent.LOOM_MASTER, Talent.SEAMLESS_WEAVE, Talent.HEROIC_ENERGY};
 	}
 
 	public static class WndItemtypeSelect extends WndTitledMessage {
@@ -445,13 +445,13 @@ public class SAGE_OF_ELEMENTS extends ArmorAbility {
 					WndItemConfirm.this.hide();
 
 					if (item instanceof MeleeWeapon) {
-						((SAGE_OF_ELEMENTS)Dungeon.hero.armorAbility).bodyForm = ((MeleeWeapon) item).enchantment;
+						((Aria_Ab_2)Dungeon.hero.armorAbility).bodyForm = ((MeleeWeapon) item).enchantment;
 					} else if (item instanceof Armor) {
-						((SAGE_OF_ELEMENTS)Dungeon.hero.armorAbility).bodyForm = ((Armor) item).glyph;
+						((Aria_Ab_2)Dungeon.hero.armorAbility).bodyForm = ((Armor) item).glyph;
 					} else if (item instanceof Wand || item instanceof MissileWeapon){
-						((SAGE_OF_ELEMENTS)Dungeon.hero.armorAbility).mindForm = item;
+						((Aria_Ab_2)Dungeon.hero.armorAbility).mindForm = item;
 					} else {
-						((SAGE_OF_ELEMENTS)Dungeon.hero.armorAbility).spiritForm = item;
+						((Aria_Ab_2)Dungeon.hero.armorAbility).spiritForm = item;
 					}
 					spell.onSpellCast(tome, Dungeon.hero);
 
@@ -493,30 +493,30 @@ public class SAGE_OF_ELEMENTS extends ArmorAbility {
 		if (Weapon.Enchantment.class.isAssignableFrom(cls) || Armor.Glyph.class.isAssignableFrom(cls)) {
 			for (Class ench : Weapon.Enchantment.rare) {
 				if (ench.equals(cls)) {
-					return Messages.get(SAGE_OF_ELEMENTS.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+					return Messages.get(Aria_Ab_2.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 				}
 			}
 			for (Class glyph : Armor.Glyph.rare){
 				if (glyph.equals(cls)){
-					return Messages.get(SAGE_OF_ELEMENTS.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+					return Messages.get(Aria_Ab_2.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 				}
 			}
-			return Messages.get(SAGE_OF_ELEMENTS.class, "ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Ab_2.class, "ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (MissileWeapon.class.isAssignableFrom(cls)){
-			return Messages.get(SAGE_OF_ELEMENTS.class, "thrown_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Ab_2.class, "thrown_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Wand.class.isAssignableFrom(cls)){
 			if (cls.equals(WandOfFireblast.class) || cls.equals(WandOfRegrowth.class)){
-				return Messages.get(SAGE_OF_ELEMENTS.class, "wand_multi_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+				return Messages.get(Aria_Ab_2.class, "wand_multi_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 			}
-			return Messages.get(SAGE_OF_ELEMENTS.class, "wand_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Ab_2.class, "wand_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Ring.class.isAssignableFrom(cls)){
-			return Messages.get(SAGE_OF_ELEMENTS.class, "ring_use", SpiritForm.ringLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Ab_2.class, "ring_use", SpiritForm.ringLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Artifact.class.isAssignableFrom(cls)){
-			return Messages.get(SAGE_OF_ELEMENTS.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Ab_2.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		return "error!";
 

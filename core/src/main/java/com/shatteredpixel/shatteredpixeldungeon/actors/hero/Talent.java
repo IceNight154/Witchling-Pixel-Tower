@@ -335,28 +335,28 @@ public enum Talent {
 	//Aria T3
 	QUICKSHIFT_MASTERY							(9, 6, 5),
 	IMPRINT_AMPLIFIER							(10, 6, 5),
-	//ARCHMAGE_OF_HARMONY T3
+	//Aria_Ab_1 T3
 	HARMONIC_LOOP								(11, 6, 5),
 	CONCORD_PULSE								(12, 6, 5),
 	HARMONIC_SURGE								(13, 6, 5),
-	//ELEMENTAL_WEAVER T3
+	//Aria_Ab_2 T3
 	WEAVE_THREADS								(14, 6, 5),
 	STITCH										(15, 6, 5),
 	PRISMATIC_DETONATION						(16, 6, 5),
-	//SAGE_OF_ELEMENTS T3
+	//Aria_Ab_3 T3
 	EARTHEN_POISE								(17, 6, 5),
 	STILL_WATER									(18, 6, 5),
 	POISED_MIND									(19, 6, 5),
 
-	//ARCHMAGE_OF_HARMONY T4
+	//Aria_Ab_1 T4
 	PERFECT_CONCORD								(24, 6, 5),
 	CONTINUUM_SLIP								(25, 6, 5),
 	RESONANT_CYCLE								(26, 6, 5),
-	//ELEMENTAL_WEAVER T4
+	//Aria_Ab_2 T4
 	TAUT_STRINGS								(27, 6, 5),
 	LOOM_MASTER									(28, 6, 5),
 	SEAMLESS_WEAVE								(29, 6, 5),
-	//SAGE_OF_ELEMENTS T4
+	//Aria_Ab_3 T4
 	STONE_READING								(30, 6, 5),
 	DEEP_WELLS									(31, 6, 5),
 	ANCIENT_STANCE								(32, 6, 5);
@@ -1294,12 +1294,9 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
 				break;
-<<<<<<< HEAD
 			case ARIA:
 				Collections.addAll(tierTalents,ELEMENTAL_RHYTHM, RUNIC_CONSERVATION, ELEMENTAL_MEMORY, PRISMATIC_INITIATION );
 				break;
-=======
->>>>>>> parent of cad34f1 (수정중)
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1329,12 +1326,9 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
 				break;
-<<<<<<< HEAD
 			case ARIA:
 				Collections.addAll(tierTalents, PRISMATIC_REBOUND, FLOW_STATE, IMPRINT_SPILLOVER, MANA_WEAVE, BARRIER_CORE );
 				break;
-=======
->>>>>>> parent of cad34f1 (수정중)
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){

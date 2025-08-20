@@ -373,20 +373,6 @@ public class ItemSpriteSheet {
 	}
 
 	private static final int ARMOR          =                               xy(1, 12);  //16 slots
-<<<<<<< HEAD
-	public static final int ARMOR_CLOTH     = ARMOR+idx(0);
-	public static final int ARMOR_LEATHER   = ARMOR+idx(1);
-	public static final int ARMOR_MAIL      = ARMOR+idx(2);
-	public static final int ARMOR_SCALE     = ARMOR+idx(3);
-	public static final int ARMOR_PLATE     = ARMOR+idx(4);
-	public static final int ARMOR_WARRIOR   = ARMOR+idx(5);
-	public static final int ARMOR_MAGE      = ARMOR+idx(6);
-	public static final int ARMOR_ROGUE     = ARMOR+idx(7);
-	public static final int ARMOR_HUNTRESS  = ARMOR+idx(8);
-	public static final int ARMOR_DUELIST   = ARMOR+idx(9);
-	public static final int ARMOR_CLERIC    = ARMOR+idx(10);
-	public static final int ARMOR_ARIA 	    = ARMOR+idx(11);
-=======
 	public static final int ARMOR_CLOTH     = ARMOR+0;
 	public static final int ARMOR_LEATHER   = ARMOR+1;
 	public static final int ARMOR_MAIL      = ARMOR+2;
@@ -398,7 +384,7 @@ public class ItemSpriteSheet {
 	public static final int ARMOR_HUNTRESS  = ARMOR+8;
 	public static final int ARMOR_DUELIST   = ARMOR+9;
 	public static final int ARMOR_CLERIC    = ARMOR+10;
->>>>>>> parent of cad34f1 (수정중)
+	public static final int ARMOR_ARIA      = ARMOR+11;
 	static{
 		assignItemRect(ARMOR_CLOTH,     15, 12);
 		assignItemRect(ARMOR_LEATHER,   14, 13);
@@ -411,6 +397,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_HUNTRESS,  13, 15);
 		assignItemRect(ARMOR_DUELIST,   12, 13);
 		assignItemRect(ARMOR_CLERIC,    13, 14);
+		assignItemRect(ARMOR_ARIA,	    15, 12);
 	}
 
 	//16 free slots

@@ -76,9 +76,9 @@ public class HeroIcon extends Image {
 	public static final int TRINITY         			  = 32;
 	public static final int POWER_OF_MANY   			  = 33;
 	public static final int RATMOGRIFY      			  = 34;
-//	public static final int						      	  = 35;
-//	public static final int						      	  = 36;
-//	public static final int						      	  = 37;
+	public static final int	ARIA_AB_1			      	  = 35;
+	public static final int	ARIA_AB_2			      	  = 36;
+	public static final int	ARIA_AB_3			      	  = 37;
 //	public static final int						      	  = 38;
 //	public static final int						      	  = 39;
 

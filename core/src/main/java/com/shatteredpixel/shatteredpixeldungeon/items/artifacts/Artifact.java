@@ -93,7 +93,7 @@ public class Artifact extends KindofMisc {
 			passiveBuff = null;
 		}
 		passiveBuff = passiveBuff();
-		if (passiveBuff != null) passiveBuff.attachTo(ch);
+		passiveBuff.attachTo(ch);
 	}
 
 	@Override
