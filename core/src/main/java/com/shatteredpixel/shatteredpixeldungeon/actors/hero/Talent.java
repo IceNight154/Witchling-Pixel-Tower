@@ -322,44 +322,44 @@ public enum Talent {
 	RATFORCEMENTS								(29, 5, 4),
 
 	//Aria T1
-	ARCANE_FEAST								(0, 6),
-	SAVANTS_INSIGHT								(1, 6),
-	RESIDUAL_ARCANA								(2, 6),
-	AEGIS_RESERVE								(3, 6),
+	ELEMENTAL_RHYTHM							(0, 6),
+	RUNIC_CONSERVATION							(1, 6),
+	ELEMENTAL_MEMORY							(2, 6),
+	PRISMATIC_INITIATION						(3, 6),
 	//Aria T2
-	MANA_INFUSION								(4, 6),
-	RUNIC_EMPOWERMENT							(5, 6),
-	WAND_CONSERVATION							(6, 6),
-	MYSTIC_SIGHT								(7, 6),
+	PRISMATIC_REBOUND							(4, 6),
+	FLOW_STATE									(5, 6),
+	IMPRINT_SPILLOVER							(6, 6),
+	MANA_WEAVE									(7, 6),
 	BARRIER_CORE								(8, 6),
 	//Aria T3
-	LAST_STAND_MAGIC							(9, 6, 5),
-	ARCANE_RELAY								(10, 6, 5),
+	QUICKSHIFT_MASTERY							(9, 6, 5),
+	IMPRINT_AMPLIFIER							(10, 6, 5),
 	//ARCHMAGE_OF_HARMONY T3
-	TERRA_STRIKE								(11, 6, 5),
-	EARTHEN_CHARGE								(12, 6, 5),
-	OVERBURDEN									(13, 6, 5),
+	HARMONIC_LOOP								(11, 6, 5),
+	CONCORD_PULSE								(12, 6, 5),
+	HARMONIC_SURGE								(13, 6, 5),
 	//ELEMENTAL_WEAVER T3
-	FLAME_EATER									(14, 6, 5),
-	EMBER_SIPHON								(15, 6, 5),
-	CINDER_SERVANTS								(16, 6, 5),
+	WEAVE_THREADS								(14, 6, 5),
+	STITCH										(15, 6, 5),
+	PRISMATIC_DETONATION						(16, 6, 5),
 	//SAGE_OF_ELEMENTS T3
-	TIDAL_BURST									(17, 6, 5),
-	AQUA_MASTERY								(18, 6, 5),
-	FLOWING_AEGIS								(19, 6, 5),
+	EARTHEN_POISE								(17, 6, 5),
+	STILL_WATER									(18, 6, 5),
+	POISED_MIND									(19, 6, 5),
 
 	//ARCHMAGE_OF_HARMONY T4
-	STONE_STEP									(24, 6, 5),
-	EARTHBOUND_BEACON							(25, 6, 5),
-	GEO_GATE									(26, 6, 5),
+	PERFECT_CONCORD								(24, 6, 5),
+	CONTINUUM_SLIP								(25, 6, 5),
+	RESONANT_CYCLE								(26, 6, 5),
 	//ELEMENTAL_WEAVER T4
-	BLAZING_STEP								(27, 6, 5),
-	EMBER_BEACON								(28, 6, 5),
-	FLAME_GATE									(29, 6, 5),
+	TAUT_STRINGS								(27, 6, 5),
+	LOOM_MASTER									(28, 6, 5),
+	SEAMLESS_WEAVE								(29, 6, 5),
 	//SAGE_OF_ELEMENTS T4
-	TIDE_STEP									(30, 6, 5),
-	RIPPLE_BEACON								(31, 6, 5),
-	AQUA_GATE									(32, 6, 5);
+	STONE_READING								(30, 6, 5),
+	DEEP_WELLS									(31, 6, 5),
+	ANCIENT_STANCE								(32, 6, 5);
 
 /*
 	//Warrior T1
@@ -1294,9 +1294,12 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
 				break;
+<<<<<<< HEAD
 			case ARIA:
-				Collections.addAll(tierTalents,HEARTY_MEAL, VETERANS_INTUITION, PROVOKED_ANGER, IRON_WILL );
+				Collections.addAll(tierTalents,ELEMENTAL_RHYTHM, RUNIC_CONSERVATION, ELEMENTAL_MEMORY, PRISMATIC_INITIATION );
 				break;
+=======
+>>>>>>> parent of cad34f1 (수정중)
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1326,9 +1329,12 @@ public enum Talent {
 			case CLERIC:
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
 				break;
+<<<<<<< HEAD
 			case ARIA:
-				Collections.addAll(tierTalents,IRON_STOMACH, LIQUID_WILLPOWER, RUNIC_TRANSFERENCE, LETHAL_MOMENTUM, IMPROVISED_PROJECTILES );
+				Collections.addAll(tierTalents, PRISMATIC_REBOUND, FLOW_STATE, IMPRINT_SPILLOVER, MANA_WEAVE, BARRIER_CORE );
 				break;
+=======
+>>>>>>> parent of cad34f1 (수정중)
 		}
 		for (Talent talent : tierTalents){
 			if (replacements.containsKey(talent)){
@@ -1357,6 +1363,9 @@ public enum Talent {
 				break;
 			case CLERIC:
 				Collections.addAll(tierTalents, CLEANSE, LIGHT_READING);
+				break;
+			case ARIA:
+				Collections.addAll(tierTalents, QUICKSHIFT_MASTERY, IMPRINT_AMPLIFIER);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -1421,6 +1430,15 @@ public enum Talent {
 				break;
 			case PALADIN:
 				Collections.addAll(tierTalents, LAY_ON_HANDS, AURA_OF_PROTECTION, WALL_OF_LIGHT);
+				break;
+			case ARCHMAGE_OF_HARMONY:
+				Collections.addAll(tierTalents, HARMONIC_LOOP, CONCORD_PULSE, HARMONIC_SURGE);
+				break;
+			case ELEMENTAL_WEAVER:
+				Collections.addAll(tierTalents,WEAVE_THREADS, STITCH, PRISMATIC_DETONATION);
+				break;
+			case SAGE_OF_ELEMENTS:
+				Collections.addAll(tierTalents, EARTHEN_POISE, STILL_WATER, POISED_MIND);
 				break;
 		}
 		for (Talent talent : tierTalents){
@@ -1526,3 +1544,4 @@ public enum Talent {
 	}
 
 }
+

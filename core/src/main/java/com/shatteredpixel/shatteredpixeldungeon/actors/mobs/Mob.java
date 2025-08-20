@@ -904,12 +904,6 @@ public abstract class Mob extends Char {
 
 		boolean soulMarked = buff(SoulMark.class) != null;
 
-		if (!Statistics.ariaUnLocked) {
-			Statistics.ariaUnLocked = true;
-			Badges.validateAriaUnlock();
-		}
-
-
 		super.die( cause );
 
 		if (!(this instanceof Wraith)

@@ -303,7 +303,7 @@ public class ARCHMAGE_OF_HARMONY extends ArmorAbility {
 
 	@Override
 	public Talent[] talents() {
-		return new Talent[]{Talent.BODY_FORM, Talent.MIND_FORM, Talent.SPIRIT_FORM, Talent.HEROIC_ENERGY};
+		return new Talent[]{Talent.PERFECT_CONCORD, Talent.CONTINUUM_SLIP, Talent.RESONANT_CYCLE};
 	}
 
 	public static class WndItemtypeSelect extends WndTitledMessage {

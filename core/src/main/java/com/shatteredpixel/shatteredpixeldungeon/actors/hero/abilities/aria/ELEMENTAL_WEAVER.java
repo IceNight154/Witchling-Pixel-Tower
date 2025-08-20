@@ -303,7 +303,7 @@ public class ELEMENTAL_WEAVER extends ArmorAbility {
 
 	@Override
 	public Talent[] talents() {
-		return new Talent[]{Talent.BODY_FORM, Talent.MIND_FORM, Talent.SPIRIT_FORM, Talent.HEROIC_ENERGY};
+		return new Talent[]{Talent.TAUT_STRINGS, Talent.LOOM_MASTER, Talent.SEAMLESS_WEAVE};
 	}
 
 	public static class WndItemtypeSelect extends WndTitledMessage {
