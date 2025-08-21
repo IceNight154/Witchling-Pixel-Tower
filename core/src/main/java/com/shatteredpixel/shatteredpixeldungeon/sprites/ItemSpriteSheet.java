@@ -98,6 +98,8 @@ public class ItemSpriteSheet {
 	public static final int PETAL           = UNCOLLECTIBLE+idx(4);
 	public static final int SANDBAG         = UNCOLLECTIBLE+idx(5);
 	public static final int SPIRIT_ARROW    = UNCOLLECTIBLE+idx(6);
+	public static final int MANA_BALL	    = UNCOLLECTIBLE+idx(6);
+
 
 	public static final int TENGU_BOMB      = UNCOLLECTIBLE+idx(8);
 	public static final int TENGU_SHOCKER   = UNCOLLECTIBLE+idx(9);
@@ -110,6 +112,7 @@ public class ItemSpriteSheet {
 		assignItemRect(PETAL,       8,  8);
 		assignItemRect(SANDBAG,     10, 10);
 		assignItemRect(SPIRIT_ARROW,11, 11);
+		assignItemRect(MANA_BALL,	11, 11);
 
 		assignItemRect(TENGU_BOMB,      10, 10);
 		assignItemRect(TENGU_SHOCKER,   10, 10);
@@ -398,6 +401,13 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_DUELIST,   12, 13);
 		assignItemRect(ARMOR_CLERIC,    13, 14);
 		assignItemRect(ARMOR_ARIA,	    15, 12);
+	}
+
+	private static final int GRIAMOIRE 		    =                           xy(1, 13);
+	public static final int GRIMOIRE_ARIA       = GRIAMOIRE+idx(0);
+	static {
+		for (int i = GRIAMOIRE; i < GRIAMOIRE+16; i++)
+			assignItemRect(i, 13, 16);
 	}
 
 	//16 free slots

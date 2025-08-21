@@ -93,7 +93,7 @@ public class HeroSprite extends CharSprite {
 		operate = new Animation( 8, false );
 		operate.frames( film, 20, 21, 20, 21 );
 		
-		fly = new Animation( 16, true );
+		fly = new Animation( 5, true );
 		fly.frames( film, 22, 24, 22, 23 );
 
 		read = new Animation( 20, false );
