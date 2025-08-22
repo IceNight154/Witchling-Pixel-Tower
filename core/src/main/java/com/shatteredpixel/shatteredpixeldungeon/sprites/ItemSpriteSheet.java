@@ -75,7 +75,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_HOLDER,    14, 12);
 		assignItemRect(MISSILE_HOLDER,  15, 15);
 		assignItemRect(WAND_HOLDER,     14, 14);
-		assignItemRect(RING_HOLDER,     8,  10);
+		assignItemRect(RING_HOLDER,     13, 13);
 		assignItemRect(ARTIFACT_HOLDER, 15, 15);
 		assignItemRect(TRINKET_HOLDER,  16, 11);
 		assignItemRect(FOOD_HOLDER,     15, 11);
@@ -98,7 +98,7 @@ public class ItemSpriteSheet {
 	public static final int PETAL           = UNCOLLECTIBLE+idx(4);
 	public static final int SANDBAG         = UNCOLLECTIBLE+idx(5);
 	public static final int SPIRIT_ARROW    = UNCOLLECTIBLE+idx(6);
-	public static final int MANA_BALL	    = UNCOLLECTIBLE+idx(6);
+	public static final int MANA_BALL	    = UNCOLLECTIBLE+idx(7);
 
 
 	public static final int TENGU_BOMB      = UNCOLLECTIBLE+idx(8);

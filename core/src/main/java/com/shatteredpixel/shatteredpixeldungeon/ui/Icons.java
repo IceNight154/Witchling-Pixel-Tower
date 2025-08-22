@@ -463,7 +463,7 @@ public enum Icons {
 			case CLERIC:
 				return new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME);
 			case ARIA:
-				return new ItemSprite(ItemSpriteSheet.SEAL);
+				return new ItemSprite(ItemSpriteSheet.GRIMOIRE_ARIA);
 			default:
 				return null;
 		}
