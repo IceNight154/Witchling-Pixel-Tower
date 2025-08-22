@@ -19,49 +19,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PrismaticGuard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Stasis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
+import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
-public class ScrollOfLullaby extends Scroll {
-
+public class JewelOfPrismaticImage extends ExoticJewel {
+	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_LULLABY;
+		icon = ItemSpriteSheet.Icons.JEWEL_PRISIMG;
 	}
-
+	
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		curUser.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
-		Sample.INSTANCE.play( Assets.Sounds.LULLABY );
-
-		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (Dungeon.level.heroFOV[mob.pos]) {
-				Buff.affect( mob, Drowsy.class, Drowsy.DURATION );
-				mob.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
+		boolean found = false;
+		for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
+			if (m instanceof PrismaticImage){
+				found = true;
+				m.HP = m.HT;
+				m.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(m.HT), FloatingText.HEALING );
 			}
 		}
 
-		Buff.affect( curUser, Drowsy.class, Drowsy.DURATION );
-
-		GLog.i( Messages.get(this, "sooth") );
+		if (!found){
+			if (Stasis.getStasisAlly() instanceof PrismaticImage){
+				found = true;
+				Stasis.getStasisAlly().HP = Stasis.getStasisAlly().HT;
+			}
+		}
+		
+		if (!found) {
+			Buff.affect(curUser, PrismaticGuard.class).set( PrismaticGuard.maxHP( curUser ) );
+		}
 
 		identify();
-		readAnimation();
-	}
+		
+		Sample.INSTANCE.play( Assets.Sounds.READ );
 	
-	@Override
-	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		readAnimation();
 	}
 }

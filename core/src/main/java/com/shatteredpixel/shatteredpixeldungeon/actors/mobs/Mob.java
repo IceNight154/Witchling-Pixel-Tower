@@ -70,7 +70,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourg
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
@@ -1002,9 +1002,9 @@ public abstract class Mob extends Char {
 				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
 					return Generator.random(ExoticPotion.regToExo.get(loot));
 				}
-			} else if (ExoticScroll.regToExo.containsKey(loot)){
+			} else if (ExoticJewel.regToExo.containsKey(loot)){
 				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
-					return Generator.random(ExoticScroll.regToExo.get(loot));
+					return Generator.random(ExoticJewel.regToExo.get(loot));
 				}
 			}
 

@@ -21,19 +21,19 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.secret;
 
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfLullaby;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTerror;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -55,19 +55,19 @@ public class SecretLibraryRoom extends SecretRoom {
 		return Math.max(7, super.minHeight());
 	}
 	
-	private static HashMap<Class<? extends Scroll>, Float> scrollChances = new HashMap<>();
+	private static HashMap<Class<? extends Jewel>, Float> jewelChances = new HashMap<>();
 	static{
-		scrollChances.put( ScrollOfIdentify.class,      1f );
-		scrollChances.put( ScrollOfRemoveCurse.class,   2f );
-		scrollChances.put( ScrollOfMirrorImage.class,   3f );
-		scrollChances.put( ScrollOfRecharging.class,    3f );
-		scrollChances.put( ScrollOfTeleportation.class, 3f );
-		scrollChances.put( ScrollOfLullaby.class,       4f );
-		scrollChances.put( ScrollOfMagicMapping.class,  4f );
-		scrollChances.put( ScrollOfRage.class,          4f );
-		scrollChances.put( ScrollOfRetribution.class,   4f );
-		scrollChances.put( ScrollOfTerror.class,        4f );
-		scrollChances.put( ScrollOfTransmutation.class, 6f );
+		jewelChances.put( JewelOfIdentify.class,      1f );
+		jewelChances.put( JewelOfRemoveCurse.class,   2f );
+		jewelChances.put( JewelOfMirrorImage.class,   3f );
+		jewelChances.put( JewelOfRecharging.class,    3f );
+		jewelChances.put( JewelOfTeleportation.class, 3f );
+		jewelChances.put( JewelOfLullaby.class,       4f );
+		jewelChances.put( JewelOfMagicMapping.class,  4f );
+		jewelChances.put( JewelOfRage.class,          4f );
+		jewelChances.put( JewelOfRetribution.class,   4f );
+		jewelChances.put( JewelOfTerror.class,        4f );
+		jewelChances.put( JewelOfTransmutation.class, 6f );
 	}
 	
 	public void paint( Level level ) {
@@ -86,23 +86,23 @@ public class SecretLibraryRoom extends SecretRoom {
 		entrance.set( Door.Type.HIDDEN );
 		
 		int n = Random.IntRange( 2, 3 );
-		HashMap<Class<? extends Scroll>, Float> chances = new HashMap<>(scrollChances);
+		HashMap<Class<? extends Jewel>, Float> chances = new HashMap<>(jewelChances);
 		for (int i=0; i < n; i++) {
 			int pos;
 			do {
 				pos = level.pointToCell(random());
 			} while (level.map[pos] != Terrain.EMPTY_SP || level.heaps.get( pos ) != null);
 			
-			Class<?extends Scroll> scrollCls = Random.chances(chances);
-			chances.put(scrollCls, 0f);
+			Class<?extends Jewel> jewelCls = Random.chances(chances);
+			chances.put(jewelCls, 0f);
 
-			if (ExoticScroll.regToExo.containsKey(scrollCls)){
+			if (ExoticJewel.regToExo.containsKey(jewelCls)){
 				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
-					scrollCls = ExoticScroll.regToExo.get(scrollCls);
+					jewelCls = ExoticJewel.regToExo.get(jewelCls);
 				}
 			}
 
-			level.drop( Reflection.newInstance(scrollCls), pos );
+			level.drop( Reflection.newInstance(jewelCls), pos );
 		}
 	}
 	

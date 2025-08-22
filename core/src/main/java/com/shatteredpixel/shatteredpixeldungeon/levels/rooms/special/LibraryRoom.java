@@ -25,9 +25,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.IronKey;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -54,7 +54,7 @@ public class LibraryRoom extends SpecialRoom {
 			} while (level.map[pos] != Terrain.EMPTY_SP || level.heaps.get( pos ) != null);
 			Item item;
 			if (i == 0)
-				item = Random.Int(2) == 0 ? new ScrollOfIdentify() : new ScrollOfRemoveCurse();
+				item = Random.Int(2) == 0 ? new JewelOfIdentify() : new JewelOfRemoveCurse();
 			else
 				item = prize( level );
 			level.drop( item, pos );
@@ -69,7 +69,7 @@ public class LibraryRoom extends SpecialRoom {
 		
 		Item prize = level.findPrizeItem( TrinketCatalyst.class );
 		if (prize == null){
-			prize = level.findPrizeItem( Scroll.class );
+			prize = level.findPrizeItem( Jewel.class );
 			if (prize == null) {
 				prize = Generator.random( Generator.Category.SCROLL );
 			}

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Enchanting;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.InventoryScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.InventoryJewel;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -42,10 +42,10 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
 import com.watabou.noosa.audio.Sample;
 
-public class ScrollOfEnchantment extends ExoticScroll {
+public class JewelOfEnchantment extends ExoticJewel {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_ENCHANT;
+		icon = ItemSpriteSheet.Icons.JEWEL_ENCHANT;
 
 		unique = true;
 
@@ -74,9 +74,9 @@ public class ScrollOfEnchantment extends ExoticScroll {
 	private void confirmCancelation() {
 		GameScene.show( new WndOptions(new ItemSprite(this),
 				Messages.titleCase(name()),
-				Messages.get(InventoryScroll.class, "warning"),
-				Messages.get(InventoryScroll.class, "yes"),
-				Messages.get(InventoryScroll.class, "no") ) {
+				Messages.get(InventoryJewel.class, "warning"),
+				Messages.get(InventoryJewel.class, "yes"),
+				Messages.get(InventoryJewel.class, "no") ) {
 			@Override
 			protected void onSelect( int index ) {
 				switch (index) {
@@ -97,7 +97,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 
 		@Override
 		public String textPrompt() {
-			return Messages.get(ScrollOfEnchantment.class, "inv_title");
+			return Messages.get(JewelOfEnchantment.class, "inv_title");
 		}
 
 		@Override
@@ -143,7 +143,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 				
 				GameScene.show(new WndGlyphSelect((Armor) item, glyphs[0], glyphs[1], glyphs[2]));
 			} else if (identifiedByUse){
-				((ScrollOfEnchantment)curItem).confirmCancelation();
+				((JewelOfEnchantment)curItem).confirmCancelation();
 			}
 		}
 	};
@@ -160,13 +160,13 @@ public class ScrollOfEnchantment extends ExoticScroll {
 
 		public WndEnchantSelect(Weapon wep, Weapon.Enchantment ench1,
 		                           Weapon.Enchantment ench2, Weapon.Enchantment ench3){
-			super(new ItemSprite(new ScrollOfEnchantment()),
-					Messages.titleCase(new ScrollOfEnchantment().name()),
-					Messages.get(ScrollOfEnchantment.class, "weapon"),
+			super(new ItemSprite(new JewelOfEnchantment()),
+					Messages.titleCase(new JewelOfEnchantment().name()),
+					Messages.get(JewelOfEnchantment.class, "weapon"),
 					ench1.name(),
 					ench2.name(),
 					ench3.name(),
-					Messages.get(ScrollOfEnchantment.class, "cancel"));
+					Messages.get(JewelOfEnchantment.class, "cancel"));
 			this.wep = wep;
 			enchantments = new Weapon.Enchantment[3];
 			enchantments[0] = ench1;
@@ -181,7 +181,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 			if (index < 3) {
 				wep.enchant(enchantments[index]);
 				GLog.p(Messages.get(StoneOfEnchantment.class, "weapon"));
-				((ScrollOfEnchantment)curItem).readAnimation();
+				((JewelOfEnchantment)curItem).readAnimation();
 
 				Sample.INSTANCE.play( Assets.Sounds.READ );
 				Enchanting.show(curUser, wep);
@@ -222,13 +222,13 @@ public class ScrollOfEnchantment extends ExoticScroll {
 
 		public WndGlyphSelect(Armor arm, Armor.Glyph glyph1,
 		                      Armor.Glyph glyph2, Armor.Glyph glyph3) {
-			super(new ItemSprite(new ScrollOfEnchantment()),
-					Messages.titleCase(new ScrollOfEnchantment().name()),
-					Messages.get(ScrollOfEnchantment.class, "armor"),
+			super(new ItemSprite(new JewelOfEnchantment()),
+					Messages.titleCase(new JewelOfEnchantment().name()),
+					Messages.get(JewelOfEnchantment.class, "armor"),
 					glyph1.name(),
 					glyph2.name(),
 					glyph3.name(),
-					Messages.get(ScrollOfEnchantment.class, "cancel"));
+					Messages.get(JewelOfEnchantment.class, "cancel"));
 			this.arm = arm;
 			glyphs = new Armor.Glyph[3];
 			glyphs[0] = glyph1;
@@ -243,7 +243,7 @@ public class ScrollOfEnchantment extends ExoticScroll {
 			if (index < 3) {
 				arm.inscribe(glyphs[index]);
 				GLog.p(Messages.get(StoneOfEnchantment.class, "armor"));
-				((ScrollOfEnchantment) curItem).readAnimation();
+				((JewelOfEnchantment) curItem).readAnimation();
 
 				Sample.INSTANCE.play(Assets.Sounds.READ);
 				Enchanting.show(curUser, arm);
@@ -275,11 +275,11 @@ public class ScrollOfEnchantment extends ExoticScroll {
 	public static class WndConfirmCancel extends WndOptions{
 
 		public WndConfirmCancel(){
-			super(new ItemSprite(new ScrollOfEnchantment()),
-					Messages.titleCase(new ScrollOfEnchantment().name()),
-					Messages.get(ScrollOfEnchantment.class, "cancel_warn"),
-					Messages.get(ScrollOfEnchantment.class, "cancel_warn_yes"),
-					Messages.get(ScrollOfEnchantment.class, "cancel_warn_no"));
+			super(new ItemSprite(new JewelOfEnchantment()),
+					Messages.titleCase(new JewelOfEnchantment().name()),
+					Messages.get(JewelOfEnchantment.class, "cancel_warn"),
+					Messages.get(JewelOfEnchantment.class, "cancel_warn_yes"),
+					Messages.get(JewelOfEnchantment.class, "cancel_warn_no"));
 		}
 
 		@Override

@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -171,7 +171,7 @@ public class Stasis extends ClericSpell {
 				Buff.prolong(Dungeon.hero, LifeLink.class, stasisAlly.buff(LifeLink.class).cooldown()).object = stasisAlly.id();
 			}
 
-			ScrollOfTeleportation.appear(stasisAlly, stasisAlly.pos);
+			JewelOfTeleportation.appear(stasisAlly, stasisAlly.pos);
 			Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
 
 			return super.act();

@@ -50,7 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -103,7 +103,7 @@ public class Dungeon {
 	public static enum LimitedDrops {
 		//limited world drops
 		STRENGTH_POTIONS,
-		UPGRADE_SCROLLS,
+		UPGRADE_JEWELS,
 		ARCANE_STYLI,
 		ENCH_STONE,
 		INT_STONE,
@@ -132,7 +132,7 @@ public class Dungeon {
 
 		//containers
 		VELVET_POUCH,
-		SCROLL_HOLDER,
+		JEWEL_HOLDER,
 		POTION_BANDOLIER,
 		MAGICAL_HOLSTER,
 
@@ -241,7 +241,7 @@ public class Dungeon {
 		//offset seed slightly to avoid output patterns
 		Random.pushGenerator( seed+1 );
 
-			Scroll.initLabels();
+			Jewel.initLabels();
 			Potion.initColors();
 			Ring.initGems();
 
@@ -538,11 +538,11 @@ public class Dungeon {
 	public static boolean souNeeded() {
 		int souLeftThisSet;
 		//3 SOU each floor set
-		souLeftThisSet = 3 - (LimitedDrops.UPGRADE_SCROLLS.count - (depth / 5) * 3);
+		souLeftThisSet = 3 - (LimitedDrops.UPGRADE_JEWELS.count - (depth / 5) * 3);
 		if (souLeftThisSet <= 0) return false;
 
 		int floorThisSet = (depth % 5);
-		//chance is floors left / scrolls left
+		//chance is floors left / jewels left
 		return Random.Int(5 - floorThisSet) < souLeftThisSet;
 	}
 	
@@ -552,7 +552,7 @@ public class Dungeon {
 		if (asLeftThisSet <= 0) return false;
 
 		int floorThisSet = (depth % 5);
-		//chance is floors left / scrolls left
+		//chance is floors left / jewels left
 		return Random.Int(5 - floorThisSet) < asLeftThisSet;
 	}
 
@@ -671,7 +671,7 @@ public class Dungeon {
 			}
 			bundle.put( GENERATED_LEVELS, bundleArr);
 			
-			Scroll.save( bundle );
+			Jewel.save( bundle );
 			Potion.save( bundle );
 			Ring.save( bundle );
 
@@ -738,7 +738,7 @@ public class Dungeon {
 		Dungeon.level = null;
 		Dungeon.depth = -1;
 		
-		Scroll.restore( bundle );
+		Jewel.restore( bundle );
 		Potion.restore( bundle );
 		Ring.restore( bundle );
 

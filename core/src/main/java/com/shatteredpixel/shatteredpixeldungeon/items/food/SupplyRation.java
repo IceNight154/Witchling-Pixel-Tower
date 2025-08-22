@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -64,7 +64,7 @@ public class SupplyRation extends Food {
 		CloakOfShadows cloak = hero.belongings.getItem(CloakOfShadows.class);
 		if (cloak != null) {
 			cloak.directCharge(1);
-			ScrollOfRecharging.charge(hero);
+			JewelOfRecharging.charge(hero);
 		}
 	}
 

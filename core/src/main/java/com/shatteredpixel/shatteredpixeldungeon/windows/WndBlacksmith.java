@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -266,7 +266,7 @@ public class WndBlacksmith extends Window {
 					}
 
 					Sample.INSTANCE.play( Assets.Sounds.EVOKE );
-					ScrollOfUpgrade.upgrade( Dungeon.hero );
+					JewelOfUpgrade.upgrade( Dungeon.hero );
 					Item.evoke( Dungeon.hero );
 
 					if (second.isEquipped( Dungeon.hero )) {
@@ -437,7 +437,7 @@ public class WndBlacksmith extends Window {
 				WndBlacksmith.this.hide();
 
 				Sample.INSTANCE.play(Assets.Sounds.EVOKE);
-				ScrollOfUpgrade.upgrade( Dungeon.hero );
+				JewelOfUpgrade.upgrade( Dungeon.hero );
 				Item.evoke( Dungeon.hero );
 
 				Badges.validateItemLevelAquired( item );

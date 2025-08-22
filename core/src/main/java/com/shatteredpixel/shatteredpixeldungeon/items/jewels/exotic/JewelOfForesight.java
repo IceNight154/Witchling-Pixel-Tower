@@ -19,25 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.remains;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 
-public class BrokenStaff extends RemainsItem {
-
+public class JewelOfForesight extends ExoticJewel {
+	
 	{
-		image = ItemSpriteSheet.BROKEN_STAFF;
+		icon = ItemSpriteSheet.Icons.JEWEL_FORESIGHT;
 	}
-
+	
 	@Override
-	protected void doEffect(Hero hero) {
-		hero.belongings.charge(1f);
-		JewelOfRecharging.charge(hero);
-		Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
-	}
+	public void doRead() {
 
+		detach(curUser.belongings.backpack);
+		Sample.INSTANCE.play( Assets.Sounds.READ );
+		
+		Buff.affect(curUser, Foresight.class, Foresight.DURATION);
+
+		identify();
+		
+		readAnimation();
+	}
+	
 }

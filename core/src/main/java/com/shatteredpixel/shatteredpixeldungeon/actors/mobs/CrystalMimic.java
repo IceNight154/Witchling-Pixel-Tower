@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -137,7 +137,7 @@ public class CrystalMimic extends Mimic {
 			}
 
 			if (!candidates.isEmpty()){
-				ScrollOfTeleportation.appear(enemy, Random.element(candidates));
+				JewelOfTeleportation.appear(enemy, Random.element(candidates));
 			}
 
 			if (alignment == Alignment.ENEMY) state = FLEEING;

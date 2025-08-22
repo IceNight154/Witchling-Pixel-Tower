@@ -51,8 +51,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfIc
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfToxicEssence;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
@@ -89,7 +89,7 @@ public class QuickRecipe extends Component {
 	private ArrayList<Item> ingredients;
 	
 	private ArrayList<ItemSlot> inputs;
-	private QuickRecipe.arrow arrow;
+	private arrow arrow;
 	private ItemSlot output;
 	
 	public QuickRecipe(Recipe.SimpleRecipe r){
@@ -196,8 +196,8 @@ public class QuickRecipe extends Component {
 	private void anonymize(Item item){
 		if (item instanceof Potion){
 			((Potion) item).anonymize();
-		} else if (item instanceof Scroll){
-			((Scroll) item).anonymize();
+		} else if (item instanceof Jewel){
+			((Jewel) item).anonymize();
 		}
 	}
 	
@@ -280,11 +280,11 @@ public class QuickRecipe extends Component {
 				}));
 				return result;
 			case 1:
-				Recipe r = new Scroll.ScrollToStone();
-				for (Class<?> cls : Generator.Category.SCROLL.classes){
-					Scroll scroll = (Scroll) Reflection.newInstance(cls);
-					if (!scroll.isKnown()) scroll.anonymize();
-					ArrayList<Item> in = new ArrayList<Item>(Arrays.asList(scroll));
+				Recipe r = new Jewel.JewelToStone();
+				for (Class<?> cls : Generator.Category.Jewel.classes){
+					Jewel jewel = (Jewel) Reflection.newInstance(cls);
+					if (!jewel.isKnown()) jewel.anonymize();
+					ArrayList<Item> in = new ArrayList<Item>(Arrays.asList(jewel));
 					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
 				}
 				return result;
@@ -320,10 +320,10 @@ public class QuickRecipe extends Component {
 				}
 				return result;
 			case 4:
-				r = new ExoticScroll.ScrollToExotic();
-				for (Class<?> cls : Generator.Category.SCROLL.classes){
-					Scroll scroll = (Scroll) Reflection.newInstance(cls);
-					ArrayList<Item> in = new ArrayList<>(Arrays.asList(scroll));
+				r = new ExoticJewel.JewelToExotic();
+				for (Class<?> cls : Generator.Category.Jewel.classes){
+					Jewel jewel = (Jewel) Reflection.newInstance(cls);
+					ArrayList<Item> in = new ArrayList<>(Arrays.asList(jewel));
 					result.add(new QuickRecipe( r, in, r.sampleOutput(in)));
 				}
 				return result;
@@ -368,7 +368,7 @@ public class QuickRecipe extends Component {
 				result.add(new QuickRecipe(new ElixirOfMight.Recipe()));
 				return result;
 			case 8:
-				result.add(new QuickRecipe(new UnstableSpell.Recipe(), new ArrayList<>(Arrays.asList(new Scroll.PlaceHolder(), new  Runestone.PlaceHolder())), new UnstableSpell()));
+				result.add(new QuickRecipe(new UnstableSpell.Recipe(), new ArrayList<>(Arrays.asList(new Jewel.PlaceHolder(), new  Runestone.PlaceHolder())), new UnstableSpell()));
 				result.add(new QuickRecipe(new WildEnergy.Recipe()));
 				result.add(new QuickRecipe(new TelekineticGrab.Recipe()));
 				result.add(new QuickRecipe(new PhaseShift.Recipe()));

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -52,6 +52,6 @@ public class StoneOfBlink extends Runestone {
 	
 	@Override
 	protected void activate(int cell) {
-		ScrollOfTeleportation.teleportToLocation(curUser, cell);
+		JewelOfTeleportation.teleportToLocation(curUser, cell);
 	}
 }

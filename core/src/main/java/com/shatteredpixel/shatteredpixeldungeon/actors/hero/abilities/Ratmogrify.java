@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Rat;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -108,7 +108,7 @@ public class Ratmogrify extends ArmorAbility {
 					rat.state = rat.HUNTING;
 					Buff.affect(rat, AscensionChallenge.AscensionBuffBlocker.class);
 					GameScene.add( rat );
-					ScrollOfTeleportation.appear( rat, spawnPoints.get( index ) );
+					JewelOfTeleportation.appear( rat, spawnPoints.get( index ) );
 
 					spawnPoints.remove( index );
 					ratsToSpawn--;

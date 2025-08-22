@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Transmuting;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.InventoryScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.InventoryJewel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -46,10 +46,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
-public class ScrollOfMetamorphosis extends ExoticScroll {
+public class JewelOfMetamorphosis extends ExoticJewel {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_METAMORPH;
+		icon = ItemSpriteSheet.Icons.JEWEL_METAMORPH;
 
 		talentFactor = 2f;
 	}
@@ -69,8 +69,8 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 	}
 
 	public static void onMetamorph( Talent oldTalent, Talent newTalent ){
-		if (curItem instanceof ScrollOfMetamorphosis) {
-			((ScrollOfMetamorphosis) curItem).readAnimation();
+		if (curItem instanceof JewelOfMetamorphosis) {
+			((JewelOfMetamorphosis) curItem).readAnimation();
 			Sample.INSTANCE.play(Assets.Sounds.READ);
 		}
 		curUser.sprite.emitter().start(Speck.factory(Speck.CHANGE), 0.2f, 10);
@@ -84,9 +84,9 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 	private void confirmCancelation( Window chooseWindow, boolean byID ) {
 		GameScene.show( new WndOptions(new ItemSprite(this),
 				Messages.titleCase(name()),
-				byID ? Messages.get(InventoryScroll.class, "warning") : Messages.get(ScrollOfMetamorphosis.class, "cancel_warn"),
-				Messages.get(InventoryScroll.class, "yes"),
-				Messages.get(InventoryScroll.class, "no") ) {
+				byID ? Messages.get(InventoryJewel.class, "warning") : Messages.get(JewelOfMetamorphosis.class, "cancel_warn"),
+				Messages.get(InventoryJewel.class, "yes"),
+				Messages.get(InventoryJewel.class, "no") ) {
 			@Override
 			protected void onSelect( int index ) {
 				switch (index) {
@@ -124,7 +124,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 
 			top = title.bottom() + 2;
 
-			RenderedTextBlock text = PixelScene.renderTextBlock(Messages.get(ScrollOfMetamorphosis.class, "choose_desc"), 6);
+			RenderedTextBlock text = PixelScene.renderTextBlock(Messages.get(JewelOfMetamorphosis.class, "choose_desc"), 6);
 			text.maxWidth(120);
 			text.setPos(0, top);
 			add(text);
@@ -158,7 +158,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 		public void onBackPressed() {
 
 			if (identifiedByUse){
-				((ScrollOfMetamorphosis)curItem).confirmCancelation(this, true);
+				((JewelOfMetamorphosis)curItem).confirmCancelation(this, true);
 			} else {
 				super.onBackPressed();
 			}
@@ -197,7 +197,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 		public WndMetamorphReplace(Talent replacing, int tier){
 			super();
 
-			if (!identifiedByUse && curItem instanceof ScrollOfMetamorphosis) {
+			if (!identifiedByUse && curItem instanceof JewelOfMetamorphosis) {
 				curItem.detach(curUser.belongings.backpack);
 			}
 			identifiedByUse = false;
@@ -246,7 +246,7 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 
 			top = title.bottom() + 2;
 
-			RenderedTextBlock text = PixelScene.renderTextBlock(Messages.get(ScrollOfMetamorphosis.class, "replace_desc"), 6);
+			RenderedTextBlock text = PixelScene.renderTextBlock(Messages.get(JewelOfMetamorphosis.class, "replace_desc"), 6);
 			text.maxWidth(120);
 			text.setPos(0, top);
 			add(text);
@@ -273,8 +273,8 @@ public class ScrollOfMetamorphosis extends ExoticScroll {
 
 		@Override
 		public void onBackPressed() {
-			if (curItem instanceof ScrollOfMetamorphosis) {
-				((ScrollOfMetamorphosis) curItem).confirmCancelation(this, false);
+			if (curItem instanceof JewelOfMetamorphosis) {
+				((JewelOfMetamorphosis) curItem).confirmCancelation(this, false);
 			} else {
 				super.onBackPressed();
 			}

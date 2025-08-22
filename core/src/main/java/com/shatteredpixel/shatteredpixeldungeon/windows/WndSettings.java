@@ -481,10 +481,10 @@ public class WndSettings extends WndTabbed {
 							CheckBox chkFlipTags;
 
 							{
-								barDesc = PixelScene.renderTextBlock(Messages.get(WndSettings.UITab.this, "mode"), 9);
+								barDesc = PixelScene.renderTextBlock(Messages.get(UITab.this, "mode"), 9);
 								add(barDesc);
 
-								btnSplit = new RedButton(Messages.get(WndSettings.UITab.this, "split")) {
+								btnSplit = new RedButton(Messages.get(UITab.this, "split")) {
 									@Override
 									protected void onClick() {
 										textColor(TITLE_COLOR);
@@ -499,7 +499,7 @@ public class WndSettings extends WndTabbed {
 								}
 								add(btnSplit);
 
-								btnGrouped = new RedButton(Messages.get(WndSettings.UITab.this, "group")) {
+								btnGrouped = new RedButton(Messages.get(UITab.this, "group")) {
 									@Override
 									protected void onClick() {
 										btnSplit.textColor(WHITE);
@@ -514,7 +514,7 @@ public class WndSettings extends WndTabbed {
 								}
 								add(btnGrouped);
 
-								btnCentered = new RedButton(Messages.get(WndSettings.UITab.this, "center")) {
+								btnCentered = new RedButton(Messages.get(UITab.this, "center")) {
 									@Override
 									protected void onClick() {
 										btnSplit.textColor(WHITE);
@@ -529,7 +529,7 @@ public class WndSettings extends WndTabbed {
 								}
 								add(btnCentered);
 
-								chkQuickSwapper = new CheckBox(Messages.get(WndSettings.UITab.this, "quickslot_swapper")) {
+								chkQuickSwapper = new CheckBox(Messages.get(UITab.this, "quickslot_swapper")) {
 									@Override
 									protected void onClick() {
 										super.onClick();
@@ -540,11 +540,11 @@ public class WndSettings extends WndTabbed {
 								chkQuickSwapper.checked(SPDSettings.quickSwapper());
 								add(chkQuickSwapper);
 
-								swapperDesc = PixelScene.renderTextBlock(Messages.get(WndSettings.UITab.this, "swapper_desc"), 5);
+								swapperDesc = PixelScene.renderTextBlock(Messages.get(UITab.this, "swapper_desc"), 5);
 								swapperDesc.hardlight(0x888888);
 								add(swapperDesc);
 
-								chkFlipToolbar = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_toolbar")) {
+								chkFlipToolbar = new CheckBox(Messages.get(UITab.this, "flip_toolbar")) {
 									@Override
 									protected void onClick() {
 										super.onClick();
@@ -555,7 +555,7 @@ public class WndSettings extends WndTabbed {
 								chkFlipToolbar.checked(SPDSettings.flipToolbar());
 								add(chkFlipToolbar);
 
-								chkFlipTags = new CheckBox(Messages.get(WndSettings.UITab.this, "flip_indicators")){
+								chkFlipTags = new CheckBox(Messages.get(UITab.this, "flip_indicators")){
 									@Override
 									protected void onClick() {
 										super.onClick();

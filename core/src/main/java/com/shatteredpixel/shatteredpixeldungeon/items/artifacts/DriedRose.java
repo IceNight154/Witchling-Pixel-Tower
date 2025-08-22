@@ -49,8 +49,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPsionicBlast;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfPsionicBlast;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -848,8 +848,8 @@ public class DriedRose extends Artifact {
 		{
 			immunities.add( CorrosiveGas.class );
 			immunities.add( Burning.class );
-			immunities.add( ScrollOfRetribution.class );
-			immunities.add( ScrollOfPsionicBlast.class );
+			immunities.add( JewelOfRetribution.class );
+			immunities.add( JewelOfPsionicBlast.class );
 			immunities.add( AllyBuff.class );
 		}
 

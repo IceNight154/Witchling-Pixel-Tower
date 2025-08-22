@@ -41,14 +41,14 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourg
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.JewelHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.SmallRation;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAugmentation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -278,9 +278,9 @@ public class ShopRoom extends SpecialRoom {
 		itemsToSpawn.add( Generator.randomUsingDefaults( Generator.Category.POTION ) );
 		itemsToSpawn.add( Generator.randomUsingDefaults( Generator.Category.POTION ) );
 
-		itemsToSpawn.add( new ScrollOfIdentify() );
-		itemsToSpawn.add( new ScrollOfRemoveCurse() );
-		itemsToSpawn.add( new ScrollOfMagicMapping() );
+		itemsToSpawn.add( new JewelOfIdentify() );
+		itemsToSpawn.add( new JewelOfRemoveCurse() );
+		itemsToSpawn.add( new JewelOfMagicMapping() );
 
 		for (int i=0; i < 2; i++)
 			itemsToSpawn.add( Random.Int(2) == 0 ?
@@ -363,7 +363,7 @@ public class ShopRoom extends SpecialRoom {
 		//generate a hashmap of all valid bags.
 		HashMap<Bag, Integer> bags = new HashMap<>();
 		if (!Dungeon.LimitedDrops.VELVET_POUCH.dropped()) bags.put(new VelvetPouch(), 1);
-		if (!Dungeon.LimitedDrops.SCROLL_HOLDER.dropped()) bags.put(new ScrollHolder(), 0);
+		if (!Dungeon.LimitedDrops.JEWEL_HOLDER.dropped()) bags.put(new JewelHolder(), 0);
 		if (!Dungeon.LimitedDrops.POTION_BANDOLIER.dropped()) bags.put(new PotionBandolier(), 0);
 		if (!Dungeon.LimitedDrops.MAGICAL_HOLSTER.dropped()) bags.put(new MagicalHolster(), 0);
 
@@ -390,8 +390,8 @@ public class ShopRoom extends SpecialRoom {
 
 		if (bestBag instanceof VelvetPouch){
 			Dungeon.LimitedDrops.VELVET_POUCH.drop();
-		} else if (bestBag instanceof ScrollHolder){
-			Dungeon.LimitedDrops.SCROLL_HOLDER.drop();
+		} else if (bestBag instanceof JewelHolder){
+			Dungeon.LimitedDrops.JEWEL_HOLDER.drop();
 		} else if (bestBag instanceof PotionBandolier){
 			Dungeon.LimitedDrops.POTION_BANDOLIER.drop();
 		} else if (bestBag instanceof MagicalHolster){

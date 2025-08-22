@@ -63,7 +63,7 @@ public class ChangesScene extends PixelScene {
 	public static int changesSelected = 0;
 
 	private NinePatch rightPanel;
-	private ScrollPane rightScroll;
+	private ScrollPane rightJewel;
 	private IconTitle changeTitle;
 	private RenderedTextBlock changeBody;
 	
@@ -108,26 +108,26 @@ public class ChangesScene extends PixelScene {
 			rightPanel.y = 20;
 			add(rightPanel);
 
-			rightScroll = new ScrollPane(new Component());
-			add(rightScroll);
-			rightScroll.setRect(
+			rightJewel = new ScrollPane(new Component());
+			add(rightJewel);
+			rightJewel.setRect(
 					rightPanel.x + rightPanel.marginLeft(),
 					rightPanel.y + rightPanel.marginTop()-1,
 					rightPanel.innerWidth() + 2,
 					rightPanel.innerHeight() + 2);
-			rightScroll.scrollTo(0, 0);
+			rightJewel.jewelTo(0, 0);
 
 			changeTitle = new IconTitle(Icons.get(Icons.CHANGES), Messages.get(this, "right_title"));
 			changeTitle.setPos(0, 1);
 			changeTitle.setSize(pw, 20);
-			rightScroll.content().add(changeTitle);
+			rightJewel.content().add(changeTitle);
 
 			String body = Messages.get(this, "right_body");
 
 			changeBody = PixelScene.renderTextBlock(body, 6);
 			changeBody.maxWidth(pw - panel.marginHor());
 			changeBody.setPos(0, changeTitle.bottom()+2);
-			rightScroll.content().add(changeBody);
+			rightJewel.content().add(changeBody);
 
 		} else {
 			panel.size( pw, ph );
@@ -226,7 +226,7 @@ public class ChangesScene extends PixelScene {
 				panel.y + panel.marginTop() - 1,
 				panel.innerWidth() + 2,
 				panel.innerHeight() + 2);
-		list.scrollTo(0, 0);
+		list.jewelTo(0, 0);
 
 		StyledButton btn3_X = new StyledButton(Chrome.Type.GREY_BUTTON_TR, "3.X", 8){
 			@Override
@@ -361,9 +361,9 @@ public class ChangesScene extends PixelScene {
 				}
 			}
 			changeBody.text(message);
-			rightScroll.content().setSize(rightScroll.width(), changeBody.bottom()+2);
-			rightScroll.setSize(rightScroll.width(), rightScroll.height());
-			rightScroll.scrollTo(0, 0);
+			rightJewel.content().setSize(rightJewel.width(), changeBody.bottom()+2);
+			rightJewel.setSize(rightJewel.width(), rightJewel.height());
+			rightJewel.jewelTo(0, 0);
 
 		} else {
 			if (messages.length == 1) {

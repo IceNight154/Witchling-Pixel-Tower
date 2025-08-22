@@ -442,7 +442,7 @@ public class Notes {
 		public Image icon() {
 			switch (type){
 				case TEXT: default:
-					return Icons.SCROLL_COLOR.get();
+					return Icons.JEWEL_COLOR.get();
 				case DEPTH:
 					return Icons.STAIRS.get();
 				case ITEM_TYPE:

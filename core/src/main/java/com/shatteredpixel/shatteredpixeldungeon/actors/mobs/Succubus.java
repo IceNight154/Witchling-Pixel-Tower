@@ -33,10 +33,10 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.SuccubusSprite;
@@ -62,7 +62,7 @@ public class Succubus extends Mob {
 		EXP = 12;
 		maxLvl = 25;
 		
-		loot = Generator.Category.SCROLL;
+		loot = Generator.Category.Jewel;
 		lootChance = 0.33f;
 
 		properties.add(Property.DEMONIC);
@@ -153,7 +153,7 @@ public class Succubus extends Mob {
 			}
 		}
 		
-		ScrollOfTeleportation.appear( this, cell );
+		JewelOfTeleportation.appear( this, cell );
 
 		blinkCooldown = Random.IntRange(4, 6);
 		return true;
@@ -171,10 +171,10 @@ public class Succubus extends Mob {
 
 	@Override
 	public Item createLoot() {
-		Class<?extends Scroll> loot;
+		Class<?extends Jewel> loot;
 		do{
-			loot = (Class<? extends Scroll>) Random.oneOf(Generator.Category.SCROLL.classes);
-		} while (loot == ScrollOfIdentify.class || loot == ScrollOfUpgrade.class);
+			loot = (Class<? extends Jewel>) Random.oneOf(Generator.Category.Jewel.classes);
+		} while (loot == JewelOfIdentify.class || loot == JewelOfUpgrade.class);
 
 		return Reflection.newInstance(loot);
 	}

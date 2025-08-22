@@ -25,19 +25,19 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfLullaby;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTerror;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -54,41 +54,41 @@ public class UnstableSpell extends Spell {
 		image = ItemSpriteSheet.UNSTABLE_SPELL;
 	}
 	
-	private static HashMap<Class<? extends Scroll>, Float> scrollChances = new HashMap<>();
+	private static HashMap<Class<? extends Jewel>, Float> jewelChances = new HashMap<>();
 	static{
-		scrollChances.put( ScrollOfIdentify.class,      3f );
-		scrollChances.put( ScrollOfRemoveCurse.class,   2f );
-		scrollChances.put( ScrollOfMagicMapping.class,  2f );
-		scrollChances.put( ScrollOfMirrorImage.class,   2f );
-		scrollChances.put( ScrollOfRecharging.class,    2f );
-		scrollChances.put( ScrollOfLullaby.class,       2f );
-		scrollChances.put( ScrollOfRetribution.class,   2f );
-		scrollChances.put( ScrollOfRage.class,          2f );
-		scrollChances.put( ScrollOfTeleportation.class, 2f );
-		scrollChances.put( ScrollOfTerror.class,        2f );
-		scrollChances.put( ScrollOfTransmutation.class, 1f );
+		jewelChances.put( JewelOfIdentify.class,      3f );
+		jewelChances.put( JewelOfRemoveCurse.class,   2f );
+		jewelChances.put( JewelOfMagicMapping.class,  2f );
+		jewelChances.put( JewelOfMirrorImage.class,   2f );
+		jewelChances.put( JewelOfRecharging.class,    2f );
+		jewelChances.put( JewelOfLullaby.class,       2f );
+		jewelChances.put( JewelOfRetribution.class,   2f );
+		jewelChances.put( JewelOfRage.class,          2f );
+		jewelChances.put( JewelOfTeleportation.class, 2f );
+		jewelChances.put( JewelOfTerror.class,        2f );
+		jewelChances.put( JewelOfTransmutation.class, 1f );
 	}
 
-	private static HashSet<Class<? extends Scroll>> nonCombatScrolls = new HashSet<>();
+	private static HashSet<Class<? extends Jewel>> nonCombatJewels = new HashSet<>();
 	static {
-		nonCombatScrolls.add( ScrollOfIdentify.class );
-		nonCombatScrolls.add( ScrollOfRemoveCurse.class );
-		nonCombatScrolls.add( ScrollOfMagicMapping.class );
-		nonCombatScrolls.add( ScrollOfRecharging.class );
-		nonCombatScrolls.add( ScrollOfLullaby.class );
-		nonCombatScrolls.add( ScrollOfTeleportation.class );
-		nonCombatScrolls.add( ScrollOfTransmutation.class );
+		nonCombatJewels.add( JewelOfIdentify.class );
+		nonCombatJewels.add( JewelOfRemoveCurse.class );
+		nonCombatJewels.add( JewelOfMagicMapping.class );
+		nonCombatJewels.add( JewelOfRecharging.class );
+		nonCombatJewels.add( JewelOfLullaby.class );
+		nonCombatJewels.add( JewelOfTeleportation.class );
+		nonCombatJewels.add( JewelOfTransmutation.class );
 	}
 
-	private static HashSet<Class<? extends Scroll>> combatScrolls = new HashSet<>();
+	private static HashSet<Class<? extends Jewel>> combatJewels = new HashSet<>();
 	static {
-		combatScrolls.add( ScrollOfMirrorImage.class );
-		combatScrolls.add( ScrollOfRecharging.class );
-		combatScrolls.add( ScrollOfLullaby.class );
-		combatScrolls.add( ScrollOfRetribution.class );
-		combatScrolls.add( ScrollOfRage.class );
-		combatScrolls.add( ScrollOfTeleportation.class );
-		combatScrolls.add( ScrollOfTerror.class );
+		combatJewels.add( JewelOfMirrorImage.class );
+		combatJewels.add( JewelOfRecharging.class );
+		combatJewels.add( JewelOfLullaby.class );
+		combatJewels.add( JewelOfRetribution.class );
+		combatJewels.add( JewelOfRage.class );
+		combatJewels.add( JewelOfTeleportation.class );
+		combatJewels.add( JewelOfTerror.class );
 	}
 	
 	@Override
@@ -97,16 +97,16 @@ public class UnstableSpell extends Spell {
 		detach( curUser.belongings.backpack );
 		updateQuickslot();
 		
-		Scroll s = Reflection.newInstance(Random.chances(scrollChances));
+		Jewel s = Reflection.newInstance(Random.chances(jewelChances));
 
-		//reroll the scroll until it is relevant for the situation (whether there are visible enemies)
+		//reroll the jewel until it is relevant for the situation (whether there are visible enemies)
 		if (hero.visibleEnemies() == 0){
-			while (!nonCombatScrolls.contains(s.getClass())){
-				s = Reflection.newInstance(Random.chances(scrollChances));
+			while (!nonCombatJewels.contains(s.getClass())){
+				s = Reflection.newInstance(Random.chances(jewelChances));
 			}
 		} else {
-			while (!combatScrolls.contains(s.getClass())){
-				s = Reflection.newInstance(Random.chances(scrollChances));
+			while (!combatJewels.contains(s.getClass())){
+				s = Reflection.newInstance(Random.chances(jewelChances));
 			}
 		}
 
@@ -117,7 +117,7 @@ public class UnstableSpell extends Spell {
 
 		Catalog.countUse(getClass());
 		if (Random.Float() < talentChance){
-			Talent.onScrollUsed(curUser, curUser.pos, talentFactor, getClass());
+			Talent.onJewelUsed(curUser, curUser.pos, talentFactor, getClass());
 		}
 	}
 
@@ -136,20 +136,20 @@ public class UnstableSpell extends Spell {
 
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
-			boolean scroll = false;
+			boolean jewel = false;
 			boolean stone = false;
 
 			for (Item i : ingredients){
 				if (i instanceof Runestone){
 					stone = true;
 					//if it is a regular or exotic potion
-				} else if (ExoticScroll.regToExo.containsKey(i.getClass())
-						|| ExoticScroll.regToExo.containsValue(i.getClass())) {
-					scroll = true;
+				} else if (ExoticJewel.regToExo.containsKey(i.getClass())
+						|| ExoticJewel.regToExo.containsValue(i.getClass())) {
+					jewel = true;
 				}
 			}
 
-			return scroll && stone;
+			return jewel && stone;
 		}
 		
 		@Override

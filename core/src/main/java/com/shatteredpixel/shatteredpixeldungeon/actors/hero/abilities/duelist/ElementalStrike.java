@@ -55,7 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Annoying;
@@ -493,7 +493,7 @@ public class ElementalStrike extends ArmorAbility {
 			for (Char ch : affected){
 				if (Random.Float() < 0.5f*powerMulti){
 					int oldpos = ch.pos;
-					if (ScrollOfTeleportation.teleportChar(ch)){
+					if (JewelOfTeleportation.teleportChar(ch)){
 						if (Dungeon.level.heroFOV[oldpos]) {
 							CellEmitter.get( oldpos ).start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
 						}

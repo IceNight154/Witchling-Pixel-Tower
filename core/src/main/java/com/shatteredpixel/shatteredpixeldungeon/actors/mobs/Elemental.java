@@ -42,8 +42,8 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Embers;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.RatSkull;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.CursedWand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
@@ -507,7 +507,7 @@ public abstract class Elemental extends Mob {
 		{
 			spriteClass = ElementalSprite.Shock.class;
 			
-			loot = ScrollOfRecharging.class;
+			loot = JewelOfRecharging.class;
 			lootChance = 1/4f;
 			
 			properties.add( Property.ELECTRIC );
@@ -556,7 +556,7 @@ public abstract class Elemental extends Mob {
 		{
 			spriteClass = ElementalSprite.Chaos.class;
 			
-			loot = ScrollOfTransmutation.class;
+			loot = JewelOfTransmutation.class;
 			lootChance = 1f;
 		}
 		

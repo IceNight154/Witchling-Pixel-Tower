@@ -28,9 +28,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.keys.CrystalKey;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfMetamorphosis;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfMetamorphosis;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -171,7 +171,7 @@ public class CrystalPathRoom extends SpecialRoom {
 		if (Random.Int(2) == 0){
 			addRewardItem(Generator.Category.POTION, potions, duplicates);
 			scrolls.add(Random.Float() < ExoticCrystals.consumableExoticChance()
-					? new ScrollOfMetamorphosis() : new ScrollOfTransmutation());
+					? new JewelOfMetamorphosis() : new JewelOfTransmutation());
 		} else {
 			potions.add(Random.Float() < ExoticCrystals.consumableExoticChance()
 					? new PotionOfDivineInspiration() : new PotionOfExperience());
@@ -186,8 +186,8 @@ public class CrystalPathRoom extends SpecialRoom {
 		for (Item i : duplicates){
 			if (i instanceof ExoticPotion){
 				Generator.undoDrop(ExoticPotion.exoToReg.get(i.getClass()));
-			} else if (i instanceof ExoticScroll){
-				Generator.undoDrop(ExoticScroll.exoToReg.get(i.getClass()));
+			} else if (i instanceof ExoticJewel){
+				Generator.undoDrop(ExoticJewel.exoToReg.get(i.getClass()));
 			} else {
 				Generator.undoDrop(i);
 			}
@@ -217,11 +217,11 @@ public class CrystalPathRoom extends SpecialRoom {
 			public int compare(Item a, Item b) {
 				int aVal = 0, bVal = 0;
 				Class aCls = a.getClass(), bCls = b.getClass();
-				if (a instanceof ExoticScroll){
-					aCls = ExoticScroll.exoToReg.get(aCls);
+				if (a instanceof ExoticJewel){
+					aCls = ExoticJewel.exoToReg.get(aCls);
 				}
-				if (b instanceof ExoticScroll){
-					bCls = ExoticScroll.exoToReg.get(bCls);
+				if (b instanceof ExoticJewel){
+					bCls = ExoticJewel.exoToReg.get(bCls);
 				}
 				for (int i = 0; i < Generator.Category.SCROLL.classes.length; i++){
 					if (aCls == Generator.Category.SCROLL.classes[i]) aVal = (int)Generator.Category.SCROLL.defaultProbsTotal[i];
@@ -260,8 +260,8 @@ public class CrystalPathRoom extends SpecialRoom {
 			Class rewardClass = reward.getClass();
 			if (reward instanceof ExoticPotion){
 				rewardClass = ExoticPotion.exoToReg.get(rewardClass);
-			} else if (reward instanceof ExoticScroll){
-				rewardClass = ExoticScroll.exoToReg.get(rewardClass);
+			} else if (reward instanceof ExoticJewel){
+				rewardClass = ExoticJewel.exoToReg.get(rewardClass);
 			}
 
 			boolean dupe = false;
@@ -269,8 +269,8 @@ public class CrystalPathRoom extends SpecialRoom {
 				Class iClass = i.getClass();
 				if (i instanceof ExoticPotion){
 					iClass = ExoticPotion.exoToReg.get(iClass);
-				} else if (i instanceof ExoticScroll){
-					iClass = ExoticScroll.exoToReg.get(iClass);
+				} else if (i instanceof ExoticJewel){
+					iClass = ExoticJewel.exoToReg.get(iClass);
 				}
 				if (iClass == rewardClass){
 					dupes.add(reward);

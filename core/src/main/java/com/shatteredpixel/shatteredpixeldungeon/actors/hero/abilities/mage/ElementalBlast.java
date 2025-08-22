@@ -53,7 +53,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfCorrosion;
@@ -247,7 +247,7 @@ public class ElementalBlast extends ArmorAbility {
 										Dungeon.level.discover(c);
 
 										GameScene.discoverTile(c, terr);
-										ScrollOfMagicMapping.discover(c);
+										JewelOfMagicMapping.discover(c);
 
 									}
 								}

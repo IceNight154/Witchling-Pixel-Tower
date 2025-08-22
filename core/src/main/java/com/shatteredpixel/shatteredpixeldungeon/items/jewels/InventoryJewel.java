@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 
-public abstract class InventoryScroll extends Scroll {
+public abstract class InventoryJewel extends Jewel {
 
 	protected static boolean identifiedByUse = false;
 
@@ -105,7 +105,7 @@ public abstract class InventoryScroll extends Scroll {
 			
 			//FIXME this safety check shouldn't be necessary
 			//it would be better to eliminate the curItem static variable.
-			if (!(curItem instanceof InventoryScroll)){
+			if (!(curItem instanceof InventoryJewel)){
 				return;
 			}
 			
@@ -113,21 +113,21 @@ public abstract class InventoryScroll extends Scroll {
 
 				//SoU opens a separate window that can be cancelled
 				//so we don't do a lot of logic here
-				if (!identifiedByUse && !(curItem instanceof ScrollOfUpgrade)) {
+				if (!identifiedByUse && !(curItem instanceof JewelOfUpgrade)) {
 					curItem = detach(curUser.belongings.backpack);
 				}
-				((InventoryScroll)curItem).onItemSelected( item );
+				((InventoryJewel)curItem).onItemSelected( item );
 
-				if (!(curItem instanceof ScrollOfUpgrade)) {
-					((InventoryScroll) curItem).readAnimation();
+				if (!(curItem instanceof JewelOfUpgrade)) {
+					((InventoryJewel) curItem).readAnimation();
 					Sample.INSTANCE.play(Assets.Sounds.READ);
 				}
 				
-			} else if (identifiedByUse && !((Scroll)curItem).anonymous) {
+			} else if (identifiedByUse && !((Jewel)curItem).anonymous) {
 				
-				((InventoryScroll)curItem).confirmCancelation();
+				((InventoryJewel)curItem).confirmCancelation();
 				
-			} else if (((Scroll)curItem).anonymous) {
+			} else if (((Jewel)curItem).anonymous) {
 
 				curUser.spendAndNext( TIME_TO_READ );
 

@@ -19,42 +19,68 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
-public class ScrollOfRage extends Scroll {
+public class JewelOfMagicMapping extends Jewel {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_RAGE;
+		icon = ItemSpriteSheet.Icons.JEWEL_MAGICMAP;
 	}
 
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			mob.beckon( curUser.pos );
-			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
-				Buff.prolong(mob, Amok.class, 5f);
+		int length = Dungeon.level.length();
+		int[] map = Dungeon.level.map;
+		boolean[] mapped = Dungeon.level.mapped;
+		boolean[] discoverable = Dungeon.level.discoverable;
+		
+		boolean noticed = false;
+		
+		for (int i=0; i < length; i++) {
+			
+			int terr = map[i];
+			
+			if (discoverable[i]) {
+				
+				mapped[i] = true;
+				if ((Terrain.flags[terr] & Terrain.SECRET) != 0) {
+					
+					Dungeon.level.discover( i );
+					
+					if (Dungeon.level.heroFOV[i]) {
+						GameScene.discoverTile( i, terr );
+						discover( i );
+						
+						noticed = true;
+					}
+				}
 			}
 		}
-
-		GLog.w( Messages.get(this, "roar") );
-		identify();
+		GameScene.updateFog();
 		
-		curUser.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
-		Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
+		GLog.i( Messages.get(this, "layout") );
+		if (noticed) {
+			Sample.INSTANCE.play( Assets.Sounds.SECRET );
+		}
+		
+		SpellSprite.show( curUser, SpellSprite.MAP );
+		Sample.INSTANCE.play( Assets.Sounds.READ );
+
+		identify();
 
 		readAnimation();
 	}
@@ -62,5 +88,9 @@ public class ScrollOfRage extends Scroll {
 	@Override
 	public int value() {
 		return isKnown() ? 40 * quantity : super.value();
+	}
+	
+	public static void discover( int cell ) {
+		CellEmitter.get( cell ).start( Speck.factory( Speck.DISCOVER ), 0.1f, 4 );
 	}
 }

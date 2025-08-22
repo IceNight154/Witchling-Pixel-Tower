@@ -27,7 +27,7 @@ import com.watabou.utils.Signal;
 //pointer area with additional support for detecting scrolling events
 public class ScrollArea extends PointerArea {
 	
-	public ScrollArea( Visual target ){
+	public ScrollArea(Visual target ){
 		super( target );
 		ScrollEvent.addScrollListener( scrollListener );
 	}

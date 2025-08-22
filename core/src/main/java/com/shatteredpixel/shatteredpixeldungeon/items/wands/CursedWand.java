@@ -73,12 +73,12 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SparkParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfMetamorphosis;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfSirensSong;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfMetamorphosis;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfSirensSong;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.WondrousResin;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -262,14 +262,14 @@ public class CursedWand {
 			Char target = Actor.findChar( bolt.collisionPos );
 			//can only teleport target if positive only
 			if (target != null && !Char.hasProp(target, Char.Property.IMMOVABLE) && (positiveOnly || Random.Int(2) == 0)){
-				ScrollOfTeleportation.teleportChar(target);
+				JewelOfTeleportation.teleportChar(target);
 				tryForWandProc(target, origin);
 				return true;
 			} else {
 				if (positiveOnly || user == null || Char.hasProp(user, Char.Property.IMMOVABLE)){
 					return false;
 				} else {
-					ScrollOfTeleportation.teleportChar(user);
+					JewelOfTeleportation.teleportChar(user);
 					return true;
 				}
 			}
@@ -569,7 +569,7 @@ public class CursedWand {
 			for (Char ch : affected){
 				if (ch instanceof Hero) {
 					Buff.prolong(ch, Recharging.class, Recharging.DURATION/3f);
-					ScrollOfRecharging.charge(ch);
+					JewelOfRecharging.charge(ch);
 					SpellSprite.show(ch, SpellSprite.CHARGE);
 				}
 				//does not harm allies if positive only
@@ -649,7 +649,7 @@ public class CursedWand {
 			}
 			user.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
 			if (positiveOnly){
-				Buff.affect(user, ScrollOfChallenge.ChallengeArena.class).setup(user.pos);
+				Buff.affect(user, JewelOfChallenge.ChallengeArena.class).setup(user.pos);
 				Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 			} else {
 				Sample.INSTANCE.play(Assets.Sounds.ALERT);
@@ -771,7 +771,7 @@ public class CursedWand {
 
 			//scroll of teleportation if positive only, or inter-floor teleport disallowed
 			} else {
-				ScrollOfTeleportation.teleportChar(user);
+				JewelOfTeleportation.teleportChar(user);
 
 			}
 			return true;
@@ -784,7 +784,7 @@ public class CursedWand {
 		public boolean effect(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			//mirror images if positive only and user is hero
 			if (positiveOnly && user == Dungeon.hero){
-				ScrollOfMirrorImage.spawnImages(Dungeon.hero, bolt.collisionPos, 2);
+				JewelOfMirrorImage.spawnImages(Dungeon.hero, bolt.collisionPos, 2);
 			} else {
 				new SummoningTrap().set(bolt.collisionPos).activate();
 			}
@@ -1074,7 +1074,7 @@ public class CursedWand {
 
 			//mimic is enthralled, but also contains no extra reward, if positive only
 			if (positiveOnly){
-				Buff.affect(mimic, ScrollOfSirensSong.Enthralled.class);
+				Buff.affect(mimic, JewelOfSirensSong.Enthralled.class);
 			} else {
 				Item reward;
 				do {
@@ -1155,7 +1155,7 @@ public class CursedWand {
 		public boolean effect(Item origin, Char user, Ballistica bolt, boolean positiveOnly) {
 			//triggers metamorph effect if positive only
 			if (positiveOnly){
-				GameScene.show(new ScrollOfMetamorphosis.WndMetamorphChoose());
+				GameScene.show(new JewelOfMetamorphosis.WndMetamorphChoose());
 				return true;
 			}
 

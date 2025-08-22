@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -49,7 +49,7 @@ public class PhaseShift extends TargetedSpell {
 		final Char ch = Actor.findChar(bolt.collisionPos);
 		
 		if (ch != null) {
-			if (ScrollOfTeleportation.teleportChar(ch)){
+			if (JewelOfTeleportation.teleportChar(ch)){
 
 				if (ch instanceof Mob) {
 					if (((Mob) ch).state == ((Mob) ch).HUNTING) ((Mob) ch).state = ((Mob) ch).WANDERING;
@@ -80,7 +80,7 @@ public class PhaseShift extends TargetedSpell {
 		private static final int OUT_QUANTITY = 6;
 		
 		{
-			inputs =  new Class[]{ScrollOfTeleportation.class};
+			inputs =  new Class[]{JewelOfTeleportation.class};
 			inQuantity = new int[]{1};
 			
 			cost = 10;

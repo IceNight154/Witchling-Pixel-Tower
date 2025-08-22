@@ -19,54 +19,63 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.PrismaticGuard;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.Stasis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.PrismaticImage;
-import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
-public class ScrollOfPrismaticImage extends ExoticScroll {
-	
+public class JewelOfTerror extends Jewel {
+
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_PRISIMG;
+		icon = ItemSpriteSheet.Icons.JEWEL_TERROR;
 	}
-	
+
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		boolean found = false;
-		for (Mob m : Dungeon.level.mobs.toArray(new Mob[0])){
-			if (m instanceof PrismaticImage){
-				found = true;
-				m.HP = m.HT;
-				m.sprite.showStatusWithIcon( CharSprite.POSITIVE, Integer.toString(m.HT), FloatingText.HEALING );
-			}
-		}
-
-		if (!found){
-			if (Stasis.getStasisAlly() instanceof PrismaticImage){
-				found = true;
-				Stasis.getStasisAlly().HP = Stasis.getStasisAlly().HT;
-			}
-		}
-		
-		if (!found) {
-			Buff.affect(curUser, PrismaticGuard.class).set( PrismaticGuard.maxHP( curUser ) );
-		}
-
-		identify();
-		
+		new Flare( 5, 32 ).color( 0xFF0000, true ).show( curUser.sprite, 2f );
 		Sample.INSTANCE.play( Assets.Sounds.READ );
-	
+		
+		int count = 0;
+		Mob affected = null;
+		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
+				Buff.affect( mob, Terror.class, Terror.DURATION ).object = curUser.id();
+
+				if (mob.buff(Terror.class) != null){
+					count++;
+					affected = mob;
+				}
+			}
+		}
+		
+		switch (count) {
+		case 0:
+			GLog.i( Messages.get(this, "none") );
+			break;
+		case 1:
+			GLog.i( Messages.get(this, "one", affected.name()) );
+			break;
+		default:
+			GLog.i( Messages.get(this, "many") );
+		}
+		identify();
+
 		readAnimation();
+	}
+	
+	@Override
+	public int value() {
+		return isKnown() ? 40 * quantity : super.value();
 	}
 }

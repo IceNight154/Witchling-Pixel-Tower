@@ -115,10 +115,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourg
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfCleansing;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfElements;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPsionicBlast;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfPsionicBlast;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.FerretTuft;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
@@ -274,8 +274,8 @@ public abstract class Char extends Actor {
 			}
 			pos = newPos;
 			c.pos = oldPos;
-			ScrollOfTeleportation.appear(this, newPos);
-			ScrollOfTeleportation.appear(c, oldPos);
+			JewelOfTeleportation.appear(this, newPos);
+			JewelOfTeleportation.appear(c, oldPos);
 			Dungeon.observe();
 			GameScene.updateFog();
 			return true;
@@ -458,7 +458,7 @@ public abstract class Char extends Actor {
 				dmg = endure.adjustDamageTaken(dmg);
 			}
 
-			if (enemy.buff(ScrollOfChallenge.ChallengeArena.class) != null){
+			if (enemy.buff(JewelOfChallenge.ChallengeArena.class) != null){
 				dmg *= 0.67f;
 			}
 
@@ -1361,7 +1361,7 @@ public abstract class Char extends Actor {
 	}
 
 	public enum Property{
-		BOSS ( new HashSet<Class>( Arrays.asList(Grim.class, GrimTrap.class, ScrollOfRetribution.class, ScrollOfPsionicBlast.class)),
+		BOSS ( new HashSet<Class>( Arrays.asList(Grim.class, GrimTrap.class, JewelOfRetribution.class, JewelOfPsionicBlast.class)),
 				new HashSet<Class>( Arrays.asList(AllyBuff.class, Dread.class) )),
 		MINIBOSS ( new HashSet<Class>(),
 				new HashSet<Class>( Arrays.asList(AllyBuff.class, Dread.class) )),

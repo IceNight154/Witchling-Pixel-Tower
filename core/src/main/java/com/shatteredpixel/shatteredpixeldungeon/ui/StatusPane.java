@@ -178,14 +178,14 @@ public class StatusPane extends Component {
 		if (large)  bg.size( 160, bg.height ); //HP bars must be 128px wide atm
 		else        bg.size( width, bg.height );
 
-		avatar.x = bg.x - avatar.width / 6.5f + 15;
-		avatar.y = bg.y - avatar.height / 6.5f + (large ? 15 : 16);
+		avatar.x = bg.x - avatar.width / 2f + 15;
+		avatar.y = bg.y - avatar.height / 2f + (large ? 15 : 16);
 		PixelScene.align(avatar);
 
 		heroInfo.setRect( x, y+(large ? 0 : 1), 30, large ? 40 : 30 );
 
-		compass.x = avatar.x + avatar.width / 8f - compass.origin.x;
-		compass.y = avatar.y + avatar.height / 8f - compass.origin.y;
+		compass.x = avatar.x + avatar.width / 2f - compass.origin.x;
+		compass.y = avatar.y + avatar.height / 2f - compass.origin.y;
 		PixelScene.align(compass);
 
 		if (large) {

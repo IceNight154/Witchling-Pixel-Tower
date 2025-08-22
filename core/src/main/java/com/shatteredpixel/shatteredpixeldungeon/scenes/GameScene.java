@@ -58,7 +58,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.TrinketCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -222,7 +222,7 @@ public class GameScene extends PixelScene {
 		
 		super.create();
 		Camera.main.zoom( GameMath.gate(minZoom, defaultZoom + SPDSettings.zoom(), maxZoom));
-		Camera.main.edgeScroll.set(1);
+		Camera.main.edgeJewel.set(1);
 
 		switch (SPDSettings.cameraFollow()) {
 			case 4: default:    Camera.main.setFollowDeadzone(0);      break;
@@ -421,12 +421,12 @@ public class GameScene extends PixelScene {
 		switch (InterlevelScene.mode) {
 			case RESURRECT:
 				Sample.INSTANCE.play(Assets.Sounds.TELEPORT);
-				ScrollOfTeleportation.appearVFX( Dungeon.hero );
+				JewelOfTeleportation.appearVFX( Dungeon.hero );
 				SpellSprite.show(Dungeon.hero, SpellSprite.ANKH);
 				new Flare( 5, 16 ).color( 0xFFFF00, true ).show( hero, 4f ) ;
 				break;
 			case RETURN:
-				ScrollOfTeleportation.appearVFX( Dungeon.hero );
+				JewelOfTeleportation.appearVFX( Dungeon.hero );
 				break;
 			case DESCEND:
 			case FALL:

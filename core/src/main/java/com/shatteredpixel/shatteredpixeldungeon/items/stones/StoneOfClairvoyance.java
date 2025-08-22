@@ -24,7 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.stones;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CheckedCell;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.ShadowCaster;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -70,7 +70,7 @@ public class StoneOfClairvoyance extends Runestone {
 					
 					if (Dungeon.level.heroFOV[curr]) {
 						GameScene.discoverTile(curr, Dungeon.level.map[curr]);
-						ScrollOfMagicMapping.discover(curr);
+						JewelOfMagicMapping.discover(curr);
 						noticed = true;
 					}
 				}

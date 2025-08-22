@@ -31,10 +31,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellboo
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTerror;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfCorruption;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
@@ -888,17 +888,17 @@ public class v0_7_X_Changes {
 				"_-_ Charming is now more powerful at higher wand levels\n\n" +
 				"_-_ All other transfusion functionality has been removed"));
 		
-		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_KAUNAN, null), new ScrollOfTeleportation().trueName(),
+		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.JEWEL_KAUNAN, null), new JewelOfTeleportation().trueName(),
 				"The scroll of teleportation has been buffed. It now prioritizes sending the user to rooms they have not seen yet, and can teleport to secret rooms."));
 		
-		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_ODAL, null), new ScrollOfMirrorImage().trueName(),
+		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.JEWEL_ODAL, null), new JewelOfMirrorImage().trueName(),
 				"Scroll of mirror image has been adjusted to have more interactions with other items, but to also be less powerful at base:\n\n" +
 				"_-_ Scroll now spawns 2 images, down from 3\n\n" +
 				"_-_ Mirror images now attack with the hero's weapon, at 50% damage\n\n" +
 				"_-_ Images no longer fade after a successful attack, instead they pull enemy aggro\n\n" +
 				"_-_ Images start out invisible, have 1 hp, no blocking power, but do inherit some of the hero's evasion."));
 		
-		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_NAUDIZ, null), new ScrollOfTerror().trueName(),
+		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.JEWEL_NAUDIZ, null), new JewelOfTerror().trueName(),
 				"Terror now has it's duration reduced by 5 whenever damage is taken, rather than being removed entirely. Scroll of terror duration has been increased to 20 from 10.\n\n" +
 				"Charm now has it's duration reduced by 5 whenever damage is taken, rather than not losing any duration. Succubi have been given a life-drain ability in compensation, and various charming effects have had their durations adjusted."));
 		
@@ -910,7 +910,7 @@ public class v0_7_X_Changes {
 				"Wand of regrowth will now cease producing plants if it is overused. Charges spent before it begins degrading will increase if the wand is upgraded. At +12 the wand will function infinitely.\n\n" +
 				"This change is made to combat farming with low-levelled wands of regrowth. Especially with the alchemy changes this would be far too powerful. Infinite farming is still possible, but requires upgrades."));
 		
-		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.SCROLL_GYFU, null), new ScrollOfRetribution().trueName(),
+		changes.addButton( new ChangeButton(new ItemSprite(ItemSpriteSheet.JEWEL_GYFU, null), new JewelOfRetribution().trueName(),
 				"The scroll of psionic blast is now known as the scroll of retribution:\n" +
 				"_-_ removed damage and stun penalty, now self-weakens instead\n" +
 				"_-_ now blinds enemies as well as the player\n" +

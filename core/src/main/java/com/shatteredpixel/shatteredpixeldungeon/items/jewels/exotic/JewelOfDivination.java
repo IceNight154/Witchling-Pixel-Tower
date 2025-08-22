@@ -19,14 +19,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Identification;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -43,10 +43,10 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class ScrollOfDivination extends ExoticScroll {
+public class JewelOfDivination extends ExoticJewel {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_DIVINATE;
+		icon = ItemSpriteSheet.Icons.JEWEL_DIVINATE;
 	}
 	
 	@Override
@@ -58,10 +58,10 @@ public class ScrollOfDivination extends ExoticScroll {
 		Sample.INSTANCE.play( Assets.Sounds.READ );
 		
 		HashSet<Class<? extends Potion>> potions = Potion.getUnknown();
-		HashSet<Class<? extends Scroll>> scrolls = Scroll.getUnknown();
+		HashSet<Class<? extends Jewel>> jewels = Jewel.getUnknown();
 		HashSet<Class<? extends Ring>> rings = Ring.getUnknown();
 		
-		int total = potions.size() + scrolls.size() + rings.size();
+		int total = potions.size() + jewels.size() + rings.size();
 		
 		ArrayList<Item> IDed = new ArrayList<>();
 		int left = 4;
@@ -86,15 +86,15 @@ public class ScrollOfDivination extends ExoticScroll {
 					potions.remove(p.getClass());
 					break;
 				case 1:
-					if (scrolls.isEmpty()) {
+					if (jewels.isEmpty()) {
 						probs[1] = 0;
 						continue;
 					}
 					probs[1]--;
-					Scroll s = Reflection.newInstance(Random.element(scrolls));
+					Jewel s = Reflection.newInstance(Random.element(jewels));
 					s.identify();
 					IDed.add(s);
-					scrolls.remove(s.getClass());
+					jewels.remove(s.getClass());
 					break;
 				case 2:
 					if (rings.isEmpty()) {
@@ -127,8 +127,8 @@ public class ScrollOfDivination extends ExoticScroll {
 		private static final int WIDTH = 120;
 		
 		WndDivination(ArrayList<Item> IDed ){
-			IconTitle cur = new IconTitle(new ItemSprite(ScrollOfDivination.this),
-					Messages.titleCase(Messages.get(ScrollOfDivination.class, "name")));
+			IconTitle cur = new IconTitle(new ItemSprite(JewelOfDivination.this),
+					Messages.titleCase(Messages.get(JewelOfDivination.class, "name")));
 			cur.setRect(0, 0, WIDTH, 0);
 			add(cur);
 			

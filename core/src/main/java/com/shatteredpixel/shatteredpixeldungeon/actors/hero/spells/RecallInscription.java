@@ -29,11 +29,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Enchanting;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfMetamorphosis;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfEnchantment;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfMetamorphosis;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.InventoryStone;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAugmentation;
@@ -73,9 +73,9 @@ public class RecallInscription extends ClericSpell {
 		hero.sprite.operate(hero.pos);
 		Enchanting.show(hero, item);
 
-		if (item instanceof Scroll){
-			((Scroll) item).anonymize();
-			((Scroll) item).doRead();
+		if (item instanceof Jewel){
+			((Jewel) item).anonymize();
+			((Jewel) item).doRead();
 		} else if (item instanceof Runestone){
 			((Runestone) item).anonymize();
 			if (item instanceof InventoryStone){
@@ -103,14 +103,14 @@ public class RecallInscription extends ClericSpell {
 	public float chargeUse(Hero hero) {
 		if (hero.buff(UsedItemTracker.class) != null){
 			Class<? extends Item> item = hero.buff(UsedItemTracker.class).item;
-			if (ExoticScroll.class.isAssignableFrom(item)){
-				if (item == ScrollOfMetamorphosis.class || item == ScrollOfEnchantment.class){
+			if (ExoticJewel.class.isAssignableFrom(item)){
+				if (item == JewelOfMetamorphosis.class || item == JewelOfEnchantment.class){
 					return 8;
 				} else {
 					return 4;
 				}
-			} else if (Scroll.class.isAssignableFrom(item)){
-				if (item == ScrollOfTransmutation.class){
+			} else if (Jewel.class.isAssignableFrom(item)){
+				if (item == JewelOfTransmutation.class){
 					return 6;
 				} else {
 					return 3;

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.AscendedForm;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -74,7 +74,7 @@ public class Flash extends TargetedClericSpell {
 			return;
 		}
 
-		if (ScrollOfTeleportation.teleportToLocation(hero, target)){
+		if (JewelOfTeleportation.teleportToLocation(hero, target)){
 			hero.spendAndNext( 1f );
 			onSpellCast(tome, hero);
 			hero.buff(AscendedForm.AscendBuff.class).flashCasts++;

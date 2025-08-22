@@ -63,7 +63,7 @@ public class ItemSpriteSheet {
 	public static final int BOMB_HOLDER     = PLACEHOLDERS+idx(9);
 	public static final int POTION_HOLDER   = PLACEHOLDERS+idx(10);
 	public static final int SEED_HOLDER     = PLACEHOLDERS+idx(11);
-	public static final int SCROLL_HOLDER   = PLACEHOLDERS+idx(12);
+	public static final int JEWEL_HOLDER   = PLACEHOLDERS+idx(12);
 	public static final int STONE_HOLDER    = PLACEHOLDERS+idx(13);
 	public static final int ELIXIR_HOLDER   = PLACEHOLDERS+idx(14);
 	public static final int SPELL_HOLDER    = PLACEHOLDERS+idx(15);
@@ -75,14 +75,14 @@ public class ItemSpriteSheet {
 		assignItemRect(ARMOR_HOLDER,    14, 12);
 		assignItemRect(MISSILE_HOLDER,  15, 15);
 		assignItemRect(WAND_HOLDER,     14, 14);
-		assignItemRect(RING_HOLDER,     13, 13);
+		assignItemRect(RING_HOLDER,     8,  10);
 		assignItemRect(ARTIFACT_HOLDER, 15, 15);
 		assignItemRect(TRINKET_HOLDER,  16, 11);
 		assignItemRect(FOOD_HOLDER,     15, 11);
 		assignItemRect(BOMB_HOLDER,     10, 13);
 		assignItemRect(POTION_HOLDER,   12, 14);
 		assignItemRect(SEED_HOLDER,     10, 10);
-		assignItemRect(SCROLL_HOLDER,   15, 14);
+		assignItemRect(JEWEL_HOLDER,   15, 14);
 		assignItemRect(STONE_HOLDER,    14, 12);
 		assignItemRect(ELIXIR_HOLDER,   12, 14);
 		assignItemRect(SPELL_HOLDER,    8,  16);
@@ -98,7 +98,7 @@ public class ItemSpriteSheet {
 	public static final int PETAL           = UNCOLLECTIBLE+idx(4);
 	public static final int SANDBAG         = UNCOLLECTIBLE+idx(5);
 	public static final int SPIRIT_ARROW    = UNCOLLECTIBLE+idx(6);
-	public static final int MANA_BALL	    = UNCOLLECTIBLE+idx(7);
+	public static final int MANA_BALL	    = UNCOLLECTIBLE+idx(6);
 
 
 	public static final int TENGU_BOMB      = UNCOLLECTIBLE+idx(8);
@@ -537,42 +537,42 @@ public class ItemSpriteSheet {
 		assignItemRect(FERRET_TUFT,     16, 15);
 	}
 
-	private static final int SCROLLS        =                               xy(1, 19);  //16 slots
-	public static final int SCROLL_KAUNAN   = SCROLLS+idx(0);
-	public static final int SCROLL_SOWILO   = SCROLLS+idx(1);
-	public static final int SCROLL_LAGUZ    = SCROLLS+idx(2);
-	public static final int SCROLL_YNGVI    = SCROLLS+idx(3);
-	public static final int SCROLL_GYFU     = SCROLLS+idx(4);
-	public static final int SCROLL_RAIDO    = SCROLLS+idx(5);
-	public static final int SCROLL_ISAZ     = SCROLLS+idx(6);
-	public static final int SCROLL_MANNAZ   = SCROLLS+idx(7);
-	public static final int SCROLL_NAUDIZ   = SCROLLS+idx(8);
-	public static final int SCROLL_BERKANAN = SCROLLS+idx(9);
-	public static final int SCROLL_ODAL     = SCROLLS+idx(10);
-	public static final int SCROLL_TIWAZ    = SCROLLS+idx(11);
+	private static final int JEWELS        =                               xy(1, 19);  //16 slots
+	public static final int JEWEL_KAUNAN   = JEWELS+idx(0);
+	public static final int JEWEL_SOWILO   = JEWELS+idx(1);
+	public static final int JEWEL_LAGUZ    = JEWELS+idx(2);
+	public static final int JEWEL_YNGVI    = JEWELS+idx(3);
+	public static final int JEWEL_GYFU     = JEWELS+idx(4);
+	public static final int JEWEL_RAIDO    = JEWELS+idx(5);
+	public static final int JEWEL_ISAZ     = JEWELS+idx(6);
+	public static final int JEWEL_MANNAZ   = JEWELS+idx(7);
+	public static final int JEWEL_NAUDIZ   = JEWELS+idx(8);
+	public static final int JEWEL_BERKANAN = JEWELS+idx(9);
+	public static final int JEWEL_ODAL     = JEWELS+idx(10);
+	public static final int JEWEL_TIWAZ    = JEWELS+idx(11);
 
-	public static final int ARCANE_RESIN    = SCROLLS+13;
+	public static final int ARCANE_RESIN    =JEWELS+13;
 	static {
-		for (int i = SCROLLS; i < SCROLLS+16; i++)
+		for (int i = JEWELS; i < JEWELS+16; i++)
 			assignItemRect(i, 15, 14);
 		assignItemRect(ARCANE_RESIN   , 12, 11);
 	}
 
-	private static final int EXOTIC_SCROLLS =                               xy(1, 20);  //16 slots
-	public static final int EXOTIC_KAUNAN   = EXOTIC_SCROLLS+idx(0);
-	public static final int EXOTIC_SOWILO   = EXOTIC_SCROLLS+idx(1);
-	public static final int EXOTIC_LAGUZ    = EXOTIC_SCROLLS+idx(2);
-	public static final int EXOTIC_YNGVI    = EXOTIC_SCROLLS+idx(3);
-	public static final int EXOTIC_GYFU     = EXOTIC_SCROLLS+idx(4);
-	public static final int EXOTIC_RAIDO    = EXOTIC_SCROLLS+idx(5);
-	public static final int EXOTIC_ISAZ     = EXOTIC_SCROLLS+idx(6);
-	public static final int EXOTIC_MANNAZ   = EXOTIC_SCROLLS+idx(7);
-	public static final int EXOTIC_NAUDIZ   = EXOTIC_SCROLLS+idx(8);
-	public static final int EXOTIC_BERKANAN = EXOTIC_SCROLLS+idx(9);
-	public static final int EXOTIC_ODAL     = EXOTIC_SCROLLS+idx(10);
-	public static final int EXOTIC_TIWAZ    = EXOTIC_SCROLLS+idx(11);
+	private static final int EXOTIC_JEWELS =                               xy(1, 20);  //16 slots
+	public static final int EXOTIC_KAUNAN   = EXOTIC_JEWELS+idx(0);
+	public static final int EXOTIC_SOWILO   = EXOTIC_JEWELS+idx(1);
+	public static final int EXOTIC_LAGUZ    = EXOTIC_JEWELS+idx(2);
+	public static final int EXOTIC_YNGVI    = EXOTIC_JEWELS+idx(3);
+	public static final int EXOTIC_GYFU     = EXOTIC_JEWELS+idx(4);
+	public static final int EXOTIC_RAIDO    = EXOTIC_JEWELS+idx(5);
+	public static final int EXOTIC_ISAZ     = EXOTIC_JEWELS+idx(6);
+	public static final int EXOTIC_MANNAZ   = EXOTIC_JEWELS+idx(7);
+	public static final int EXOTIC_NAUDIZ   = EXOTIC_JEWELS+idx(8);
+	public static final int EXOTIC_BERKANAN = EXOTIC_JEWELS+idx(9);
+	public static final int EXOTIC_ODAL     = EXOTIC_JEWELS+idx(10);
+	public static final int EXOTIC_TIWAZ    = EXOTIC_JEWELS+idx(11);
 	static {
-		for (int i = EXOTIC_SCROLLS; i < EXOTIC_SCROLLS+16; i++)
+		for (int i = EXOTIC_JEWELS; i < EXOTIC_JEWELS+16; i++)
 			assignItemRect(i, 15, 14);
 	}
 
@@ -867,60 +867,60 @@ public class ItemSpriteSheet {
 
 		//16 free slots
 
-		private static final int SCROLLS        =                            xy(1, 3);  //16 slots
-		public static final int SCROLL_UPGRADE  = SCROLLS+0;
-		public static final int SCROLL_IDENTIFY = SCROLLS+1;
-		public static final int SCROLL_REMCURSE = SCROLLS+2;
-		public static final int SCROLL_MIRRORIMG= SCROLLS+3;
-		public static final int SCROLL_RECHARGE = SCROLLS+4;
-		public static final int SCROLL_TELEPORT = SCROLLS+5;
-		public static final int SCROLL_LULLABY  = SCROLLS+6;
-		public static final int SCROLL_MAGICMAP = SCROLLS+7;
-		public static final int SCROLL_RAGE     = SCROLLS+8;
-		public static final int SCROLL_RETRIB   = SCROLLS+9;
-		public static final int SCROLL_TERROR   = SCROLLS+10;
-		public static final int SCROLL_TRANSMUTE= SCROLLS+11;
+		private static final int JEWELS        =                            xy(1, 3);  //16 slots
+		public static final int JEWEL_UPGRADE  = JEWELS+0;
+		public static final int JEWEL_IDENTIFY = JEWELS+1;
+		public static final int JEWEL_REMCURSE = JEWELS+2;
+		public static final int JEWEL_MIRRORIMG= JEWELS+3;
+		public static final int JEWEL_RECHARGE = JEWELS+4;
+		public static final int JEWEL_TELEPORT = JEWELS+5;
+		public static final int JEWEL_LULLABY  = JEWELS+6;
+		public static final int JEWEL_MAGICMAP = JEWELS+7;
+		public static final int JEWEL_RAGE     = JEWELS+8;
+		public static final int JEWEL_RETRIB   = JEWELS+9;
+		public static final int JEWEL_TERROR   = JEWELS+10;
+		public static final int JEWEL_TRANSMUTE= JEWELS+11;
 		static {
-			assignIconRect( SCROLL_UPGRADE,     7, 7 );
-			assignIconRect( SCROLL_IDENTIFY,    4, 7 );
-			assignIconRect( SCROLL_REMCURSE,    7, 7 );
-			assignIconRect( SCROLL_MIRRORIMG,   7, 5 );
-			assignIconRect( SCROLL_RECHARGE,    7, 5 );
-			assignIconRect( SCROLL_TELEPORT,    7, 7 );
-			assignIconRect( SCROLL_LULLABY,     7, 6 );
-			assignIconRect( SCROLL_MAGICMAP,    7, 7 );
-			assignIconRect( SCROLL_RAGE,        6, 6 );
-			assignIconRect( SCROLL_RETRIB,      5, 6 );
-			assignIconRect( SCROLL_TERROR,      5, 7 );
-			assignIconRect( SCROLL_TRANSMUTE,   7, 7 );
+			assignIconRect( JEWEL_UPGRADE,     7, 7 );
+			assignIconRect( JEWEL_IDENTIFY,    4, 7 );
+			assignIconRect( JEWEL_REMCURSE,    7, 7 );
+			assignIconRect( JEWEL_MIRRORIMG,   7, 5 );
+			assignIconRect( JEWEL_RECHARGE,    7, 5 );
+			assignIconRect( JEWEL_TELEPORT,    7, 7 );
+			assignIconRect( JEWEL_LULLABY,     7, 6 );
+			assignIconRect( JEWEL_MAGICMAP,    7, 7 );
+			assignIconRect( JEWEL_RAGE,        6, 6 );
+			assignIconRect( JEWEL_RETRIB,      5, 6 );
+			assignIconRect( JEWEL_TERROR,      5, 7 );
+			assignIconRect( JEWEL_TRANSMUTE,   7, 7 );
 		}
 
-		private static final int EXOTIC_SCROLLS =                            xy(1, 4);  //16 slots
-		public static final int SCROLL_ENCHANT  = EXOTIC_SCROLLS+0;
-		public static final int SCROLL_DIVINATE = EXOTIC_SCROLLS+1;
-		public static final int SCROLL_ANTIMAGIC= EXOTIC_SCROLLS+2;
-		public static final int SCROLL_PRISIMG  = EXOTIC_SCROLLS+3;
-		public static final int SCROLL_MYSTENRG = EXOTIC_SCROLLS+4;
-		public static final int SCROLL_PASSAGE  = EXOTIC_SCROLLS+5;
-		public static final int SCROLL_SIREN    = EXOTIC_SCROLLS+6;
-		public static final int SCROLL_FORESIGHT= EXOTIC_SCROLLS+7;
-		public static final int SCROLL_CHALLENGE= EXOTIC_SCROLLS+8;
-		public static final int SCROLL_PSIBLAST = EXOTIC_SCROLLS+9;
-		public static final int SCROLL_DREAD    = EXOTIC_SCROLLS+10;
-		public static final int SCROLL_METAMORPH= EXOTIC_SCROLLS+11;
+		private static final int EXOTIC_JEWELS =                            xy(1, 4);  //16 slots
+		public static final int JEWEL_ENCHANT  = EXOTIC_JEWELS+0;
+		public static final int JEWEL_DIVINATE = EXOTIC_JEWELS+1;
+		public static final int JEWEL_ANTIMAGIC= EXOTIC_JEWELS+2;
+		public static final int JEWEL_PRISIMG  = EXOTIC_JEWELS+3;
+		public static final int JEWEL_MYSTENRG = EXOTIC_JEWELS+4;
+		public static final int JEWEL_PASSAGE  = EXOTIC_JEWELS+5;
+		public static final int JEWEL_SIREN    = EXOTIC_JEWELS+6;
+		public static final int JEWEL_FORESIGHT= EXOTIC_JEWELS+7;
+		public static final int JEWEL_CHALLENGE= EXOTIC_JEWELS+8;
+		public static final int JEWEL_PSIBLAST = EXOTIC_JEWELS+9;
+		public static final int JEWEL_DREAD    = EXOTIC_JEWELS+10;
+		public static final int JEWEL_METAMORPH= EXOTIC_JEWELS+11;
 		static {
-			assignIconRect( SCROLL_ENCHANT,     7, 7 );
-			assignIconRect( SCROLL_DIVINATE,    7, 6 );
-			assignIconRect( SCROLL_ANTIMAGIC,   7, 7 );
-			assignIconRect( SCROLL_PRISIMG,     5, 7 );
-			assignIconRect( SCROLL_MYSTENRG,    7, 5 );
-			assignIconRect( SCROLL_PASSAGE,     5, 7 );
-			assignIconRect( SCROLL_SIREN,       7, 6 );
-			assignIconRect( SCROLL_FORESIGHT,   7, 5 );
-			assignIconRect( SCROLL_CHALLENGE,   7, 7 );
-			assignIconRect( SCROLL_PSIBLAST,    5, 6 );
-			assignIconRect( SCROLL_DREAD,       5, 7 );
-			assignIconRect( SCROLL_METAMORPH,   7, 7 );
+			assignIconRect( JEWEL_ENCHANT,     7, 7 );
+			assignIconRect( JEWEL_DIVINATE,    7, 6 );
+			assignIconRect( JEWEL_ANTIMAGIC,   7, 7 );
+			assignIconRect( JEWEL_PRISIMG,     5, 7 );
+			assignIconRect( JEWEL_MYSTENRG,    7, 5 );
+			assignIconRect( JEWEL_PASSAGE,     5, 7 );
+			assignIconRect( JEWEL_SIREN,       7, 6 );
+			assignIconRect( JEWEL_FORESIGHT,   7, 5 );
+			assignIconRect( JEWEL_CHALLENGE,   7, 7 );
+			assignIconRect( JEWEL_PSIBLAST,    5, 6 );
+			assignIconRect( JEWEL_DREAD,       5, 7 );
+			assignIconRect( JEWEL_METAMORPH,   7, 7 );
 		}
 
 		//16 free slots

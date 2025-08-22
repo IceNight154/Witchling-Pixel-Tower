@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.TargetedCell;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.DarkGold;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -469,12 +469,12 @@ public class GnollGeomancer extends Mob {
 
 					if (!candidates.isEmpty()){
 						int newSapperPos = Random.element(candidates);
-						ScrollOfTeleportation.appear(closest, newSapperPos);
+						JewelOfTeleportation.appear(closest, newSapperPos);
 						closest.spawnPos = newSapperPos;
 						candidates.remove((Integer)newSapperPos);
 
 						if (guard instanceof GnollGuard && !candidates.isEmpty()){
-							ScrollOfTeleportation.appear((GnollGuard)guard, Random.element(candidates));
+							JewelOfTeleportation.appear((GnollGuard)guard, Random.element(candidates));
 						}
 
 					}

@@ -37,7 +37,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Ankh;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.VialOfBlood;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes.Landmark;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -89,8 +89,8 @@ public class WaterOfHealth extends WellWater {
 			CellEmitter.get( pos ).start(Speck.factory(Speck.LIGHT), 0.2f, 3);
 			Sample.INSTANCE.play( Assets.Sounds.DRINK );
 			return item;
-		} else if (ScrollOfRemoveCurse.uncursable(item)) {
-			if (ScrollOfRemoveCurse.uncurse( null, item )){
+		} else if (JewelOfRemoveCurse.uncursable(item)) {
+			if (JewelOfRemoveCurse.uncurse( null, item )){
 				CellEmitter.get( pos ).start( ShadowParticle.UP, 0.05f, 10 );
 			}
 			Sample.INSTANCE.play( Assets.Sounds.DRINK );

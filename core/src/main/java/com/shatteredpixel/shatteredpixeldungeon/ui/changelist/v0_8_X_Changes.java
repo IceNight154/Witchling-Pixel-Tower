@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Quarterstaff;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -678,7 +678,7 @@ public class v0_8_X_Changes {
 		changes.hardlight( CharSprite.POSITIVE );
 		changeInfos.add(changes);
 
-		changes.addButton( new ChangeButton(new GrimoireAria(),
+		changes.addButton( new ChangeButton(new SpiritBow(),
 				"Sniper shot is currently performing quite poorly versus the sniper's other abilities, so I'm giving it a significant buff:\n\n" +
 				"_-_ Base sniper shot damage increased by 20%\n" +
 				"_-_ Sniper shot damage scaling with distance increased. At high distance sniper shot will deal up to 40% more total damage."));

@@ -63,15 +63,14 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlam
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfPurity;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfLullaby;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
@@ -122,7 +121,7 @@ public enum HeroClass {
 		Waterskin waterskin = new Waterskin();
 		waterskin.collect();
 
-		new ScrollOfIdentify().identify();
+		new JewelOfIdentify().identify();
 
 		switch (this) {
 			case WARRIOR:
@@ -198,7 +197,7 @@ public enum HeroClass {
 		}
 
 		new PotionOfHealing().identify();
-		new ScrollOfRage().identify();
+		new JewelOfRage().identify();
 	}
 
 	private static void initMage( Hero hero ) {
@@ -211,7 +210,7 @@ public enum HeroClass {
 
 		Dungeon.quickslot.setSlot(0, staff);
 
-		new ScrollOfUpgrade().identify();
+		new JewelOfUpgrade().identify();
 		new PotionOfLiquidFlame().identify();
 	}
 
@@ -228,20 +227,20 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(0, cloak);
 		Dungeon.quickslot.setSlot(1, knives);
 
-		new ScrollOfMagicMapping().identify();
+		new JewelOfMagicMapping().identify();
 		new PotionOfInvisibility().identify();
 	}
 
 	private static void initHuntress( Hero hero ) {
 
 		(hero.belongings.weapon = new Gloves()).identify();
-		SpiritBow bow = new SpiritBow();
+		GrimoireAria bow = new GrimoireAria();
 		bow.identify().collect();
 
 		Dungeon.quickslot.setSlot(0, bow);
 
 		new PotionOfMindVision().identify();
-		new ScrollOfLullaby().identify();
+		new JewelOfLullaby().identify();
 	}
 
 	private static void initDuelist( Hero hero ) {
@@ -256,7 +255,7 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(1, spikes);
 
 		new PotionOfStrength().identify();
-		new ScrollOfMirrorImage().identify();
+		new JewelOfMirrorImage().identify();
 	}
 
 	private static void initCleric( Hero hero ) {
@@ -271,7 +270,7 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(0, tome);
 
 		new PotionOfPurity().identify();
-		new ScrollOfRemoveCurse().identify();
+		new JewelOfRemoveCurse().identify();
 	}
 
 	private static void initAria( Hero hero ) {
@@ -286,7 +285,7 @@ public enum HeroClass {
 		}
 
 		new PotionOfHealing().identify();
-		new ScrollOfRage().identify();
+		new JewelOfRage().identify();
 	}
 
 

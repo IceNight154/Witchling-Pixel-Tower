@@ -19,59 +19,66 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
-public class ScrollOfTerror extends Scroll {
+import java.util.ArrayList;
+
+public class JewelOfRetribution extends Jewel {
 
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_TERROR;
+		icon = ItemSpriteSheet.Icons.JEWEL_RETRIB;
 	}
-
+	
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		new Flare( 5, 32 ).color( 0xFF0000, true ).show( curUser.sprite, 2f );
-		Sample.INSTANCE.play( Assets.Sounds.READ );
+		GameScene.flash( 0x80FFFFFF );
 		
-		int count = 0;
-		Mob affected = null;
-		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
-				Buff.affect( mob, Terror.class, Terror.DURATION ).object = curUser.id();
+		//scales from 0x to 1x power, maxing at ~10% HP
+		float hpPercent = (curUser.HT - curUser.HP)/(float)(curUser.HT);
+		float power = Math.min( 4f, 4.45f*hpPercent);
+		
+		Sample.INSTANCE.play( Assets.Sounds.BLAST );
+		GLog.i(Messages.get(this, "blast"));
 
-				if (mob.buff(Terror.class) != null){
-					count++;
-					affected = mob;
-				}
+		ArrayList<Mob> targets = new ArrayList<>();
+
+		//calculate targets first, in case damaging/blinding a target affects hero vision
+		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
+			if (Dungeon.level.heroFOV[mob.pos]) {
+				targets.add(mob);
+			}
+		}
+
+		for (Mob mob : targets){
+			//deals 10%HT, plus 0-90%HP based on scaling
+			mob.damage(Math.round(mob.HT/10f + (mob.HP * power * 0.225f)), this);
+			if (mob.isAlive()) {
+				Buff.prolong(mob, Blindness.class, Blindness.DURATION);
 			}
 		}
 		
-		switch (count) {
-		case 0:
-			GLog.i( Messages.get(this, "none") );
-			break;
-		case 1:
-			GLog.i( Messages.get(this, "one", affected.name()) );
-			break;
-		default:
-			GLog.i( Messages.get(this, "many") );
-		}
-		identify();
+		Buff.prolong(curUser, Weakness.class, Weakness.DURATION);
+		Buff.prolong(curUser, Blindness.class, Blindness.DURATION);
+		Dungeon.observe();
 
+		identify();
+		
 		readAnimation();
+		
 	}
 	
 	@Override

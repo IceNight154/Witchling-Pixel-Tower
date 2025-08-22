@@ -25,21 +25,33 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Icecap;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Stormvine;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
+import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
@@ -82,10 +94,50 @@ public class GrimoireAria extends Weapon {
 		}
 	}
 
+	private static Class[] harmfulPlants = new Class[]{
+			Blindweed.class, Firebloom.class, Icecap.class, Sorrowmoss.class,  Stormvine.class
+	};
+
+	@Override
+	public int proc(Char attacker, Char defender, int damage) {
+
+		if (attacker.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
+
+			Actor.add(new Actor() {
+				{
+					actPriority = VFX_PRIO;
+				}
+
+				@Override
+				protected boolean act() {
+
+					if (Random.Int(12) < ((Hero)attacker).pointsInTalent(Talent.NATURES_WRATH)){
+						Plant plant = (Plant) Reflection.newInstance(Random.element(harmfulPlants));
+						plant.pos = defender.pos;
+						plant.activate( defender.isAlive() ? defender : null );
+					}
+
+					if (!defender.isAlive()){
+						NaturesPower.naturesPowerTracker tracker = attacker.buff(NaturesPower.naturesPowerTracker.class);
+						if (tracker != null){
+							tracker.extend(((Hero) attacker).pointsInTalent(Talent.WILD_MOMENTUM));
+						}
+					}
+
+					Actor.remove(this);
+					return true;
+				}
+			});
+
+		}
+
+		return super.proc(attacker, defender, damage);
+	}
+
 	@Override
 	public String info() {
 		String info = super.info();
-
+		
 		info += "\n\n" + Messages.get( GrimoireAria.class, "stats",
 				Math.round(augment.damageFactor(min())),
 				Math.round(augment.damageFactor(max())),
@@ -96,7 +148,7 @@ public class GrimoireAria extends Weapon {
 		} else if (Dungeon.hero.STR() > STRReq()){
 			info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
 		}
-
+		
 		switch (augment) {
 			case SPEED:
 				info += "\n\n" + Messages.get(Weapon.class, "faster");
@@ -124,12 +176,10 @@ public class GrimoireAria extends Weapon {
 		}
 		
 		info += "\n\n" + Messages.get(MissileWeapon.class, "distance");
-
+		
 		return info;
 	}
-
-	public static class MagicDamage {};
-
+	
 	@Override
 	public int STRReq(int lvl) {
 		return STRReq(1, lvl); //tier 1
@@ -209,6 +259,16 @@ public class GrimoireAria extends Weapon {
 	}
 
 	@Override
+	protected float speedMultiplier(Char owner) {
+		float speed = super.speedMultiplier(owner);
+		if (owner.buff(NaturesPower.naturesPowerTracker.class) != null){
+			// +33% speed to +50% speed, depending on talent points
+			speed += ((8 + ((Hero)owner).pointsInTalent(Talent.GROWING_POWER)) / 24f);
+		}
+		return speed;
+	}
+
+	@Override
 	public int level() {
 		int level = Dungeon.hero == null ? 0 : Dungeon.hero.lvl/5;
 		if (curseInfusionBonus) level += 1 + level/6;
@@ -243,6 +303,19 @@ public class GrimoireAria extends Weapon {
 		@Override
 		public int defaultQuantity() {
 			return 1;
+		}
+
+		@Override
+		public Emitter emitter() {
+			if (Dungeon.hero.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
+				Emitter e = new Emitter();
+				e.pos(5, 5);
+				e.fillTarget = false;
+				e.pour(LeafParticle.GENERAL, 0.01f);
+				return e;
+			} else {
+				return super.emitter();
+			}
 		}
 
 		@Override
@@ -384,6 +457,19 @@ public class GrimoireAria extends Weapon {
 								});
 				
 			} else {
+
+				if (user.hasTalent(Talent.SEER_SHOT)
+						&& user.buff(Talent.SeerShotCooldown.class) == null){
+					int shotPos = throwPos(user, dst);
+					if (Actor.findChar(shotPos) == null) {
+						RevealedArea a = Buff.affect(user, RevealedArea.class, 5 * user.pointsInTalent(Talent.SEER_SHOT));
+						a.depth = Dungeon.depth;
+						a.branch = Dungeon.branch;
+						a.pos = shotPos;
+						Buff.affect(user, Talent.SeerShotCooldown.class, 20f);
+					}
+				}
+
 				super.cast(user, dst);
 			}
 		}

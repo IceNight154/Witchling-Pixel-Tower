@@ -44,7 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShaftParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -160,7 +160,7 @@ public class PowerOfMany extends ArmorAbility {
 				ch = new LightAlly(hero.lvl);
 				ch.pos = target;
 				GameScene.add((Mob) ch);
-				ScrollOfTeleportation.appear(ch, ch.pos);
+				JewelOfTeleportation.appear(ch, ch.pos);
 			}
 
 			Buff.affect(ch, PowerBuff.class, 100f);

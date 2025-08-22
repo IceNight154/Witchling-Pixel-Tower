@@ -19,44 +19,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
+import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.particles.Emitter;
 
-public class ScrollOfDread extends ExoticScroll {
-	
+public class JewelOfRecharging extends Jewel {
+
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_DREAD;
+		icon = ItemSpriteSheet.Icons.JEWEL_RECHARGE;
 	}
-	
+
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		new Flare( 5, 32 ).color( 0xFF0000, true ).show( curUser.sprite, 2f );
+		Buff.affect(curUser, Recharging.class, Recharging.DURATION);
+		charge(curUser);
+
 		Sample.INSTANCE.play( Assets.Sounds.READ );
+		Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
 
-		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
-				if (!mob.isImmune(Dread.class)){
-					Buff.affect( mob, Dread.class ).object = curUser.id();
-				} else {
-					Buff.affect( mob, Terror.class, Terror.DURATION ).object = curUser.id();
-				}
-			}
-		}
-
+		GLog.i( Messages.get(this, "surge") );
+		SpellSprite.show( curUser, SpellSprite.CHARGE );
 		identify();
-		
+
 		readAnimation();
+	}
+	
+	public static void charge( Char user ) {
+		if (user.sprite != null) {
+			Emitter e = user.sprite.centerEmitter();
+			if (e != null) e.burst(EnergyParticle.FACTORY, 15);
+		}
+	}
+	
+	@Override
+	public int value() {
+		return isKnown() ? 30 * quantity : super.value();
 	}
 }

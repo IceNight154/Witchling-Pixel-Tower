@@ -76,9 +76,6 @@ public class WndHeroInfo extends WndTabbed {
 			case CLERIC:
 				tabIcon = new ItemSprite(ItemSpriteSheet.ARTIFACT_TOME, null);
 				break;
-			case ARIA:
-				tabIcon = new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null);
-				break;
 		}
 
 		int finalHeight = MIN_HEIGHT;
@@ -210,10 +207,6 @@ public class WndHeroInfo extends WndTabbed {
 							new ItemSprite(ItemSpriteSheet.CUDGEL),
 							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 					break;
-				case ARIA:
-					icons = new Image[]{ new ItemSprite(ItemSpriteSheet.SPIRIT_BOW),
-							new ItemSprite(ItemSpriteSheet.WAND_MAGIC_MISSILE),
-							new ItemSprite(ItemSpriteSheet.SCROLL_ISAZ)};
 			}
 			for (Image im : icons) {
 				add(im);

@@ -52,7 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfAquaticRejuvenation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Kinetic;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -152,7 +152,7 @@ public class MnemonicPrayer extends TargetedClericSpell {
 				else if (b instanceof ToxicImbue)       ((ToxicImbue) b).extend(extension);
 				else if (b instanceof WellFed)          ((WellFed) b).extend(extension);
 				else if (b instanceof ElixirOfAquaticRejuvenation.AquaHealing)  ((ElixirOfAquaticRejuvenation.AquaHealing) b).extend(extension);
-				else if (b instanceof ScrollOfChallenge.ChallengeArena)         ((ScrollOfChallenge.ChallengeArena) b).extend(extension);
+				else if (b instanceof JewelOfChallenge.ChallengeArena)         ((JewelOfChallenge.ChallengeArena) b).extend(extension);
 				else if (b instanceof ShieldBuff)               ((ShieldBuff) b).delay(extension);
 				else if (b instanceof Kinetic.ConservedDamage)  ((Kinetic.ConservedDamage) b).delay(extension);
 				else if (b instanceof Sungrass.Health)          ((Sungrass.Health) b).boost((int) extension);

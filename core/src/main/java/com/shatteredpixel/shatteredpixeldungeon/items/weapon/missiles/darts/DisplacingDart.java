@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.utils.BArray;
@@ -93,7 +93,7 @@ public class DisplacingDart extends TippedDart {
 			}
 			
 			if (chosenPos != -1){
-				ScrollOfTeleportation.appear( defender, chosenPos );
+				JewelOfTeleportation.appear( defender, chosenPos );
 				Dungeon.level.occupyCell(defender );
 				if (defender == Dungeon.hero){
 					Dungeon.observe();

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.items.armor.curses;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.watabou.utils.Random;
 
@@ -36,7 +36,7 @@ public class Displacement extends Armor.Glyph {
 
 		float procChance = 1/20f * procChanceMultiplier(defender);
 		if ( Random.Float() < procChance ) {
-			ScrollOfTeleportation.teleportChar(defender);
+			JewelOfTeleportation.teleportChar(defender);
 			return 0;
 		}
 

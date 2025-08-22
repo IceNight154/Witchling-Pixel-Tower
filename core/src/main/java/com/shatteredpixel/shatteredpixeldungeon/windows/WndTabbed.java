@@ -265,7 +265,7 @@ public class WndTabbed extends Window {
 		protected void layout() {
 			super.layout();
 			
-			icon.scaledFrame(defaultFrame);
+			icon.frame(defaultFrame);
 			icon.x = x + (width - icon.width) / 2;
 			icon.y = y + (height - icon.height) / 2 - 1;
 			if (!selected) {
@@ -274,7 +274,7 @@ public class WndTabbed extends Window {
 				if (icon.y < y + CUT) {
 					RectF frame = icon.frame();
 					frame.top += (y + CUT - icon.y) / icon.texture.height;
-					icon.scaledFrame( frame );
+					icon.frame( frame );
 					icon.y = y + CUT;
 				}
 			}

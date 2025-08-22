@@ -31,9 +31,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.Brew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.Elixir;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -54,7 +54,7 @@ public class Recycle extends InventorySpell {
 	@Override
 	protected boolean usableOnItem(Item item) {
 		return (item instanceof Potion && !(item instanceof Elixir || item instanceof Brew)) ||
-				item instanceof Scroll ||
+				item instanceof Jewel ||
 				item instanceof Plant.Seed ||
 				item instanceof Runestone ||
 				item instanceof TippedDart;
@@ -69,10 +69,10 @@ public class Recycle extends InventorySpell {
 				if (item instanceof ExoticPotion){
 					result = Reflection.newInstance(ExoticPotion.regToExo.get(result.getClass()));
 				}
-			} else if (item instanceof Scroll) {
+			} else if (item instanceof Jewel) {
 				result = Generator.randomUsingDefaults(Generator.Category.SCROLL);
-				if (item instanceof ExoticScroll){
-					result = Reflection.newInstance(ExoticScroll.regToExo.get(result.getClass()));
+				if (item instanceof ExoticJewel){
+					result = Reflection.newInstance(ExoticJewel.regToExo.get(result.getClass()));
 				}
 			} else if (item instanceof Plant.Seed) {
 				result = Generator.randomUsingDefaults(Generator.Category.SEED);
@@ -107,7 +107,7 @@ public class Recycle extends InventorySpell {
 		private static final int OUT_QUANTITY = 12;
 		
 		{
-			inputs =  new Class[]{ScrollOfTransmutation.class};
+			inputs =  new Class[]{JewelOfTransmutation.class};
 			inQuantity = new int[]{1};
 			
 			cost = 12;

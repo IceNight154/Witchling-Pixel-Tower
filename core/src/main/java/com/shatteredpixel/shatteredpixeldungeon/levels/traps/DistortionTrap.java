@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Senior;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.RatKing;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.PathFinder;
@@ -162,7 +162,7 @@ public class DistortionTrap extends Trap{
 				Bestiary.countEncounter(t.getClass());
 				t.activate();
 			}
-			ScrollOfTeleportation.appear(mob, mob.pos);
+			JewelOfTeleportation.appear(mob, mob.pos);
 			Dungeon.level.occupyCell(mob);
 		}
 

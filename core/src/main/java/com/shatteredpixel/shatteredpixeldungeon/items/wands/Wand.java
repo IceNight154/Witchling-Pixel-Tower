@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ScrollEmpower;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.JewelEmpower;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SoulMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
@@ -52,7 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesi
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.WondrousResin;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
@@ -397,7 +397,7 @@ public abstract class Wand extends Item {
 				lvl = Degrade.reduceLevel(lvl);
 			}
 
-			if (charger.target.buff(ScrollEmpower.class) != null){
+			if (charger.target.buff(JewelEmpower.class) != null){
 				lvl += 2;
 			}
 
@@ -496,7 +496,7 @@ public abstract class Wand extends Item {
 				&& buffedLvl() > super.buffedLvl()){
 			buff.detach();
 		} else {
-			ScrollEmpower empower = curUser.buff(ScrollEmpower.class);
+			JewelEmpower empower = curUser.buff(JewelEmpower.class);
 			if (empower != null){
 				empower.use();
 			}
@@ -698,7 +698,7 @@ public abstract class Wand extends Item {
 						curWand.curCharges = 0;
 						curUser.sprite.operate(curUser.pos);
 						Sample.INSTANCE.play(Assets.Sounds.CHARGEUP);
-						ScrollOfRecharging.charge(curUser);
+						JewelOfRecharging.charge(curUser);
 						updateQuickslot();
 						curUser.spendAndNext(Actor.TICK);
 						return;
