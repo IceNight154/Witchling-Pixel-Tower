@@ -79,11 +79,13 @@ import com.watabou.noosa.ColorBlock;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.ui.Component;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.RectF;
 import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class WndJournal extends WndTabbed {
 	
@@ -104,6 +106,11 @@ public class WndJournal extends WndTabbed {
 	public static int last_index = 0;
 
 	private static WndJournal INSTANCE = null;
+
+	private static final HashSet<Class<? extends Item>> catalogShoppingRestrictedItems = new HashSet<>();
+	static {
+//		catalogShoppingRestrictedItems.add(.class);
+	}
 	
 	public WndJournal(){
 
@@ -855,6 +862,17 @@ public class WndJournal extends WndTabbed {
 						sprite.copy(icon);
 						if (ShatteredPixelDungeon.scene() instanceof GameScene){
 							GameScene.show(new WndJournalItem(sprite, finalTitle, finalDesc));
+							if (Dungeon.hero != null
+									&& (DeviceCompat.isDebug())
+									&& Item.class.isAssignableFrom(itemClass)
+									&& !catalogShoppingRestrictedItems.contains(itemClass)) {
+								Item item = (Item) Reflection.newInstance(itemClass);
+								if (item != null) {
+									if (!item.identify().doPickUp(Dungeon.hero)) {
+										Dungeon.level.drop(item, Dungeon.hero.pos).sprite.drop();
+									}
+								}
+							}
 						} else {
 							ShatteredPixelDungeon.scene().addToFront(new WndJournalItem(sprite, finalTitle, finalDesc));
 						}
