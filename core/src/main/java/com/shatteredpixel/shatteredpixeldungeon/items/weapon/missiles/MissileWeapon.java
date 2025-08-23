@@ -39,7 +39,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ParchmentScrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Explosive;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Projecting;
@@ -193,12 +194,6 @@ abstract public class MissileWeapon extends Weapon {
 		if (hasEnchant(Projecting.class, user)){
 			projecting += 4;
 		}
-		if ((!(this instanceof GrimoireAria.ManaBall) && Random.Int(3) < user.pointsInTalent(Talent.SHARED_ENCHANTMENT))){
-			GrimoireAria bow = Dungeon.hero.belongings.getItem(GrimoireAria.class);
-			if (bow != null && bow.hasEnchant(Projecting.class, user)) {
-				projecting += 4;
-			}
-		}
 
 		if (projecting > 0
 				&& (Dungeon.level.passable[dst] || Dungeon.level.avoid[dst] || Actor.findChar(dst) != null)
@@ -295,7 +290,7 @@ abstract public class MissileWeapon extends Weapon {
 	@Override
 	public int proc(Char attacker, Char defender, int damage) {
 		if (attacker == Dungeon.hero && Random.Int(3) < Dungeon.hero.pointsInTalent(Talent.SHARED_ENCHANTMENT)){
-			GrimoireAria bow = Dungeon.hero.belongings.getItem(GrimoireAria.class);
+			SpiritBow bow = Dungeon.hero.belongings.getItem(SpiritBow.class);
 			if (bow != null && bow.enchantment != null && Dungeon.hero.buff(MagicImmune.class) == null) {
 				damage = bow.enchantment.proc(this, attacker, defender, damage);
 			}

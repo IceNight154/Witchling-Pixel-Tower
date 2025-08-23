@@ -67,7 +67,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfIntuition;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
@@ -1353,13 +1353,6 @@ public enum Talent {
 			}
 		}
 
-		if (hero.buff(Talent.SpiritBladesTracker.class) != null
-				&& Random.Int(10) < 3 * hero.pointsInTalent(Talent.SPIRIT_BLADES)) {
-			GrimoireAria grimoire = hero.belongings.getItem(GrimoireAria.class);
-			if (grimoire != null) dmg = grimoire.proc(hero, enemy, dmg);
-			hero.buff(Talent.SpiritBladesTracker.class).detach();
-		}
-
 		if (hero.hasTalent(PATIENT_STRIKE)) {
 			if (hero.buff(PatientStrikeTracker.class) != null
 					&& !(hero.belongings.attackingWeapon() instanceof MissileWeapon)) {
@@ -1370,9 +1363,7 @@ public enum Talent {
 
 		if (hero.hasTalent(DEADLY_FOLLOWUP) && enemy.alignment == Char.Alignment.ENEMY) {
 			if (hero.belongings.attackingWeapon() instanceof MissileWeapon) {
-				if (!(hero.belongings.attackingWeapon() instanceof GrimoireAria.ManaBall)) {
-					Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.id();
-				}
+				Buff.prolong(hero, DeadlyFollowupTracker.class, 5f).object = enemy.id();
 			} else if (hero.buff(DeadlyFollowupTracker.class) != null
 					&& hero.buff(DeadlyFollowupTracker.class).object == enemy.id()) {
 				dmg = Math.round(dmg * (1.0f + .1f * hero.pointsInTalent(DEADLY_FOLLOWUP)));

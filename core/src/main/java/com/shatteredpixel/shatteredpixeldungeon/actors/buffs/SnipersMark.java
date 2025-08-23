@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
@@ -51,19 +51,19 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 		this.object = object;
 		this.percentDmgBonus = bonus;
 	}
-	
+
 	@Override
 	public boolean attachTo(Char target) {
 		ActionIndicator.setAction(this);
 		return super.attachTo(target);
 	}
-	
+
 	@Override
 	public void detach() {
 		super.detach();
 		ActionIndicator.clearAction(this);
 	}
-	
+
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
@@ -90,7 +90,7 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 
 	@Override
 	public String actionName() {
-		GrimoireAria bow = Dungeon.hero.belongings.getItem(GrimoireAria.class);
+		SpiritBow bow = Dungeon.hero.belongings.getItem(SpiritBow.class);
 
 		if (bow == null) return null;
 
@@ -116,27 +116,27 @@ public class SnipersMark extends FlavourBuff implements ActionIndicator.Action {
 
 	@Override
 	public void doAction() {
-		
+
 		Hero hero = Dungeon.hero;
 		if (hero == null) return;
-		
-		GrimoireAria bow = hero.belongings.getItem(GrimoireAria.class);
+
+		SpiritBow bow = hero.belongings.getItem(SpiritBow.class);
 		if (bow == null) return;
-		
-		GrimoireAria.ManaBall arrow = bow.knockArrow();
+
+		SpiritBow.SpiritArrow arrow = bow.knockArrow();
 		if (arrow == null) return;
-		
+
 		Char ch = (Char) Actor.findById(object);
 		if (ch == null) return;
-		
+
 		int cell = QuickSlotButton.autoAim(ch, arrow);
 		if (cell == -1) return;
-		
+
 		bow.sniperSpecial = true;
 		bow.sniperSpecialBonusDamage = percentDmgBonus;
-		
+
 		arrow.cast(hero, cell);
 		detach();
-		
+
 	}
 }
