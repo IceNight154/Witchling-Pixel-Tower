@@ -42,8 +42,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfIc
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfToxicEssence;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
@@ -172,9 +172,9 @@ public abstract class Recipe {
 	};
 	
 	private static Recipe[] oneIngredientRecipes = new Recipe[]{
-		new Jewel.JewelToStone(),
+		new Scroll.ScrollToStone(),
 		new ExoticPotion.PotionToExotic(),
-		new ExoticJewel.JewelToExotic(),
+		new ExoticScroll.ScrollToExotic(),
 		new ArcaneResin.Recipe(),
 		new LiquidMetal.Recipe(),
 		new BlizzardBrew.Recipe(),

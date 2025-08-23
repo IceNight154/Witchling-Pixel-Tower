@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Identification;
@@ -33,10 +33,10 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 
-public class JewelOfIdentify extends InventoryJewel {
+public class ScrollOfIdentify extends InventoryScroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_IDENTIFY;
+		icon = ItemSpriteSheet.Icons.SCROLL_IDENTIFY;
 
 		bones = true;
 	}
@@ -76,7 +76,7 @@ public class JewelOfIdentify extends InventoryJewel {
 		}
 
 		item.identify();
-		GLog.i(Messages.get(JewelOfIdentify.class, "it_is", item.title()));
+		GLog.i(Messages.get(ScrollOfIdentify.class, "it_is", item.title()));
 		Badges.validateItemLevelAquired( item );
 	}
 	

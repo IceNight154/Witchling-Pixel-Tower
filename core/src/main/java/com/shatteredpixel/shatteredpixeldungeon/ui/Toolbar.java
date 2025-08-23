@@ -556,7 +556,7 @@ public class Toolbar extends Component {
 		}
 
 		float shift = 0;
-		Mode mode;
+		Toolbar.Mode mode;
 		try {
 			mode = Mode.valueOf(SPDSettings.toolbarMode());
 		} catch (Exception e){

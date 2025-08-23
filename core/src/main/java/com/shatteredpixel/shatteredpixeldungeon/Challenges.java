@@ -33,7 +33,7 @@ public class Challenges {
 	public static final int NO_HERBALISM		= 8;
 	public static final int SWARM_INTELLIGENCE	= 16;
 	public static final int DARKNESS			= 32;
-	public static final int NO_JEWELS		    = 64;
+	public static final int NO_SCROLLS		    = 64;
 	public static final int CHAMPION_ENEMIES	= 128;
 	public static final int STRONGER_BOSSES 	= 256;
 
@@ -48,11 +48,11 @@ public class Challenges {
 			"no_herbalism",
 			"swarm_intelligence",
 			"darkness",
-			"no_jewels"
+			"no_scrolls"
 	};
 
 	public static final int[] MASKS = {
-			CHAMPION_ENEMIES, STRONGER_BOSSES, NO_FOOD, NO_ARMOR, NO_HEALING, NO_HERBALISM, SWARM_INTELLIGENCE, DARKNESS, NO_JEWELS
+			CHAMPION_ENEMIES, STRONGER_BOSSES, NO_FOOD, NO_ARMOR, NO_HEALING, NO_HERBALISM, SWARM_INTELLIGENCE, DARKNESS, NO_SCROLLS
 	};
 
 	public static int activeChallenges(){

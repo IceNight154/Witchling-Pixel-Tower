@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
@@ -200,7 +200,7 @@ public class MeleeWeapon extends Weapon {
 				tracker.detach();
 				Charger charger = Buff.affect(hero, Charger.class);
 				charger.gainCharge(hero.pointsInTalent(Talent.VARIED_CHARGE) / 6f);
-				JewelOfRecharging.charge(hero);
+				ScrollOfRecharging.charge(hero);
 			}
 		}
 		if (hero.hasTalent(Talent.COMBINED_LETHALITY)) {

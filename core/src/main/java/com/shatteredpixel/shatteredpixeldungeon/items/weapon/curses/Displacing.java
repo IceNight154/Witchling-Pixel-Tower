@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.watabou.utils.Random;
@@ -42,7 +42,7 @@ public class Displacing extends Weapon.Enchantment {
 		if (Random.Float() < procChance && !defender.properties().contains(Char.Property.IMMOVABLE)){
 
 			int oldpos = defender.pos;
-			if (JewelOfTeleportation.teleportChar(defender)){
+			if (ScrollOfTeleportation.teleportChar(defender)){
 				if (Dungeon.level.heroFOV[oldpos]) {
 					CellEmitter.get( oldpos ).start( Speck.factory( Speck.LIGHT ), 0.2f, 3 );
 				}

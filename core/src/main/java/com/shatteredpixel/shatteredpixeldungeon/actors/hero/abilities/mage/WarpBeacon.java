@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -146,20 +146,20 @@ public class WarpBeacon extends ArmorAbility {
 									Random.shuffle(candidates);
 
 									if (!candidates.isEmpty()){
-										JewelOfTeleportation.appear(hero, tracker.pos);
+										ScrollOfTeleportation.appear(hero, tracker.pos);
 										Actor.add( new Pushing( toPush, toPush.pos, candidates.get(0) ));
 
 										toPush.pos = candidates.get(0);
 										Dungeon.level.occupyCell(toPush);
 										hero.next();
 									} else {
-										GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+										GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 									}
 								} else {
-									JewelOfTeleportation.appear(hero, tracker.pos);
+									ScrollOfTeleportation.appear(hero, tracker.pos);
 								}
 							} else {
-								JewelOfTeleportation.appear(hero, tracker.pos);
+								ScrollOfTeleportation.appear(hero, tracker.pos);
 							}
 
 							Invisibility.dispel();
@@ -171,7 +171,7 @@ public class WarpBeacon extends ArmorAbility {
 						} else {
 
 							if (!Dungeon.interfloorTeleportAllowed()){
-								GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+								GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 								return;
 							}
 

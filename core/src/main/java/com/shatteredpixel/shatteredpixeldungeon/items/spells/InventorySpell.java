@@ -98,7 +98,7 @@ public abstract class InventorySpell extends Spell {
 
 					Catalog.countUse(curItem.getClass());
 					if (Random.Float() < ((Spell) curItem).talentChance) {
-						Talent.onJewelUsed(curUser, curUser.pos, ((Spell) curItem).talentFactor, curItem.getClass());
+						Talent.onScrollUsed(curUser, curUser.pos, ((Spell) curItem).talentFactor, curItem.getClass());
 					}
 				}
 				

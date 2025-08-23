@@ -50,7 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.DriedRose;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.LloydsBeacon;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfForce;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLightning;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
@@ -420,7 +420,7 @@ public class DwarfKing extends Mob {
 				}
 			}
 
-			if (bestPos != enemy.pos) JewelOfTeleportation.appear(furthest, bestPos);
+			if (bestPos != enemy.pos) ScrollOfTeleportation.appear(furthest, bestPos);
 			yell(Messages.get(this, "teleport_" + Random.IntRange(1, 2)));
 			return true;
 		}
@@ -490,7 +490,7 @@ public class DwarfKing extends Mob {
 			if (HP <= (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50)) {
 				HP = (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) ? 100 : 50);
 				sprite.showStatus(CharSprite.POSITIVE, Messages.get(this, "invulnerable"));
-				JewelOfTeleportation.appear(this, CityBossLevel.throne);
+				ScrollOfTeleportation.appear(this, CityBossLevel.throne);
 				properties.add(Property.IMMOVABLE);
 				phase = 2;
 				summonsMade = 0;

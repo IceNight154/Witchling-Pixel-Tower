@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.MagicalInfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -416,12 +416,12 @@ public class WndUpgrade extends Window {
 			protected void onClick() {
 				super.onClick();
 
-				JewelOfUpgrade.upgrade(Dungeon.hero);
+				ScrollOfUpgrade.upgrade(Dungeon.hero);
 
 				Item upgraded = toUpgrade;
-				if (upgrader instanceof JewelOfUpgrade){
-					((JewelOfUpgrade) upgrader).readAnimation();
-					upgraded = ((JewelOfUpgrade) upgrader).upgradeItem(toUpgrade);
+				if (upgrader instanceof ScrollOfUpgrade){
+					((ScrollOfUpgrade) upgrader).readAnimation();
+					upgraded = ((ScrollOfUpgrade) upgrader).upgradeItem(toUpgrade);
 					Sample.INSTANCE.play( Assets.Sounds.READ );
 				} else if (upgrader instanceof MagicalInfusion){
 					((MagicalInfusion) upgrader).useAnimation();
@@ -446,8 +446,8 @@ public class WndUpgrade extends Window {
 			protected void onClick() {
 				super.onClick();
 				hide();
-				if (upgrader instanceof JewelOfUpgrade) {
-					((JewelOfUpgrade) upgrader).reShowSelector(force);
+				if (upgrader instanceof ScrollOfUpgrade) {
+					((ScrollOfUpgrade) upgrader).reShowSelector(force);
 				} else if (upgrader instanceof MagicalInfusion){
 					((MagicalInfusion)upgrader).reShowSelector();
 				}
@@ -479,8 +479,8 @@ public class WndUpgrade extends Window {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		if (upgrader instanceof JewelOfUpgrade) {
-			((JewelOfUpgrade) upgrader).reShowSelector(force);
+		if (upgrader instanceof ScrollOfUpgrade) {
+			((ScrollOfUpgrade) upgrader).reShowSelector(force);
 		} else if (upgrader instanceof MagicalInfusion){
 			((MagicalInfusion)upgrader).reShowSelector();
 		}

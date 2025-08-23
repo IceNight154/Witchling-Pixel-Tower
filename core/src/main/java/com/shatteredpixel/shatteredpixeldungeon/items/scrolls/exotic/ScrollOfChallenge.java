@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -42,10 +42,10 @@ import com.watabou.utils.Point;
 
 import java.util.ArrayList;
 
-public class JewelOfChallenge extends ExoticJewel {
+public class ScrollOfChallenge extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_CHALLENGE;
+		icon = ItemSpriteSheet.Icons.SCROLL_CHALLENGE;
 	}
 	
 	@Override

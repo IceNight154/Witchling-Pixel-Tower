@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
@@ -60,13 +60,13 @@ public class Fadeleaf extends Plant {
 				Game.switchScene( InterlevelScene.class );
 				
 			} else {
-				JewelOfTeleportation.teleportChar(ch, Fadeleaf.class);
+				ScrollOfTeleportation.teleportChar(ch, Fadeleaf.class);
 			}
 			
 		} else if (ch instanceof Mob && !ch.properties().contains(Char.Property.IMMOVABLE)) {
 
 			Buff.prolong(ch, Trap.HazardAssistTracker.class, Trap.HazardAssistTracker.DURATION);
-			JewelOfTeleportation.teleportChar(ch, Fadeleaf.class);
+			ScrollOfTeleportation.teleportChar(ch, Fadeleaf.class);
 
 		}
 		

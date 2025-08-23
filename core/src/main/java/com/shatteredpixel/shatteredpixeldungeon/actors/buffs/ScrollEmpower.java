@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
 import com.watabou.utils.Bundle;
 
-public class JewelEmpower extends Buff {
+public class ScrollEmpower extends Buff {
 
 	{
 		type = buffType.POSITIVE;
@@ -60,7 +60,7 @@ public class JewelEmpower extends Buff {
 
 	@Override
 	public void tintIcon(Image icon) {
-		icon.hardlight(0.84f, 0.79f, 0.65f); //jewel colors
+		icon.hardlight(0.84f, 0.79f, 0.65f); //scroll colors
 	}
 
 	@Override

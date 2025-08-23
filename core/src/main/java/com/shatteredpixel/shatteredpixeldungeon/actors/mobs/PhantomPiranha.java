@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.ClericSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.PhantomMeat;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.PhantomPiranhaSprite;
@@ -67,7 +67,7 @@ public class PhantomPiranha extends Piranha {
 						}
 					}
 					if (!candidates.isEmpty()) {
-						JewelOfTeleportation.appear(this, Random.element(candidates));
+						ScrollOfTeleportation.appear(this, Random.element(candidates));
 						aggro(dmgSource);
 					} else {
 						teleportAway();
@@ -111,10 +111,10 @@ public class PhantomPiranha extends Piranha {
 
 		if (!outFOVCandidates.isEmpty()){
 			if (Dungeon.level.heroFOV[pos]) GLog.i(Messages.get(this, "teleport_away"));
-			JewelOfTeleportation.appear(this, Random.element(outFOVCandidates));
+			ScrollOfTeleportation.appear(this, Random.element(outFOVCandidates));
 			return true;
 		} else if (!inFOVCandidates.isEmpty()){
-			JewelOfTeleportation.appear(this, Random.element(inFOVCandidates));
+			ScrollOfTeleportation.appear(this, Random.element(inFOVCandidates));
 			return true;
 		}
 

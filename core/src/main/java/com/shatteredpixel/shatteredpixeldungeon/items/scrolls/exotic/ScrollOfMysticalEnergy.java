@@ -19,20 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArtifactRecharge;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 
-public class JewelOfMysticalEnergy extends ExoticJewel {
+public class ScrollOfMysticalEnergy extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_MYSTENRG;
+		icon = ItemSpriteSheet.Icons.SCROLL_MYSTENRG;
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class JewelOfMysticalEnergy extends ExoticJewel {
 		
 		SpellSprite.show( curUser, SpellSprite.CHARGE, 0, 1, 1 );
 		identify();
-		JewelOfRecharging.charge(curUser);
+		ScrollOfRecharging.charge(curUser);
 		
 		readAnimation();
 	}

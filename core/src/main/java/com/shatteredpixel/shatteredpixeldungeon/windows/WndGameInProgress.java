@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.utils.DungeonSeed;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.Image;
 
 import java.util.Locale;
 
@@ -61,7 +62,9 @@ public class WndGameInProgress extends Window {
 		}
 		
 		IconTitle title = new IconTitle();
-		title.icon( HeroSprite.avatar(info.heroClass, info.armorTier) );
+		Image image = HeroSprite.avatar(info.heroClass, info.armorTier);
+		image.scale.set(0.35f, 0.35f);
+		title.icon( image );
 		title.label((Messages.get(this, "title", info.level, className)).toUpperCase(Locale.ENGLISH));
 		title.color(Window.TITLE_COLOR);
 		title.setRect( 0, 0, WIDTH, 0 );

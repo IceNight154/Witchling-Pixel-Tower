@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Honeypot;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -59,7 +59,7 @@ public class GatewayTrap extends Trap {
 			for (int i : PathFinder.NEIGHBOURS9){
 				Char ch = Actor.findChar(pos + i);
 				if (ch != null){
-					if (JewelOfTeleportation.teleportChar(ch)) {
+					if (ScrollOfTeleportation.teleportChar(ch)) {
 						if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING) {
 							((Mob) ch).state = ((Mob) ch).WANDERING;
 							Buff.prolong(ch, Trap.HazardAssistTracker.class, HazardAssistTracker.DURATION);
@@ -125,7 +125,7 @@ public class GatewayTrap extends Trap {
 						telePositions.remove((Integer)newPos);
 						largeCharPositions.remove((Integer)newPos);
 
-						if (JewelOfTeleportation.teleportToLocation(ch, newPos)){
+						if (ScrollOfTeleportation.teleportToLocation(ch, newPos)){
 							if (ch instanceof Mob && ((Mob) ch).state == ((Mob) ch).HUNTING) {
 								((Mob) ch).state = ((Mob) ch).WANDERING;
 							}

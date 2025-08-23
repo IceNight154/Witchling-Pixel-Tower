@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -41,10 +41,10 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndUpgrade;
 
-public class JewelOfUpgrade extends InventoryJewel {
+public class ScrollOfUpgrade extends InventoryScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_UPGRADE;
+		icon = ItemSpriteSheet.Icons.SCROLL_UPGRADE;
 		preferredBag = Belongings.Backpack.class;
 
 		unique = true;
@@ -144,12 +144,12 @@ public class JewelOfUpgrade extends InventoryJewel {
 	}
 
 	public static void weakenCurse( Hero hero ){
-		GLog.p( Messages.get(JewelOfUpgrade.class, "weaken_curse") );
+		GLog.p( Messages.get(ScrollOfUpgrade.class, "weaken_curse") );
 		hero.sprite.emitter().start( ShadowParticle.UP, 0.05f, 5 );
 	}
 
 	public static void removeCurse( Hero hero ){
-		GLog.p( Messages.get(JewelOfUpgrade.class, "remove_curse") );
+		GLog.p( Messages.get(ScrollOfUpgrade.class, "remove_curse") );
 		hero.sprite.emitter().start( ShadowParticle.UP, 0.05f, 10 );
 		Badges.validateClericUnlock();
 	}

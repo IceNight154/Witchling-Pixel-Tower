@@ -37,9 +37,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.UnstableBrew;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfDivineInspiration;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfMetamorphosis;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfMetamorphosis;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.UnstableSpell;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ExoticCrystals;
@@ -235,8 +235,8 @@ public class RingOfWealth extends Ring {
 				}
 			case 2:
 				i = Generator.randomUsingDefaults(Generator.Category.SCROLL);
-				if (!(i instanceof ExoticJewel)){
-					return Reflection.newInstance(ExoticJewel.regToExo.get(i.getClass()));
+				if (!(i instanceof ExoticScroll)){
+					return Reflection.newInstance(ExoticScroll.regToExo.get(i.getClass()));
 				} else {
 					return Reflection.newInstance(i.getClass());
 				}
@@ -263,7 +263,7 @@ public class RingOfWealth extends Ring {
 			case 2:
 				return Random.Float() < ExoticCrystals.consumableExoticChance() ? new PotionOfDivineInspiration() : new PotionOfExperience();
 			case 3:
-				return Random.Float() < ExoticCrystals.consumableExoticChance() ? new JewelOfMetamorphosis() : new JewelOfTransmutation();
+				return Random.Float() < ExoticCrystals.consumableExoticChance() ? new ScrollOfMetamorphosis() : new ScrollOfTransmutation();
 		}
 	}
 

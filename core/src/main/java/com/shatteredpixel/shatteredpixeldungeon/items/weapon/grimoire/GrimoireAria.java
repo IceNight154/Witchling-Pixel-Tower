@@ -25,130 +25,154 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Blindweed;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Firebloom;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Icecap;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
-import com.shatteredpixel.shatteredpixeldungeon.plants.Stormvine;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
-import com.watabou.utils.Reflection;
+
 
 import java.util.ArrayList;
 
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.Bundle;
+
 public class GrimoireAria extends Weapon {
-	
+
+	// --- Scroll storage pocket (acts like a tiny bag that holds up to 5 scrolls) ---
+	private final ScrollPocket scrollPocket = new ScrollPocket();
+
+
+
 	public static final String AC_SHOOT		= "SHOOT";
-	
+	public static final String AC_STORE_ONE = "STORE_SCROLL";
+	public static final String AC_STORE_ALL = "STORE_ALL_SCROLLS";
+
 	{
 		image = ItemSpriteSheet.GRIMOIRE_ARIA;
-		
+
 		defaultAction = AC_SHOOT;
 		usesTargeting = true;
-		
+
 		unique = true;
 		bones = false;
 	}
-	
+
 	public boolean sniperSpecial = false;
 	public float sniperSpecialBonusDamage = 0f;
-	
+
 	@Override
 	public ArrayList<String> actions(Hero hero) {
+		ArrayList<String> a = super.actions(hero);
 		ArrayList<String> actions = super.actions(hero);
 		actions.remove(AC_EQUIP);
 		actions.add(AC_SHOOT);
+		actions.add(Bag.AC_OPEN);
 		return actions;
 	}
-	
-	@Override
+
 	public void execute(Hero hero, String action) {
-		
 		super.execute(hero, action);
-		
-		if (action.equals(AC_SHOOT)) {
-			
+
+		if (action.equals(Bag.AC_OPEN)) {
+			scrollPocket.owner = hero;
+			scrollPocket.execute(hero, Bag.AC_OPEN);
+			return;
+
+		} else if (action.equals(AC_SHOOT)) {
 			curUser = hero;
 			curItem = this;
-			GameScene.selectCell( shooter );
-			
-		}
-	}
+			GameScene.selectCell(shooter);
 
-	private static Class[] harmfulPlants = new Class[]{
-			Blindweed.class, Firebloom.class, Icecap.class, Sorrowmoss.class,  Stormvine.class
-	};
-
-	@Override
-	public int proc(Char attacker, Char defender, int damage) {
-
-		if (attacker.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
-
-			Actor.add(new Actor() {
-				{
-					actPriority = VFX_PRIO;
-				}
-
+		} else if (action.equals(AC_STORE_ONE)) {
+			scrollPocket.owner = hero;
+			GameScene.selectItem(new WndBag.ItemSelector() {
 				@Override
-				protected boolean act() {
-
-					if (Random.Int(12) < ((Hero)attacker).pointsInTalent(Talent.NATURES_WRATH)){
-						Plant plant = (Plant) Reflection.newInstance(Random.element(harmfulPlants));
-						plant.pos = defender.pos;
-						plant.activate( defender.isAlive() ? defender : null );
+				public String textPrompt() {
+					return Messages.get(GrimoireAria.class, "store_prompt");
+				}
+				@Override
+				public boolean itemSelectable(Item item) {
+					return item instanceof Scroll;
+				}
+				@Override
+				public void onSelect(Item item) {
+					if (item == null) return;
+					if (!(item instanceof Scroll)) {
+						GLog.w(Messages.get(GrimoireAria.class, "not_scroll"));
+						return;
 					}
-
-					if (!defender.isAlive()){
-						NaturesPower.naturesPowerTracker tracker = attacker.buff(NaturesPower.naturesPowerTracker.class);
-						if (tracker != null){
-							tracker.extend(((Hero) attacker).pointsInTalent(Talent.WILD_MOMENTUM));
+					if (scrollPocket.items.size() >= scrollPocket.capacity()) {
+						GLog.w(Messages.get(GrimoireAria.class, "pocket_full"));
+						return;
+					}
+					Bag backpack = hero.belongings.backpack;
+					Item detached = item.detach(backpack);
+					if (detached != null) {
+						if (detached.collect(scrollPocket)) {
+							GLog.i(Messages.get(GrimoireAria.class, "stored_one"), item.name());
+						} else {
+							detached.collect(backpack);
+							GLog.w(Messages.get(GrimoireAria.class, "store_failed"));
 						}
 					}
-
-					Actor.remove(this);
-					return true;
 				}
 			});
 
+		} else if (action.equals(AC_STORE_ALL)) {
+			scrollPocket.owner = hero;
+			Bag backpack = hero.belongings.backpack;
+			int moved = 0;
+			java.util.ArrayList<Item> snapshot = new java.util.ArrayList<Item>(backpack.items);
+			for (Item it : snapshot) {
+				if (it instanceof Scroll) {
+					if (scrollPocket.items.size() >= scrollPocket.capacity()) break;
+					Item detached = it.detach(backpack);
+					if (detached != null && detached.collect(scrollPocket)) {
+						moved++;
+					} else if (detached != null) {
+						detached.collect(backpack);
+					}
+				}
+			}
+			if (moved > 0) {
+				GLog.i(Messages.get(GrimoireAria.class, "stored_all"), moved);
+			} else {
+				GLog.w(Messages.get(GrimoireAria.class, "no_scrolls"));
+			}
 		}
-
-		return super.proc(attacker, defender, damage);
 	}
+
 
 	@Override
 	public String info() {
 		String info = super.info();
-		
+
 		info += "\n\n" + Messages.get( GrimoireAria.class, "stats",
 				Math.round(augment.damageFactor(min())),
 				Math.round(augment.damageFactor(max())),
 				STRReq());
-		
+
 		if (STRReq() > Dungeon.hero.STR()) {
 			info += " " + Messages.get(Weapon.class, "too_heavy");
 		} else if (Dungeon.hero.STR() > STRReq()){
 			info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
 		}
-		
+
 		switch (augment) {
 			case SPEED:
 				info += "\n\n" + Messages.get(Weapon.class, "faster");
@@ -166,7 +190,7 @@ public class GrimoireAria extends Weapon {
 		} else if (enchantHardened){
 			info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
 		}
-		
+
 		if (cursed && isEquipped( Dungeon.hero )) {
 			info += "\n\n" + Messages.get(Weapon.class, "cursed_worn");
 		} else if (cursedKnown && cursed) {
@@ -174,17 +198,19 @@ public class GrimoireAria extends Weapon {
 		} else if (!isIdentified() && cursedKnown){
 			info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
 		}
-		
+
 		info += "\n\n" + Messages.get(MissileWeapon.class, "distance");
-		
+
 		return info;
 	}
-	
+
+	public static class MagicDamage {};
+
 	@Override
 	public int STRReq(int lvl) {
 		return STRReq(1, lvl); //tier 1
 	}
-	
+
 	@Override
 	public int min(int lvl) {
 		int dmg = 1 + Dungeon.hero.lvl/5
@@ -192,7 +218,7 @@ public class GrimoireAria extends Weapon {
 				+ (curseInfusionBonus ? 1 + Dungeon.hero.lvl/30 : 0);
 		return Math.max(0, dmg);
 	}
-	
+
 	@Override
 	public int max(int lvl) {
 		int dmg = 6 + (int)(Dungeon.hero.lvl/2.5f)
@@ -205,13 +231,13 @@ public class GrimoireAria extends Weapon {
 	public int targetingPos(Hero user, int dst) {
 		return knockArrow().targetingPos(user, dst);
 	}
-	
+
 	private int targetPos;
-	
+
 	@Override
 	public int damageRoll(Char owner) {
 		int damage = augment.damageFactor(super.damageRoll(owner));
-		
+
 		if (owner instanceof Hero) {
 			int exStr = ((Hero)owner).STR() - STRReq();
 			if (exStr > 0) {
@@ -238,10 +264,10 @@ public class GrimoireAria extends Weapon {
 					break;
 			}
 		}
-		
+
 		return damage;
 	}
-	
+
 	@Override
 	protected float baseDelay(Char owner) {
 		if (sniperSpecial){
@@ -259,16 +285,6 @@ public class GrimoireAria extends Weapon {
 	}
 
 	@Override
-	protected float speedMultiplier(Char owner) {
-		float speed = super.speedMultiplier(owner);
-		if (owner.buff(NaturesPower.naturesPowerTracker.class) != null){
-			// +33% speed to +50% speed, depending on talent points
-			speed += ((8 + ((Hero)owner).pointsInTalent(Talent.GROWING_POWER)) / 24f);
-		}
-		return speed;
-	}
-
-	@Override
 	public int level() {
 		int level = Dungeon.hero == null ? 0 : Dungeon.hero.lvl/5;
 		if (curseInfusionBonus) level += 1 + level/6;
@@ -280,18 +296,18 @@ public class GrimoireAria extends Weapon {
 		//level isn't affected by buffs/debuffs
 		return level();
 	}
-	
+
 	@Override
 	public boolean isUpgradable() {
 		return false;
 	}
-	
+
 	public ManaBall knockArrow(){
 		return new ManaBall();
 	}
-	
+
 	public class ManaBall extends MissileWeapon {
-		
+
 		{
 			image = ItemSpriteSheet.MANA_BALL;
 
@@ -306,38 +322,25 @@ public class GrimoireAria extends Weapon {
 		}
 
 		@Override
-		public Emitter emitter() {
-			if (Dungeon.hero.buff(NaturesPower.naturesPowerTracker.class) != null && !sniperSpecial){
-				Emitter e = new Emitter();
-				e.pos(5, 5);
-				e.fillTarget = false;
-				e.pour(LeafParticle.GENERAL, 0.01f);
-				return e;
-			} else {
-				return super.emitter();
-			}
-		}
-
-		@Override
 		public int damageRoll(Char owner) {
 			return GrimoireAria.this.damageRoll(owner);
 		}
-		
+
 		@Override
 		public boolean hasEnchant(Class<? extends Enchantment> type, Char owner) {
 			return GrimoireAria.this.hasEnchant(type, owner);
 		}
-		
+
 		@Override
 		public int proc(Char attacker, Char defender, int damage) {
 			return GrimoireAria.this.proc(attacker, defender, damage);
 		}
-		
+
 		@Override
 		public float delayFactor(Char user) {
 			return GrimoireAria.this.delayFactor(user);
 		}
-		
+
 		@Override
 		public float accuracyFactor(Char owner, Char target) {
 			if (sniperSpecial && GrimoireAria.this.augment == Augment.DAMAGE){
@@ -346,7 +349,7 @@ public class GrimoireAria extends Weapon {
 				return super.accuracyFactor(owner, target);
 			}
 		}
-		
+
 		@Override
 		public int STRReq(int lvl) {
 			return GrimoireAria.this.STRReq();
@@ -380,9 +383,9 @@ public class GrimoireAria extends Weapon {
 			GrimoireAria.this.targetPos = cell;
 			if (sniperSpecial && GrimoireAria.this.augment == Augment.SPEED){
 				if (flurryCount == -1) flurryCount = 3;
-				
+
 				final Char enemy = Actor.findChar( cell );
-				
+
 				if (enemy == null){
 					if (user.buff(Talent.LethalMomentumTracker.class) != null){
 						user.buff(Talent.LethalMomentumTracker.class).detach();
@@ -401,9 +404,9 @@ public class GrimoireAria extends Weapon {
 				}
 
 				QuickSlotButton.target(enemy);
-				
+
 				user.busy();
-				
+
 				throwSound();
 
 				user.sprite.zap(cell);
@@ -455,26 +458,13 @@ public class GrimoireAria extends Weapon {
 										}
 									}
 								});
-				
+
 			} else {
-
-				if (user.hasTalent(Talent.SEER_SHOT)
-						&& user.buff(Talent.SeerShotCooldown.class) == null){
-					int shotPos = throwPos(user, dst);
-					if (Actor.findChar(shotPos) == null) {
-						RevealedArea a = Buff.affect(user, RevealedArea.class, 5 * user.pointsInTalent(Talent.SEER_SHOT));
-						a.depth = Dungeon.depth;
-						a.branch = Dungeon.branch;
-						a.pos = shotPos;
-						Buff.affect(user, Talent.SeerShotCooldown.class, 20f);
-					}
-				}
-
 				super.cast(user, dst);
 			}
 		}
 	}
-	
+
 	private CellSelector.Listener shooter = new CellSelector.Listener() {
 		@Override
 		public void onSelect( Integer target ) {
@@ -487,4 +477,52 @@ public class GrimoireAria extends Weapon {
 			return Messages.get(GrimoireAria.class, "prompt");
 		}
 	};
+
+
+	@Override
+	public boolean collect(Bag container) {
+		boolean result = super.collect(container);
+		if (result) {
+			// tie the pocket to the same owner and auto-grab scrolls up to capacity
+			scrollPocket.owner = container.owner;
+			scrollPocket.grabItems(container);
+		}
+		return result;
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		scrollPocket.onDetach();
+	}
+
+	private static final String SCROLL_POCKET = "scroll_pocket";
+	@Override
+	public void storeInBundle(Bundle bundle) {
+		super.storeInBundle(bundle);
+		Bundle b = new Bundle();
+		scrollPocket.storeInBundle(b);
+		bundle.put(SCROLL_POCKET, b);
+	}
+
+	@Override
+	public void restoreFromBundle(Bundle bundle) {
+		super.restoreFromBundle(bundle);
+		Bundle b = bundle.getBundle(SCROLL_POCKET);
+		if (b != null) scrollPocket.restoreFromBundle(b);
+	}
+
+
+	// Inner bag class that only holds scrolls and has capacity 5
+	private static class ScrollPocket extends Bag {
+		@Override
+		public int capacity() { return 5; }
+		@Override
+		public boolean canHold(Item item) { return item instanceof Scroll && super.canHold(item); }
+		@Override
+		public String name() { return Messages.get(GrimoireAria.class, "pocket_name"); }
+		@Override
+		public boolean isIdentified() { return true; }
+	}
+
 }

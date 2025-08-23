@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.JewelHolder;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ArcaneBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
@@ -97,7 +97,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.remains.BrokenStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.CloakScrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.SealShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.TornPage;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Alchemize;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.BeaconOfReturning;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.CurseInfusion;
@@ -139,11 +139,11 @@ public enum Catalog {
 	//CONSUMABLES
 	POTIONS,
 	SEEDS,
-	JEWELS,
+	SCROLLS,
 	STONES,
 	FOOD,
 	EXOTIC_POTIONS,
-	EXOTIC_JEWELS,
+	EXOTIC_SCROLLS,
 	BOMBS,
 	TIPPED_DARTS,
 	BREWS_ELIXIRS,
@@ -218,13 +218,13 @@ public enum Catalog {
 		TRINKETS.addItems(Generator.Category.TRINKET.classes);
 
 		MISC_EQUIPMENT.addItems(BrokenSeal.class, GrimoireAria.class, Waterskin.class, VelvetPouch.class,
-				PotionBandolier.class, JewelHolder.class, MagicalHolster.class, Amulet.class);
+				PotionBandolier.class, ScrollHolder.class, MagicalHolster.class, Amulet.class);
 
 
 
 		POTIONS.addItems(Generator.Category.POTION.classes);
 
-		JEWELS.addItems(Generator.Category.JEWEL.classes);
+		SCROLLS.addItems(Generator.Category.SCROLL.classes);
 
 		SEEDS.addItems(Generator.Category.SEED.classes);
 
@@ -236,7 +236,7 @@ public enum Catalog {
 
 		EXOTIC_POTIONS.addItems(ExoticPotion.exoToReg.keySet().toArray(new Class[0]));
 
-		EXOTIC_JEWELS.addItems(ExoticJewel.exoToReg.keySet().toArray(new Class[0]));
+		EXOTIC_SCROLLS.addItems(ExoticScroll.exoToReg.keySet().toArray(new Class[0]));
 
 		BOMBS.addItems( Bomb.class, FrostBomb.class, Firebomb.class, SmokeBomb.class, RegrowthBomb.class,
 				WoollyBomb.class, Noisemaker.class, FlashBangBomb.class, HolyBomb.class, ArcaneBomb.class, ShrapnelBomb.class);
@@ -271,7 +271,7 @@ public enum Catalog {
 		catalogBadges.put(RINGS, Badges.Badge.ALL_RINGS_IDENTIFIED);
 		catalogBadges.put(ARTIFACTS, Badges.Badge.ALL_ARTIFACTS_IDENTIFIED);
 		catalogBadges.put(POTIONS, Badges.Badge.ALL_POTIONS_IDENTIFIED);
-		catalogBadges.put(JEWELS, Badges.Badge.ALL_JEWELS_IDENTIFIED);
+		catalogBadges.put(SCROLLS, Badges.Badge.ALL_SCROLLS_IDENTIFIED);
 	}
 
 	public static ArrayList<Catalog> equipmentCatalogs = new ArrayList<>();
@@ -291,12 +291,12 @@ public enum Catalog {
 	public static ArrayList<Catalog> consumableCatalogs = new ArrayList<>();
 	static {
 		consumableCatalogs.add(POTIONS);
-		consumableCatalogs.add(JEWELS);
+		consumableCatalogs.add(SCROLLS);
 		consumableCatalogs.add(SEEDS);
 		consumableCatalogs.add(STONES);
 		consumableCatalogs.add(FOOD);
 		consumableCatalogs.add(EXOTIC_POTIONS);
-		consumableCatalogs.add(EXOTIC_JEWELS);
+		consumableCatalogs.add(EXOTIC_SCROLLS);
 		consumableCatalogs.add(BOMBS);
 		consumableCatalogs.add(TIPPED_DARTS);
 		consumableCatalogs.add(BREWS_ELIXIRS);

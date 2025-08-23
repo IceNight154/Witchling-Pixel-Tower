@@ -40,7 +40,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.journal.DocumentPage;
 import com.shatteredpixel.shatteredpixeldungeon.items.journal.Guidebook;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.TippedDart;
@@ -215,7 +215,7 @@ public class Heap implements Bundlable {
 		boolean evaporated = false;
 		
 		for (Item item : items.toArray( new Item[0] )) {
-			if (item instanceof Jewel && !item.unique) {
+			if (item instanceof Scroll && !item.unique) {
 				items.remove( item );
 				burnt = true;
 			} else if (item instanceof Dewdrop) {

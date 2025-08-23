@@ -47,7 +47,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Sickle;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
@@ -539,7 +539,7 @@ public abstract class YogFist extends Mob {
 						|| Dungeon.level.solid[i]
 						|| Actor.findChar(i) != null
 						|| PathFinder.getStep(i, Dungeon.level.exit(), Dungeon.level.passable) == -1);
-				JewelOfTeleportation.appear(this, i);
+				ScrollOfTeleportation.appear(this, i);
 				state = WANDERING;
 				GameScene.flash(0x80FFFFFF);
 				GLog.w( Messages.get( this, "teleport" ));
@@ -612,7 +612,7 @@ public abstract class YogFist extends Mob {
 						|| Dungeon.level.solid[i]
 						|| Actor.findChar(i) != null
 						|| PathFinder.getStep(i, Dungeon.level.exit(), Dungeon.level.passable) == -1);
-				JewelOfTeleportation.appear(this, i);
+				ScrollOfTeleportation.appear(this, i);
 				state = WANDERING;
 				GameScene.flash(0, false);
 				GLog.w( Messages.get( this, "teleport" ));

@@ -19,48 +19,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
+import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.EnergyParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.particles.Emitter;
 
-public class JewelOfRage extends Jewel {
+public class ScrollOfRecharging extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_RAGE;
+		icon = ItemSpriteSheet.Icons.SCROLL_RECHARGE;
 	}
 
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			mob.beckon( curUser.pos );
-			if (mob.alignment != Char.Alignment.ALLY && Dungeon.level.heroFOV[mob.pos]) {
-				Buff.prolong(mob, Amok.class, 5f);
-			}
-		}
+		Buff.affect(curUser, Recharging.class, Recharging.DURATION);
+		charge(curUser);
 
-		GLog.w( Messages.get(this, "roar") );
+		Sample.INSTANCE.play( Assets.Sounds.READ );
+		Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
+
+		GLog.i( Messages.get(this, "surge") );
+		SpellSprite.show( curUser, SpellSprite.CHARGE );
 		identify();
-		
-		curUser.sprite.centerEmitter().start( Speck.factory( Speck.SCREAM ), 0.3f, 3 );
-		Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
 
 		readAnimation();
 	}
 	
+	public static void charge( Char user ) {
+		if (user.sprite != null) {
+			Emitter e = user.sprite.centerEmitter();
+			if (e != null) e.burst(EnergyParticle.FACTORY, 15);
+		}
+	}
+	
 	@Override
 	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		return isKnown() ? 30 * quantity : super.value();
 	}
 }

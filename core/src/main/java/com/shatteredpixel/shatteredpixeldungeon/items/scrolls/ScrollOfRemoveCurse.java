@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -42,10 +42,10 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.PathFinder;
 
-public class JewelOfRemoveCurse extends InventoryJewel {
+public class ScrollOfRemoveCurse extends InventoryScroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_REMCURSE;
+		icon = ItemSpriteSheet.Icons.SCROLL_REMCURSE;
 		preferredBag = Belongings.Backpack.class;
 	}
 

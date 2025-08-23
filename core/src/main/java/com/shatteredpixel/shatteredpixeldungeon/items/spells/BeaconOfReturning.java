@@ -29,8 +29,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfPassage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfPassage;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
@@ -152,12 +152,12 @@ public class BeaconOfReturning extends Spell {
 						Dungeon.level.occupyCell(toPush);
 					}
 				} else {
-					GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+					GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 					return;
 				}
 			}
 
-			if (JewelOfTeleportation.teleportToLocation(hero, returnPos)){
+			if (ScrollOfTeleportation.teleportToLocation(hero, returnPos)){
 				hero.spendAndNext( 1f );
 			} else {
 				return;
@@ -172,7 +172,7 @@ public class BeaconOfReturning extends Spell {
 
 			//cannot return to mining level
 			if (returnDepth >= 11 && returnDepth <= 14 && returnBranch == 1){
-				GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+				GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 				return;
 			}
 
@@ -190,7 +190,7 @@ public class BeaconOfReturning extends Spell {
 		detach(hero.belongings.backpack);
 		Catalog.countUse(getClass());
 		if (Random.Float() < talentChance){
-			Talent.onJewelUsed(curUser, curUser.pos, talentFactor, getClass());
+			Talent.onScrollUsed(curUser, curUser.pos, talentFactor, getClass());
 		}
 	}
 	
@@ -247,7 +247,7 @@ public class BeaconOfReturning extends Spell {
 		private static final int OUT_QUANTITY = 5;
 		
 		{
-			inputs =  new Class[]{JewelOfPassage.class};
+			inputs =  new Class[]{ScrollOfPassage.class};
 			inQuantity = new int[]{1};
 			
 			cost = 12;

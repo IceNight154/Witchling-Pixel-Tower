@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.EquipableItem;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -82,7 +82,7 @@ public class CustomNoteButton extends IconButton {
 	private class WndNoteTypeSelect extends WndOptions {
 
 		public WndNoteTypeSelect(){
-			super(Icons.JEWEL_COLOR.get(),
+			super(Icons.SCROLL_COLOR.get(),
 					Messages.get(CustomNoteButton.class, "title"),
 					Messages.get(CustomNoteButton.class, "desc"),
 					Messages.get(CustomNoteButton.class, "new_text"),
@@ -203,7 +203,7 @@ public class CustomNoteButton extends IconButton {
 	private static class WndItemtypeSelect extends WndTitledMessage {
 
 		public WndItemtypeSelect() {
-			super(Icons.JEWEL_COLOR.get(),
+			super(Icons.SCROLL_COLOR.get(),
 					Messages.get(CustomNoteButton.class, "new_type"),
 					Messages.get(CustomNoteButton.class, "new_type_prompt"));
 
@@ -214,7 +214,7 @@ public class CustomNoteButton extends IconButton {
 			for (Class<?> potionCls : Generator.Category.POTION.classes) {
 				items.add((Item) Reflection.newInstance(potionCls));
 			}
-			for (Class<?> potionCls : Generator.Category.JEWEL.classes) {
+			for (Class<?> potionCls : Generator.Category.SCROLL.classes) {
 				items.add((Item) Reflection.newInstance(potionCls));
 			}
 			for (Class<?> potionCls : Generator.Category.RING.classes) {
@@ -260,10 +260,10 @@ public class CustomNoteButton extends IconButton {
 			int i1Idx = i1.image();
 			int i2Idx = i2.image();
 
-			if (i1 instanceof Jewel)   i1Idx += 1000;
+			if (i1 instanceof Scroll)   i1Idx += 1000;
 			if (i1 instanceof Ring)     i1Idx += 2000;
 
-			if (i2 instanceof Jewel)   i2Idx += 1000;
+			if (i2 instanceof Scroll)   i2Idx += 1000;
 			if (i2 instanceof Ring)     i2Idx += 2000;
 
 			return i1Idx - i2Idx;

@@ -19,49 +19,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Drowsy;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.Game;
 
-public class JewelOfLullaby extends Jewel {
-
+public class ScrollOfPassage extends ExoticScroll {
+	
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_LULLABY;
+		icon = ItemSpriteSheet.Icons.SCROLL_PASSAGE;
 	}
-
+	
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		curUser.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
-		Sample.INSTANCE.play( Assets.Sounds.LULLABY );
-
-		for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
-			if (Dungeon.level.heroFOV[mob.pos]) {
-				Buff.affect( mob, Drowsy.class, Drowsy.DURATION );
-				mob.sprite.centerEmitter().start( Speck.factory( Speck.NOTE ), 0.3f, 5 );
-			}
-		}
-
-		Buff.affect( curUser, Drowsy.class, Drowsy.DURATION );
-
-		GLog.i( Messages.get(this, "sooth") );
-
 		identify();
 		readAnimation();
-	}
-	
-	@Override
-	public int value() {
-		return isKnown() ? 40 * quantity : super.value();
+		
+		if (!Dungeon.interfloorTeleportAllowed()) {
+			
+			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
+			return;
+			
+		}
+
+		Level.beforeTransition();
+		InterlevelScene.mode = InterlevelScene.Mode.RETURN;
+		InterlevelScene.returnDepth = Math.max(1, (Dungeon.depth - 1 - (Dungeon.depth-2)%5));
+		InterlevelScene.returnBranch = 0;
+		InterlevelScene.returnPos = -1;
+		Game.switchScene( InterlevelScene.class );
 	}
 }

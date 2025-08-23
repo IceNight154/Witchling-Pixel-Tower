@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.PathFinder;
@@ -99,7 +99,7 @@ public class SummoningTrap extends Trap {
 				Bestiary.countEncounter(t.getClass());
 				t.activate();
 			}
-			JewelOfTeleportation.appear(mob, mob.pos);
+			ScrollOfTeleportation.appear(mob, mob.pos);
 			Dungeon.level.occupyCell(mob);
 		}
 

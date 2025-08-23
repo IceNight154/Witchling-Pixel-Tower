@@ -74,8 +74,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesi
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfStrength;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfUpgrade;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfIntuition;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.DimensionalSundial;
@@ -226,13 +226,13 @@ public abstract class Level implements Bundlable {
 				addItemToSpawn( new PotionOfStrength() );
 			}
 			if (Dungeon.souNeeded()) {
-				Dungeon.LimitedDrops.UPGRADE_JEWELS.count++;
-				//every 2nd jewel of upgrade is removed with forbidden runes challenge on
+				Dungeon.LimitedDrops.UPGRADE_SCROLLS.count++;
+				//every 2nd scroll of upgrade is removed with forbidden runes challenge on
 				//TODO while this does significantly reduce this challenge's levelgen impact, it doesn't quite remove it
 				//for 0 levelgen impact, we need to do something like give the player all SOU, but nerf them
-				//or give a random jewel (from a separate RNG) instead of every 2nd SOU
-				if (!Dungeon.isChallenged(Challenges.NO_JEWELS) || Dungeon.LimitedDrops.UPGRADE_JEWELS.count%2 != 0){
-					addItemToSpawn(new JewelOfUpgrade());
+				//or give a random scroll (from a separate RNG) instead of every 2nd SOU
+				if (!Dungeon.isChallenged(Challenges.NO_SCROLLS) || Dungeon.LimitedDrops.UPGRADE_SCROLLS.count%2 != 0){
+					addItemToSpawn(new ScrollOfUpgrade());
 				}
 			}
 			if (Dungeon.asNeeded()) {
@@ -592,7 +592,7 @@ public abstract class Level implements Bundlable {
 		//iron stomach and challenge arena do not persist between floors
 		Talent.WarriorFoodImmunity foodImmune = Dungeon.hero.buff(Talent.WarriorFoodImmunity.class);
 		if (foodImmune != null) foodImmune.detach();
-		JewelOfChallenge.ChallengeArena arena = Dungeon.hero.buff(JewelOfChallenge.ChallengeArena.class);
+		ScrollOfChallenge.ChallengeArena arena = Dungeon.hero.buff(ScrollOfChallenge.ChallengeArena.class);
 		if (arena != null) arena.detach();
 		//awareness also doesn't, honestly it's weird that it's a buff
 		Awareness awareness = Dungeon.hero.buff(Awareness.class);

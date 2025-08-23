@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -39,10 +39,10 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 
-public class JewelOfSirensSong extends ExoticJewel {
+public class ScrollOfSirensSong extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_SIREN;
+		icon = ItemSpriteSheet.Icons.SCROLL_SIREN;
 	}
 
 	protected static boolean identifiedByUse = false;
@@ -76,7 +76,7 @@ public class JewelOfSirensSong extends ExoticJewel {
 			}
 
 			if (target == null && !anonymous && !identifiedByUse){
-				GLog.w(Messages.get(JewelOfSirensSong.class, "cancel"));
+				GLog.w(Messages.get(ScrollOfSirensSong.class, "cancel"));
 				return;
 
 			} else {
@@ -102,7 +102,7 @@ public class JewelOfSirensSong extends ExoticJewel {
 					}
 					target.sprite.centerEmitter().burst( Speck.factory( Speck.HEART ), 10 );
 				} else {
-					GLog.w(Messages.get(JewelOfSirensSong.class, "no_target"));
+					GLog.w(Messages.get(ScrollOfSirensSong.class, "no_target"));
 				}
 
 				if (!identifiedByUse) {
@@ -117,7 +117,7 @@ public class JewelOfSirensSong extends ExoticJewel {
 
 		@Override
 		public String prompt() {
-			return Messages.get(JewelOfSirensSong.class, "prompt");
+			return Messages.get(ScrollOfSirensSong.class, "prompt");
 		}
 
 	};

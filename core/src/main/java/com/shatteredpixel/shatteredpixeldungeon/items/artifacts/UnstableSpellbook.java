@@ -35,17 +35,17 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElmoParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.JewelHolder;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfLullaby;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRage;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTerror;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -80,28 +80,28 @@ public class UnstableSpellbook extends Artifact {
 	public static final String AC_READ = "READ";
 	public static final String AC_ADD = "ADD";
 
-	private final ArrayList<Class> jewels = new ArrayList<>();
+	private final ArrayList<Class> scrolls = new ArrayList<>();
 
 	public UnstableSpellbook() {
 		super();
 
-		setupJewels();
+		setupScrolls();
 	}
 
-	private void setupJewels(){
-		jewels.clear();
+	private void setupScrolls(){
+		scrolls.clear();
 
-		Class<?>[] jewelClasses = Generator.Category.Jewel.classes;
-		float[] probs = Generator.Category.Jewel.defaultProbsTotal.clone(); //array of primitives, clone gives deep copy.
+		Class<?>[] scrollClasses = Generator.Category.SCROLL.classes;
+		float[] probs = Generator.Category.SCROLL.defaultProbsTotal.clone(); //array of primitives, clone gives deep copy.
 		int i = Random.chances(probs);
 
 		while (i != -1){
-			jewels.add(jewelClasses[i]);
+			scrolls.add(scrollClasses[i]);
 			probs[i] = 0;
 
 			i = Random.chances(probs);
 		}
-		jewels.remove(JewelOfTransmutation.class);
+		scrolls.remove(ScrollOfTransmutation.class);
 	}
 
 	@Override
@@ -141,48 +141,48 @@ public class UnstableSpellbook extends Artifact {
 	public void doReadEffect(Hero hero){
 		charge--;
 
-		Jewel jewel;
+		Scroll scroll;
 		do {
-			jewel = (Jewel) Generator.randomUsingDefaults(Generator.Category.Jewel);
-		} while (jewel == null
-				//reduce the frequency of these jewels by half
-				||((jewel instanceof JewelOfIdentify ||
-				jewel instanceof JewelOfRemoveCurse ||
-				jewel instanceof JewelOfMagicMapping) && Random.Int(2) == 0)
+			scroll = (Scroll) Generator.randomUsingDefaults(Generator.Category.SCROLL);
+		} while (scroll == null
+				//reduce the frequency of these scrolls by half
+				||((scroll instanceof ScrollOfIdentify ||
+				scroll instanceof ScrollOfRemoveCurse ||
+				scroll instanceof ScrollOfMagicMapping) && Random.Int(2) == 0)
 				//cannot roll transmutation
-				|| (jewel instanceof JewelOfTransmutation));
+				|| (scroll instanceof ScrollOfTransmutation));
 
-		jewel.anonymize();
-		curItem = jewel;
+		scroll.anonymize();
+		curItem = scroll;
 		curUser = hero;
 
-		//if there are charges left and the jewel has been given to the book
-		if (charge > 0 && !jewels.contains(jewel.getClass())) {
-			final Jewel fJewel = jewel;
+		//if there are charges left and the scroll has been given to the book
+		if (charge > 0 && !scrolls.contains(scroll.getClass())) {
+			final Scroll fScroll = scroll;
 
 			final ExploitHandler handler = Buff.affect(hero, ExploitHandler.class);
-			handler.jewel = jewel;
+			handler.scroll = scroll;
 
 			GameScene.show(new WndOptions(new ItemSprite(this),
 					Messages.get(this, "prompt"),
 					Messages.get(this, "read_empowered"),
-					jewel.trueName(),
-					Messages.get(ExoticJewel.regToExo.get(jewel.getClass()), "name")){
+					scroll.trueName(),
+					Messages.get(ExoticScroll.regToExo.get(scroll.getClass()), "name")){
 				@Override
 				protected void onSelect(int index) {
 					handler.detach();
 					if (index == 1){
-						Jewel jewel = Reflection.newInstance(ExoticJewel.regToExo.get(fJewel.getClass()));
-						curItem = jewel;
+						Scroll scroll = Reflection.newInstance(ExoticScroll.regToExo.get(fScroll.getClass()));
+						curItem = scroll;
 						charge--;
-						jewel.anonymize();
-						checkForArtifactProc(curUser, jewel);
-						jewel.doRead();
+						scroll.anonymize();
+						checkForArtifactProc(curUser, scroll);
+						scroll.doRead();
 						Invisibility.dispel();
 						Talent.onArtifactUsed(Dungeon.hero);
 					} else {
-						checkForArtifactProc(curUser, fJewel);
-						fJewel.doRead();
+						checkForArtifactProc(curUser, fScroll);
+						fScroll.doRead();
 						Invisibility.dispel();
 						Talent.onArtifactUsed(Dungeon.hero);
 					}
@@ -195,8 +195,8 @@ public class UnstableSpellbook extends Artifact {
 				}
 			});
 		} else {
-			checkForArtifactProc(curUser, jewel);
-			jewel.doRead();
+			checkForArtifactProc(curUser, scroll);
+			scroll.doRead();
 			Invisibility.dispel();
 			Talent.onArtifactUsed(Dungeon.hero);
 		}
@@ -204,38 +204,38 @@ public class UnstableSpellbook extends Artifact {
 		updateQuickslot();
 	}
 
-	private void checkForArtifactProc(Hero user, Jewel jewel){
-		//if the base jewel (exotics all match) is an AOE effect, then also trigger illuminate
-		if (jewel instanceof JewelOfLullaby
-				|| jewel instanceof JewelOfRemoveCurse || jewel instanceof JewelOfTerror) {
+	private void checkForArtifactProc(Hero user, Scroll scroll){
+		//if the base scroll (exotics all match) is an AOE effect, then also trigger illuminate
+		if (scroll instanceof ScrollOfLullaby
+				|| scroll instanceof ScrollOfRemoveCurse || scroll instanceof ScrollOfTerror) {
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 				if (Dungeon.level.heroFOV[mob.pos]) {
 					artifactProc(mob, visiblyUpgraded(), 1);
 				}
 			}
 		//except rage, which affects everything even if it isn't visible
-		} else if (jewel instanceof JewelOfRage){
+		} else if (scroll instanceof ScrollOfRage){
 			for (Mob mob : Dungeon.level.mobs.toArray( new Mob[0] )) {
 				artifactProc(mob, visiblyUpgraded(), 1);
 			}
 		}
 	}
 
-	//forces the reading of a regular jewel if the player tried to exploit by quitting the game when the menu was up
+	//forces the reading of a regular scroll if the player tried to exploit by quitting the game when the menu was up
 	public static class ExploitHandler extends Buff {
 		{ actPriority = VFX_PRIO; }
 
-		public Jewel jewel;
+		public Scroll scroll;
 
 		@Override
 		public boolean act() {
 			curUser = Dungeon.hero;
-			curItem = jewel;
-			jewel.anonymize();
+			curItem = scroll;
+			scroll.anonymize();
 			Game.runOnRenderThread(new Callback() {
 				@Override
 				public void call() {
-					jewel.doRead();
+					scroll.doRead();
 					Invisibility.dispel();
 					Item.updateQuickslot();
 				}
@@ -247,13 +247,13 @@ public class UnstableSpellbook extends Artifact {
 		@Override
 		public void storeInBundle(Bundle bundle) {
 			super.storeInBundle(bundle);
-			bundle.put( "jewel", jewel );
+			bundle.put( "scroll", scroll );
 		}
 
 		@Override
 		public void restoreFromBundle(Bundle bundle) {
 			super.restoreFromBundle(bundle);
-			jewel = (Jewel)bundle.get("jewel");
+			scroll = (Scroll)bundle.get("scroll");
 		}
 	}
 
@@ -282,8 +282,8 @@ public class UnstableSpellbook extends Artifact {
 		chargeCap = (int)((level()+1)*0.6f)+2;
 
 		//for artifact transmutation.
-		while (!jewels.isEmpty() && jewels.size() > (levelCap-1-level())) {
-			jewels.remove(0);
+		while (!scrolls.isEmpty() && scrolls.size() > (levelCap-1-level())) {
+			scrolls.remove(0);
 		}
 
 		return super.upgrade();
@@ -292,9 +292,9 @@ public class UnstableSpellbook extends Artifact {
 	@Override
 	public void resetForTrinity(int visibleLevel) {
 		super.resetForTrinity(visibleLevel);
-		setupJewels();
-		while (!jewels.isEmpty() && jewels.size() > (levelCap-1-level())) {
-			jewels.remove(0);
+		setupScrolls();
+		while (!scrolls.isEmpty() && scrolls.size() > (levelCap-1-level())) {
+			scrolls.remove(0);
 		}
 	}
 
@@ -307,11 +307,11 @@ public class UnstableSpellbook extends Artifact {
 				desc += "\n\n" + Messages.get(this, "desc_cursed");
 			}
 			
-			if (level() < levelCap && jewels.size() > 0) {
+			if (level() < levelCap && scrolls.size() > 0) {
 				desc += "\n\n" + Messages.get(this, "desc_index");
-				desc += "\n" + "_" + Messages.get(jewels.get(0), "name") + "_";
-				if (jewels.size() > 1)
-					desc += "\n" + "_" + Messages.get(jewels.get(1), "name") + "_";
+				desc += "\n" + "_" + Messages.get(scrolls.get(0), "name") + "_";
+				if (scrolls.size() > 1)
+					desc += "\n" + "_" + Messages.get(scrolls.get(1), "name") + "_";
 			}
 		}
 		
@@ -322,21 +322,21 @@ public class UnstableSpellbook extends Artifact {
 		return desc;
 	}
 
-	private static final String JEWELS =   "jewels";
+	private static final String SCROLLS =   "scrolls";
 
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle(bundle);
-		bundle.put( JEWELS, jewels.toArray(new Class[jewels.size()]) );
+		bundle.put( SCROLLS, scrolls.toArray(new Class[scrolls.size()]) );
 	}
 
 	@Override
 	public void restoreFromBundle( Bundle bundle ) {
 		super.restoreFromBundle(bundle);
-		jewels.clear();
-		if (bundle.contains(JEWELS) && bundle.getClassArray(JEWELS) != null) {
-			for (Class<?> jewel : bundle.getClassArray(JEWELS)) {
-				if (jewel != null) jewels.add(jewel);
+		scrolls.clear();
+		if (bundle.contains(SCROLLS) && bundle.getClassArray(SCROLLS) != null) {
+			for (Class<?> scroll : bundle.getClassArray(SCROLLS)) {
+				if (scroll != null) scrolls.add(scroll);
 			}
 		}
 	}
@@ -380,38 +380,38 @@ public class UnstableSpellbook extends Artifact {
 
 		@Override
 		public Class<?extends Bag> preferredBag(){
-			return JewelHolder.class;
+			return ScrollHolder.class;
 		}
 
 		@Override
 		public boolean itemSelectable(Item item) {
-			return item instanceof Jewel && item.isIdentified() && jewels.contains(item.getClass());
+			return item instanceof Scroll && item.isIdentified() && scrolls.contains(item.getClass());
 		}
 
 		@Override
 		public void onSelect(Item item) {
-			if (item != null && item instanceof Jewel && item.isIdentified()){
+			if (item != null && item instanceof Scroll && item.isIdentified()){
 				Hero hero = Dungeon.hero;
-				for (int i = 0; ( i <= 1 && i < jewels.size() ); i++){
-					if (jewels.get(i).equals(item.getClass())){
+				for (int i = 0; ( i <= 1 && i < scrolls.size() ); i++){
+					if (scrolls.get(i).equals(item.getClass())){
 						hero.sprite.operate( hero.pos );
 						hero.busy();
 						hero.spend( 2f );
 						Sample.INSTANCE.play(Assets.Sounds.BURNING);
 						hero.sprite.emitter().burst( ElmoParticle.FACTORY, 12 );
 
-						jewels.remove(i);
+						scrolls.remove(i);
 						item.detach(hero.belongings.backpack);
 
 						upgrade();
 						Catalog.countUse(UnstableSpellbook.class);
-						GLog.i( Messages.get(UnstableSpellbook.class, "infuse_jewel") );
+						GLog.i( Messages.get(UnstableSpellbook.class, "infuse_scroll") );
 						return;
 					}
 				}
-				GLog.w( Messages.get(UnstableSpellbook.class, "unable_jewel") );
-			} else if (item instanceof Jewel && !item.isIdentified()) {
-				GLog.w( Messages.get(UnstableSpellbook.class, "unknown_jewel") );
+				GLog.w( Messages.get(UnstableSpellbook.class, "unable_scroll") );
+			} else if (item instanceof Scroll && !item.isIdentified()) {
+				GLog.w( Messages.get(UnstableSpellbook.class, "unknown_scroll") );
 			}
 		}
 	};

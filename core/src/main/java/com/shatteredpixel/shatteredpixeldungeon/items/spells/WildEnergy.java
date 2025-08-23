@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.CursedWand;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -59,7 +59,7 @@ public class WildEnergy extends TargetedSpell {
 	protected void affectTarget(Ballistica bolt, final Hero hero) {
 		Sample.INSTANCE.play( Assets.Sounds.LIGHTNING );
 		Sample.INSTANCE.play( Assets.Sounds.CHARGEUP );
-		JewelOfRecharging.charge(hero);
+		ScrollOfRecharging.charge(hero);
 		SpellSprite.show(hero, SpellSprite.CHARGE);
 
 		hero.belongings.charge(1f);
@@ -84,7 +84,7 @@ public class WildEnergy extends TargetedSpell {
 		private static final int OUT_QUANTITY = 5;
 		
 		{
-			inputs =  new Class[]{JewelOfRecharging.class, MetalShard.class};
+			inputs =  new Class[]{ScrollOfRecharging.class, MetalShard.class};
 			inQuantity = new int[]{1, 1};
 			
 			cost = 4;

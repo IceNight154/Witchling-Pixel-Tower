@@ -127,9 +127,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfFuror;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfHaste;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ThirteenLeafClover;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
@@ -1096,7 +1096,7 @@ public class Hero extends Char {
 
 						//TODO make all unique items important? or just POS / SOU?
 						boolean important = item.unique && item.isIdentified() &&
-								(item instanceof Jewel || item instanceof Potion);
+								(item instanceof Scroll || item instanceof Potion);
 						if (important) {
 							GLog.p( Messages.capitalize(Messages.get(this, "you_now_have", item.name())) );
 						} else {
@@ -1585,7 +1585,7 @@ public class Hero extends Char {
 				damage = endure.adjustDamageTaken(dmg);
 			}
 			//the same also applies to challenge scroll damage reduction
-			if (buff(JewelOfChallenge.ChallengeArena.class) != null){
+			if (buff(ScrollOfChallenge.ChallengeArena.class) != null){
 				damage *= 0.67f;
 			}
 			//and to monk meditate damage reduction
@@ -2468,7 +2468,7 @@ public class Hero extends Char {
 							
 							Dungeon.level.discover( curr );
 							
-							JewelOfMagicMapping.discover( curr );
+							ScrollOfMagicMapping.discover( curr );
 							
 							if (fieldOfView[curr]) smthFound = true;
 	

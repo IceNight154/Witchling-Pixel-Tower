@@ -22,7 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -189,7 +189,7 @@ public enum Document {
 				case "Surprise_Attacks":
 					return Icons.get(Icons.SNAKE);
 				case "Identifying":
-					return new ItemSprite( new JewelOfIdentify() );
+					return new ItemSprite( new ScrollOfIdentify() );
 				case "Food":
 					return new ItemSprite( ItemSpriteSheet.PASTY );
 				case "Alchemy":

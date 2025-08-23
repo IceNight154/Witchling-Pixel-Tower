@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -36,10 +36,10 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class JewelOfMirrorImage extends Jewel {
+public class ScrollOfMirrorImage extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_MIRRORIMG;
+		icon = ItemSpriteSheet.Icons.SCROLL_MIRRORIMG;
 	}
 
 	private static final int NIMAGES	= 2;
@@ -82,7 +82,7 @@ public class JewelOfMirrorImage extends Jewel {
 			MirrorImage mob = new MirrorImage();
 			mob.duplicate( hero );
 			GameScene.add( mob );
-			JewelOfTeleportation.appear( mob, respawnPoints.get( index ) );
+			ScrollOfTeleportation.appear( mob, respawnPoints.get( index ) );
 			
 			respawnPoints.remove( index );
 			nImages--;

@@ -34,7 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.RainbowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -123,7 +123,7 @@ public class Pasty extends Food {
 				Sample.INSTANCE.play(Assets.Sounds.MIMIC);
 			case EASTER:
 				ArtifactRecharge.chargeArtifacts(hero, 2f);
-				JewelOfRecharging.charge( hero );
+				ScrollOfRecharging.charge( hero );
 				break;
 			case PRIDE:
 				Char target = null;
@@ -160,7 +160,7 @@ public class Pasty extends Food {
 				break;
 			case WINTER_HOLIDAYS:
 				hero.belongings.charge(0.5f); //2 turns worth
-				JewelOfRecharging.charge( hero );
+				ScrollOfRecharging.charge( hero );
 				break;
 			case NEW_YEARS:
 				//shields for 10% of max hp, min of 5

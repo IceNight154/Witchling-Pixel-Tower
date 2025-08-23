@@ -241,8 +241,8 @@ public class PixelScene extends Scene {
 				}
 
 				cameraShift.invScale(Camera.main.zoom);
-				cameraShift.x *= Camera.main.edgeJewel.x;
-				cameraShift.y *= Camera.main.edgeJewel.y;
+				cameraShift.x *= Camera.main.edgeScroll.x;
+				cameraShift.y *= Camera.main.edgeScroll.y;
 				if (cameraShift.length() > 0){
 					Camera.main.shift(cameraShift);
 				}
@@ -464,8 +464,8 @@ public class PixelScene extends Scene {
 		
 		@Override
 		protected void updateMatrix() {
-			float sx = align( this, jewel.x + shakeX );
-			float sy = align( this, jewel.y + shakeY );
+			float sx = align( this, scroll.x + shakeX );
+			float sy = align( this, scroll.y + shakeY );
 			
 			matrix[0] = +zoom * invW2;
 			matrix[5] = -zoom * invH2;

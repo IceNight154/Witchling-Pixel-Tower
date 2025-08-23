@@ -271,10 +271,10 @@ public class WndRanking extends WndTabbed {
 					protected void onClick() {
 						super.onClick();
 						ShatteredPixelDungeon.scene().addToFront(new WndOptions(new Image(icon),
-								Messages.get(StatsTab.this, "copy_seed"),
-								Messages.get(StatsTab.this, "copy_seed_desc"),
-								Messages.get(StatsTab.this, "copy_seed_copy"),
-								Messages.get(StatsTab.this, "copy_seed_cancel")){
+								Messages.get(WndRanking.StatsTab.this, "copy_seed"),
+								Messages.get(WndRanking.StatsTab.this, "copy_seed_desc"),
+								Messages.get(WndRanking.StatsTab.this, "copy_seed_copy"),
+								Messages.get(WndRanking.StatsTab.this, "copy_seed_cancel")){
 							@Override
 							protected void onSelect(int index) {
 								super.onSelect(index);

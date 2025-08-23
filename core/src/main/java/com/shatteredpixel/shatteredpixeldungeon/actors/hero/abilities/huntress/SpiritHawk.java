@@ -38,7 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShaftParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MobSprite;
@@ -108,7 +108,7 @@ public class SpiritHawk extends ArmorAbility {
 				ally.pos = Random.element(spawnPoints);
 				GameScene.add(ally);
 
-				JewelOfTeleportation.appear(ally, ally.pos);
+				ScrollOfTeleportation.appear(ally, ally.pos);
 				Dungeon.observe();
 
 				Invisibility.dispel();

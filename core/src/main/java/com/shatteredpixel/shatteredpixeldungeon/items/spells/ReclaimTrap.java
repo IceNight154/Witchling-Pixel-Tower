@@ -27,8 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMagicMapping;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
@@ -88,7 +88,7 @@ public class ReclaimTrap extends TargetedSpell {
 				t.disarm(); //even disarms traps that normally wouldn't be
 				
 				Sample.INSTANCE.play(Assets.Sounds.LIGHTNING);
-				JewelOfRecharging.charge(hero);
+				ScrollOfRecharging.charge(hero);
 				Buff.affect(hero, ReclaimedTrap.class).trap = t.getClass();
 				Bestiary.setSeen(t.getClass());
 				
@@ -169,7 +169,7 @@ public class ReclaimTrap extends TargetedSpell {
 		private static final int OUT_QUANTITY = 5;
 		
 		{
-			inputs =  new Class[]{JewelOfMagicMapping.class, MetalShard.class};
+			inputs =  new Class[]{ScrollOfMagicMapping.class, MetalShard.class};
 			inQuantity = new int[]{1, 1};
 			
 			cost = 8;

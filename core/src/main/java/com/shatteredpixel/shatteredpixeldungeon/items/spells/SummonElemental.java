@@ -40,9 +40,9 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfFrost;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Embers;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -103,7 +103,7 @@ public class SummonElemental extends Spell {
 
 			for (Char ch : Actor.chars()){
 				if (ch instanceof Elemental && ch.buff(InvisAlly.class) != null){
-					JewelOfTeleportation.appear( ch, Random.element(spawnPoints) );
+					ScrollOfTeleportation.appear( ch, Random.element(spawnPoints) );
 					((Elemental) ch).state = ((Elemental) ch).HUNTING;
 					curUser.spendAndNext(Actor.TICK);
 					return;
@@ -115,7 +115,7 @@ public class SummonElemental extends Spell {
 			Buff.affect(elemental, InvisAlly.class);
 			elemental.setSummonedALly();
 			elemental.HP = elemental.HT;
-			JewelOfTeleportation.appear( elemental, Random.element(spawnPoints) );
+			ScrollOfTeleportation.appear( elemental, Random.element(spawnPoints) );
 			Invisibility.dispel(curUser);
 			curUser.sprite.operate(curUser.pos);
 			curUser.spendAndNext(Actor.TICK);
@@ -123,7 +123,7 @@ public class SummonElemental extends Spell {
 			detach(Dungeon.hero.belongings.backpack);
 			Catalog.countUse(getClass());
 			if (Random.Float() < talentChance){
-				Talent.onJewelUsed(curUser, curUser.pos, talentFactor, getClass());
+				Talent.onScrollUsed(curUser, curUser.pos, talentFactor, getClass());
 			}
 
 		} else {
@@ -180,8 +180,8 @@ public class SummonElemental extends Spell {
 		public boolean itemSelectable(Item item) {
 			return item.isIdentified() && (item instanceof PotionOfLiquidFlame
 					|| item instanceof PotionOfFrost
-					|| item instanceof JewelOfRecharging
-					|| item instanceof JewelOfTransmutation);
+					|| item instanceof ScrollOfRecharging
+					|| item instanceof ScrollOfTransmutation);
 		}
 
 		@Override
@@ -202,12 +202,12 @@ public class SummonElemental extends Spell {
 				curUser.sprite.emitter().burst( MagicMissile.MagicParticle.FACTORY, 12 );
 				summonClass = Elemental.FrostElemental.class;
 
-			} else if (item instanceof JewelOfRecharging){
+			} else if (item instanceof ScrollOfRecharging){
 				Sample.INSTANCE.play(Assets.Sounds.ZAP);
 				curUser.sprite.emitter().burst( ShaftParticle.FACTORY, 12 );
 				summonClass = Elemental.ShockElemental.class;
 
-			} else if (item instanceof JewelOfTransmutation){
+			} else if (item instanceof ScrollOfTransmutation){
 				Sample.INSTANCE.play(Assets.Sounds.READ);
 				curUser.sprite.emitter().burst( RainbowParticle.BURST, 12 );
 				summonClass = Elemental.ChaosElemental.class;

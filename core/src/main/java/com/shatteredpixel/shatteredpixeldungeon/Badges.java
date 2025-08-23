@@ -28,12 +28,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.JewelHolder;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.remains.RemainsItem;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -120,8 +120,8 @@ public class Badges {
 		BOSS_SLAIN_2                ( 48 ),
 		BOSS_SLAIN_3                ( 49 ),
 		ALL_POTIONS_IDENTIFIED      , //still exists internally for pre-2.5 saves
-		ALL_JEWELS_IDENTIFIED      , //still exists internally for pre-2.5 saves
-		CATALOG_POTIONS_JEWELS     ( 50 ),
+		ALL_SCROLLS_IDENTIFIED      , //still exists internally for pre-2.5 saves
+		CATALOG_POTIONS_SCROLLS     ( 50 ),
 		DEATH_FROM_ENEMY_MAGIC      ( 51 ),
 		DEATH_FROM_FRIENDLY_MAGIC   ( 52 ),
 		DEATH_FROM_SACRIFICE        ( 53 ),
@@ -142,7 +142,7 @@ public class Badges {
 		PIRANHAS                    ( 65 ),
 		GRIM_WEAPON                 ( 66 ),
 		BAG_BOUGHT_VELVET_POUCH,
-		BAG_BOUGHT_JEWEL_HOLDER,
+		BAG_BOUGHT_SCROLL_HOLDER,
 		BAG_BOUGHT_POTION_BANDOLIER,
 		BAG_BOUGHT_MAGICAL_HOLSTER,
 		ALL_BAGS_BOUGHT             ( 67 ),
@@ -562,7 +562,7 @@ public class Badges {
 		
 		// This method should be called:
 		// 1) When an item is obtained (Item.collect)
-		// 2) When an item is upgraded (JewelOfUpgrade, JewelOfWeaponUpgrade, ShortSword, WandOfMagicMissile)
+		// 2) When an item is upgraded (ScrollOfUpgrade, ScrollOfWeaponUpgrade, ShortSword, WandOfMagicMissile)
 		// 3) When an item is identified
 
 		// Note that artifacts should never trigger this badge as they are alternatively upgraded
@@ -608,8 +608,8 @@ public class Badges {
 		Badge badge = null;
 		if (bag instanceof VelvetPouch) {
 			badge = Badge.BAG_BOUGHT_VELVET_POUCH;
-		} else if (bag instanceof JewelHolder) {
-			badge = Badge.BAG_BOUGHT_JEWEL_HOLDER;
+		} else if (bag instanceof ScrollHolder) {
+			badge = Badge.BAG_BOUGHT_SCROLL_HOLDER;
 		} else if (bag instanceof PotionBandolier) {
 			badge = Badge.BAG_BOUGHT_POTION_BANDOLIER;
 		} else if (bag instanceof MagicalHolster) {
@@ -622,7 +622,7 @@ public class Badges {
 			
 			if (!local.contains( Badge.ALL_BAGS_BOUGHT ) &&
 				local.contains( Badge.BAG_BOUGHT_VELVET_POUCH ) &&
-				local.contains( Badge.BAG_BOUGHT_JEWEL_HOLDER ) &&
+				local.contains( Badge.BAG_BOUGHT_SCROLL_HOLDER ) &&
 				local.contains( Badge.BAG_BOUGHT_POTION_BANDOLIER ) &&
 				local.contains( Badge.BAG_BOUGHT_MAGICAL_HOLSTER )) {
 						
@@ -697,11 +697,11 @@ public class Badges {
 		}
 
 		//doesn't actually use catalogs, but triggers at the same time effectively
-		if (!local.contains(Badge.CATALOG_POTIONS_JEWELS)
-				&& Potion.allKnown() && Jewel.allKnown()
+		if (!local.contains(Badge.CATALOG_POTIONS_SCROLLS)
+				&& Potion.allKnown() && Scroll.allKnown()
 				&& Dungeon.hero != null && Dungeon.hero.isAlive()){
-			local.add(Badge.CATALOG_POTIONS_JEWELS);
-			displayBadge(Badge.CATALOG_POTIONS_JEWELS);
+			local.add(Badge.CATALOG_POTIONS_SCROLLS);
+			displayBadge(Badge.CATALOG_POTIONS_SCROLLS);
 		}
 
 		if (Bestiary.RARE.totalSeen() >= 10){
@@ -1289,7 +1289,7 @@ public class Badges {
 			{Badge.ALL_RINGS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED},
 			{Badge.ALL_ARTIFACTS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED},
 			{Badge.ALL_POTIONS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED},
-			{Badge.ALL_JEWELS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED}
+			{Badge.ALL_SCROLLS_IDENTIFIED, Badge.ALL_ITEMS_IDENTIFIED}
 	};
 	
 	public static List<Badge> filterReplacedBadges( List<Badge> badges ) {

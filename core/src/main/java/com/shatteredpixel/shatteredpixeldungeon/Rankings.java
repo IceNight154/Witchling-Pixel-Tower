@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.CorpseDust;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -289,7 +289,7 @@ public enum Rankings {
 
 		//save handler information
 		Bundle handler = new Bundle();
-		Jewel.saveSelectively(handler, belongings.backpack.items);
+		Scroll.saveSelectively(handler, belongings.backpack.items);
 		Potion.saveSelectively(handler, belongings.backpack.items);
 		//include potentially worn rings
 		if (belongings.misc != null)        belongings.backpack.items.add(belongings.misc);
@@ -326,7 +326,7 @@ public enum Rankings {
 		if (data == null) return;
 
 		Bundle handler = data.getBundle(HANDLERS);
-		Jewel.restore(handler);
+		Scroll.restore(handler);
 		Potion.restore(handler);
 		Ring.restore(handler);
 

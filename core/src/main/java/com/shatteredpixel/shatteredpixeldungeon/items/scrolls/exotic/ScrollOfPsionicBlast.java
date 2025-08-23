@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
@@ -28,7 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Blindness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -37,10 +37,10 @@ import com.watabou.noosa.audio.Sample;
 
 import java.util.ArrayList;
 
-public class JewelOfPsionicBlast extends ExoticJewel {
+public class ScrollOfPsionicBlast extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_PSIBLAST;
+		icon = ItemSpriteSheet.Icons.SCROLL_PSIBLAST;
 	}
 	
 	@Override
@@ -50,7 +50,7 @@ public class JewelOfPsionicBlast extends ExoticJewel {
 		GameScene.flash( 0x80FFFFFF );
 		
 		Sample.INSTANCE.play( Assets.Sounds.BLAST );
-		GLog.i(Messages.get(JewelOfRetribution.class, "blast"));
+		GLog.i(Messages.get(ScrollOfRetribution.class, "blast"));
 
 		ArrayList<Mob> targets = new ArrayList<>();
 

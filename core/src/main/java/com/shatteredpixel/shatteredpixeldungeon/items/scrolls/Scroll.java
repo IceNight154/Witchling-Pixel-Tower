@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
@@ -34,8 +34,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemStatusHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfAntiMagic;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfAntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAugmentation;
@@ -64,7 +64,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
-public abstract class Jewel extends Item {
+public abstract class Scroll extends Item {
 	
 	public static final String AC_READ	= "READ";
 	
@@ -72,28 +72,28 @@ public abstract class Jewel extends Item {
 
 	private static final LinkedHashMap<String, Integer> runes = new LinkedHashMap<String, Integer>() {
 		{
-			put("KAUNAN",ItemSpriteSheet.JEWEL_KAUNAN);
-			put("SOWILO",ItemSpriteSheet.JEWEL_SOWILO);
-			put("LAGUZ",ItemSpriteSheet.JEWEL_LAGUZ);
-			put("YNGVI",ItemSpriteSheet.JEWEL_YNGVI);
-			put("GYFU",ItemSpriteSheet.JEWEL_GYFU);
-			put("RAIDO",ItemSpriteSheet.JEWEL_RAIDO);
-			put("ISAZ",ItemSpriteSheet.JEWEL_ISAZ);
-			put("MANNAZ",ItemSpriteSheet.JEWEL_MANNAZ);
-			put("NAUDIZ",ItemSpriteSheet.JEWEL_NAUDIZ);
-			put("BERKANAN",ItemSpriteSheet.JEWEL_BERKANAN);
-			put("ODAL",ItemSpriteSheet.JEWEL_ODAL);
-			put("TIWAZ",ItemSpriteSheet.JEWEL_TIWAZ);
+			put("KAUNAN",ItemSpriteSheet.SCROLL_KAUNAN);
+			put("SOWILO",ItemSpriteSheet.SCROLL_SOWILO);
+			put("LAGUZ",ItemSpriteSheet.SCROLL_LAGUZ);
+			put("YNGVI",ItemSpriteSheet.SCROLL_YNGVI);
+			put("GYFU",ItemSpriteSheet.SCROLL_GYFU);
+			put("RAIDO",ItemSpriteSheet.SCROLL_RAIDO);
+			put("ISAZ",ItemSpriteSheet.SCROLL_ISAZ);
+			put("MANNAZ",ItemSpriteSheet.SCROLL_MANNAZ);
+			put("NAUDIZ",ItemSpriteSheet.SCROLL_NAUDIZ);
+			put("BERKANAN",ItemSpriteSheet.SCROLL_BERKANAN);
+			put("ODAL",ItemSpriteSheet.SCROLL_ODAL);
+			put("TIWAZ",ItemSpriteSheet.SCROLL_TIWAZ);
 		}
 	};
 	
-	protected static ItemStatusHandler<Jewel> handler;
+	protected static ItemStatusHandler<Scroll> handler;
 	
 	protected String rune;
 
-	//affects how strongly on-jewel talents trigger from this jewel
+	//affects how strongly on-scroll talents trigger from this scroll
 	protected float talentFactor = 1;
-	//the chance (0-1) of whether on-jewel talents trigger from this potion
+	//the chance (0-1) of whether on-scroll talents trigger from this potion
 	protected float talentChance = 1;
 	
 	{
@@ -103,7 +103,7 @@ public abstract class Jewel extends Item {
 	
 	@SuppressWarnings("unchecked")
 	public static void initLabels() {
-		handler = new ItemStatusHandler<>( (Class<? extends Jewel>[])Generator.Category.Jewel.classes, runes );
+		handler = new ItemStatusHandler<>( (Class<? extends Scroll>[])Generator.Category.SCROLL.classes, runes );
 	}
 
 	public static void clearLabels(){
@@ -117,11 +117,11 @@ public abstract class Jewel extends Item {
 	public static void saveSelectively( Bundle bundle, ArrayList<Item> items ) {
 		ArrayList<Class<?extends Item>> classes = new ArrayList<>();
 		for (Item i : items){
-			if (i instanceof ExoticJewel){
-				if (!classes.contains(ExoticJewel.exoToReg.get(i.getClass()))){
-					classes.add(ExoticJewel.exoToReg.get(i.getClass()));
+			if (i instanceof ExoticScroll){
+				if (!classes.contains(ExoticScroll.exoToReg.get(i.getClass()))){
+					classes.add(ExoticScroll.exoToReg.get(i.getClass()));
 				}
-			} else if (i instanceof Jewel){
+			} else if (i instanceof Scroll){
 				if (!classes.contains(i.getClass())){
 					classes.add(i.getClass());
 				}
@@ -132,20 +132,20 @@ public abstract class Jewel extends Item {
 
 	@SuppressWarnings("unchecked")
 	public static void restore( Bundle bundle ) {
-		handler = new ItemStatusHandler<>( (Class<? extends Jewel>[])Generator.Category.Jewel.classes, runes, bundle );
+		handler = new ItemStatusHandler<>( (Class<? extends Scroll>[])Generator.Category.SCROLL.classes, runes, bundle );
 	}
 	
-	public Jewel() {
+	public Scroll() {
 		super();
 		reset();
 	}
 	
-	//anonymous jewels are always IDed, do not affect ID status,
+	//anonymous scrolls are always IDed, do not affect ID status,
 	//and their sprite is replaced by a placeholder if they are not known,
 	//useful for items that appear in UIs, or which are only spawned for their effects
 	protected boolean anonymous = false;
 	public void anonymize(){
-		if (!isKnown()) image = ItemSpriteSheet.JEWEL_HOLDER;
+		if (!isKnown()) image = ItemSpriteSheet.SCROLL_HOLDER;
 		anonymous = true;
 	}
 	
@@ -157,7 +157,7 @@ public abstract class Jewel extends Item {
 			image = handler.image(this);
 			rune = handler.label(this);
 		} else {
-			image = ItemSpriteSheet.JEWEL_KAUNAN;
+			image = ItemSpriteSheet.SCROLL_KAUNAN;
 			rune = "KAUNAN";
 		}
 	}
@@ -182,7 +182,7 @@ public abstract class Jewel extends Item {
 				GLog.w( Messages.get(this, "blinded") );
 			} else if (hero.buff(UnstableSpellbook.bookRecharge.class) != null
 					&& hero.buff(UnstableSpellbook.bookRecharge.class).isCursed()
-					&& !(this instanceof JewelOfRemoveCurse || this instanceof JewelOfAntiMagic)){
+					&& !(this instanceof ScrollOfRemoveCurse || this instanceof ScrollOfAntiMagic)){
 				GLog.n( Messages.get(this, "cursed") );
 			} else {
 				doRead();
@@ -194,7 +194,7 @@ public abstract class Jewel extends Item {
 	public abstract void doRead();
 
 	public void readAnimation() {
-		//if jewel is being created for its effect, depend on creating item to dispel
+		//if scroll is being created for its effect, depend on creating item to dispel
 		if (!anonymous) Invisibility.dispel();
 		curUser.spend( TIME_TO_READ );
 		curUser.busy();
@@ -203,7 +203,7 @@ public abstract class Jewel extends Item {
 		if (!anonymous) {
 			Catalog.countUse(getClass());
 			if (Random.Float() < talentChance) {
-				Talent.onJewelUsed(curUser, curUser.pos, talentFactor, getClass());
+				Talent.onScrollUsed(curUser, curUser.pos, talentFactor, getClass());
 			}
 		}
 
@@ -263,16 +263,16 @@ public abstract class Jewel extends Item {
 		return isKnown();
 	}
 	
-	public static HashSet<Class<? extends Jewel>> getKnown() {
+	public static HashSet<Class<? extends Scroll>> getKnown() {
 		return handler.known();
 	}
 	
-	public static HashSet<Class<? extends Jewel>> getUnknown() {
+	public static HashSet<Class<? extends Scroll>> getUnknown() {
 		return handler.unknown();
 	}
 	
 	public static boolean allKnown() {
-		return handler != null && handler.known().size() == Generator.Category.Jewel.classes.length;
+		return handler != null && handler.known().size() == Generator.Category.SCROLL.classes.length;
 	}
 	
 	@Override
@@ -285,16 +285,16 @@ public abstract class Jewel extends Item {
 		return 6 * quantity;
 	}
 	
-	public static class PlaceHolder extends Jewel {
+	public static class PlaceHolder extends Scroll {
 		
 		{
-			image = ItemSpriteSheet.JEWEL_HOLDER;
+			image = ItemSpriteSheet.SCROLL_HOLDER;
 		}
 		
 		@Override
 		public boolean isSimilar(Item item) {
-			return ExoticJewel.regToExo.containsKey(item.getClass())
-					|| ExoticJewel.regToExo.containsValue(item.getClass());
+			return ExoticScroll.regToExo.containsKey(item.getClass())
+					|| ExoticScroll.regToExo.containsValue(item.getClass());
 		}
 		
 		@Override
@@ -306,28 +306,28 @@ public abstract class Jewel extends Item {
 		}
 	}
 	
-	public static class JewelToStone extends Recipe {
+	public static class ScrollToStone extends Recipe {
 		
-		private static HashMap<Class<?extends Jewel>, Class<?extends Runestone>> stones = new HashMap<>();
+		private static HashMap<Class<?extends Scroll>, Class<?extends Runestone>> stones = new HashMap<>();
 		static {
-			stones.put(JewelOfIdentify.class,      StoneOfIntuition.class);
-			stones.put(JewelOfLullaby.class,       StoneOfDeepSleep.class);
-			stones.put(JewelOfMagicMapping.class,  StoneOfClairvoyance.class);
-			stones.put(JewelOfMirrorImage.class,   StoneOfFlock.class);
-			stones.put(JewelOfRetribution.class,   StoneOfBlast.class);
-			stones.put(JewelOfRage.class,          StoneOfAggression.class);
-			stones.put(JewelOfRecharging.class,    StoneOfShock.class);
-			stones.put(JewelOfRemoveCurse.class,   StoneOfDetectMagic.class);
-			stones.put(JewelOfTeleportation.class, StoneOfBlink.class);
-			stones.put(JewelOfTerror.class,        StoneOfFear.class);
-			stones.put(JewelOfTransmutation.class, StoneOfAugmentation.class);
-			stones.put(JewelOfUpgrade.class,       StoneOfEnchantment.class);
+			stones.put(ScrollOfIdentify.class,      StoneOfIntuition.class);
+			stones.put(ScrollOfLullaby.class,       StoneOfDeepSleep.class);
+			stones.put(ScrollOfMagicMapping.class,  StoneOfClairvoyance.class);
+			stones.put(ScrollOfMirrorImage.class,   StoneOfFlock.class);
+			stones.put(ScrollOfRetribution.class,   StoneOfBlast.class);
+			stones.put(ScrollOfRage.class,          StoneOfAggression.class);
+			stones.put(ScrollOfRecharging.class,    StoneOfShock.class);
+			stones.put(ScrollOfRemoveCurse.class,   StoneOfDetectMagic.class);
+			stones.put(ScrollOfTeleportation.class, StoneOfBlink.class);
+			stones.put(ScrollOfTerror.class,        StoneOfFear.class);
+			stones.put(ScrollOfTransmutation.class, StoneOfAugmentation.class);
+			stones.put(ScrollOfUpgrade.class,       StoneOfEnchantment.class);
 		}
 		
 		@Override
 		public boolean testIngredients(ArrayList<Item> ingredients) {
 			if (ingredients.size() != 1
-					|| !(ingredients.get(0) instanceof Jewel)
+					|| !(ingredients.get(0) instanceof Scroll)
 					|| !stones.containsKey(ingredients.get(0).getClass())){
 				return false;
 			}
@@ -344,7 +344,7 @@ public abstract class Jewel extends Item {
 		public Item brew(ArrayList<Item> ingredients) {
 			if (!testIngredients(ingredients)) return null;
 			
-			Jewel s = (Jewel) ingredients.get(0);
+			Scroll s = (Scroll) ingredients.get(0);
 			
 			s.quantity(s.quantity() - 1);
 			if (ShatteredPixelDungeon.scene() instanceof AlchemyScene){
@@ -362,7 +362,7 @@ public abstract class Jewel extends Item {
 		public Item sampleOutput(ArrayList<Item> ingredients) {
 			if (!testIngredients(ingredients)) return null;
 			
-			Jewel s = (Jewel) ingredients.get(0);
+			Scroll s = (Scroll) ingredients.get(0);
 
 			if (!s.isKnown()){
 				return new Runestone.PlaceHolder().quantity(2);

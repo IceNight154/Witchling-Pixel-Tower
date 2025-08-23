@@ -30,8 +30,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -61,8 +61,8 @@ public class StoneOfIntuition extends InventoryStone {
 			return !((Ring) item).isKnown();
 		} else if (item instanceof Potion){
 			return !((Potion) item).isKnown();
-		} else if (item instanceof Jewel){
-			return !((Jewel) item).isKnown();
+		} else if (item instanceof Scroll){
+			return !((Scroll) item).isKnown();
 		}
 		return false;
 	}
@@ -164,13 +164,13 @@ public class StoneOfIntuition extends InventoryStone {
 				} else {
 					unIDed.addAll(Potion.getUnknown());
 				}
-			} else if (item instanceof Jewel){
-				if (item instanceof ExoticJewel) {
-					for (Class<?extends Item> i : Jewel.getUnknown()){
-						unIDed.add(ExoticJewel.regToExo.get(i));
+			} else if (item instanceof Scroll){
+				if (item instanceof ExoticScroll) {
+					for (Class<?extends Item> i : Scroll.getUnknown()){
+						unIDed.add(ExoticScroll.regToExo.get(i));
 					}
 				} else {
-					unIDed.addAll(Jewel.getUnknown());
+					unIDed.addAll(Scroll.getUnknown());
 				}
 			} else if (item instanceof Ring) {
 				unIDed.addAll(Ring.getUnknown());

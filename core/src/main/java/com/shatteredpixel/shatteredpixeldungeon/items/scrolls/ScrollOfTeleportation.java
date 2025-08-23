@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -49,10 +49,10 @@ import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
-public class JewelOfTeleportation extends Jewel {
+public class ScrollOfTeleportation extends Scroll {
 
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_TELEPORT;
+		icon = ItemSpriteSheet.Icons.SCROLL_TELEPORT;
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class JewelOfTeleportation extends Jewel {
 				|| (!Dungeon.level.passable[pos] && !Dungeon.level.avoid[pos])
 				|| (Actor.findChar(pos) != null && Actor.findChar(pos) != ch)){
 			if (ch == Dungeon.hero){
-				GLog.w( Messages.get(JewelOfTeleportation.class, "cant_reach") );
+				GLog.w( Messages.get(ScrollOfTeleportation.class, "cant_reach") );
 			}
 			return false;
 		}
@@ -91,7 +91,7 @@ public class JewelOfTeleportation extends Jewel {
 	}
 
 	public static boolean teleportChar( Char ch ) {
-		return teleportChar( ch, JewelOfTeleportation.class );
+		return teleportChar( ch, ScrollOfTeleportation.class );
 	}
 
 	public static boolean teleportChar( Char ch, Class source ) {
@@ -101,7 +101,7 @@ public class JewelOfTeleportation extends Jewel {
 		}
 
 		if (Char.hasProp(ch, Char.Property.IMMOVABLE) || ch.isImmune(source)){
-			GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 		}
 		
@@ -116,7 +116,7 @@ public class JewelOfTeleportation extends Jewel {
 		
 		if (pos == -1) {
 			
-			GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 			
 		} else {
@@ -126,7 +126,7 @@ public class JewelOfTeleportation extends Jewel {
 			Buff.detach(ch, Roots.class);
 			
 			if (ch == Dungeon.hero) {
-				GLog.i( Messages.get(JewelOfTeleportation.class, "tele") );
+				GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 				
 				Dungeon.observe();
 				GameScene.updateFog();
@@ -192,7 +192,7 @@ public class JewelOfTeleportation extends Jewel {
 					}
 				}
 			}
-			GLog.i( Messages.get(JewelOfTeleportation.class, "tele") );
+			GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 			appear( hero, pos );
 			Dungeon.level.occupyCell( hero );
 			Buff.detach(hero, Roots.class);
@@ -201,7 +201,7 @@ public class JewelOfTeleportation extends Jewel {
 				int oldValue = Dungeon.level.map[doorPos];
 				GameScene.discoverTile( doorPos, oldValue );
 				Dungeon.level.discover( doorPos );
-				JewelOfMagicMapping.discover( doorPos );
+				ScrollOfMagicMapping.discover( doorPos );
 			}
 			Dungeon.observe();
 			GameScene.updateFog();
@@ -215,7 +215,7 @@ public class JewelOfTeleportation extends Jewel {
 	private static boolean teleportInNonRegularLevel(Char ch, boolean preferNotSeen ){
 
 		if (Char.hasProp(ch, Char.Property.IMMOVABLE)){
-			GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 		}
 
@@ -254,7 +254,7 @@ public class JewelOfTeleportation extends Jewel {
 		} else if (!visibleValid.isEmpty()){
 			pos = Random.element(visibleValid);
 		} else {
-			GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+			GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 			return false;
 		}
 
@@ -264,7 +264,7 @@ public class JewelOfTeleportation extends Jewel {
 		Buff.detach(ch, Roots.class);
 
 		if (ch == Dungeon.hero) {
-			GLog.i( Messages.get(JewelOfTeleportation.class, "tele") );
+			GLog.i( Messages.get(ScrollOfTeleportation.class, "tele") );
 
 			Dungeon.observe();
 			GameScene.updateFog();

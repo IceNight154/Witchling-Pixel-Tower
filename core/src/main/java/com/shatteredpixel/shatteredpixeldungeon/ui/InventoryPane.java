@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.JewelHolder;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -473,8 +473,8 @@ public class InventoryPane extends Component {
 	private Image bagIcon(Bag bag ) {
 		if (bag instanceof VelvetPouch) {
 			return Icons.get( Icons.SEED_POUCH );
-		} else if (bag instanceof JewelHolder) {
-			return Icons.get( Icons.JEWEL_HOLDER );
+		} else if (bag instanceof ScrollHolder) {
+			return Icons.get( Icons.SCROLL_HOLDER );
 		} else if (bag instanceof MagicalHolster) {
 			return Icons.get( Icons.WAND_HOLSTER );
 		} else if (bag instanceof PotionBandolier) {

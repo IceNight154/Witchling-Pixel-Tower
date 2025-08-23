@@ -31,7 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -158,7 +158,7 @@ public class LloydsBeacon extends Artifact {
 		} else if (action == AC_RETURN) {
 			
 			if (returnDepth == Dungeon.depth) {
-				JewelOfTeleportation.appear( hero, returnPos );
+				ScrollOfTeleportation.appear( hero, returnPos );
 				for(Mob m : Dungeon.level.mobs){
 					if (m.pos == hero.pos){
 						//displace mob
@@ -199,14 +199,14 @@ public class LloydsBeacon extends Artifact {
 			updateQuickslot();
 
 			if (Actor.findChar(target) == curUser){
-				JewelOfTeleportation.teleportChar(curUser);
+				ScrollOfTeleportation.teleportChar(curUser);
 				curUser.spendAndNext(1f);
 			} else {
 				final Ballistica bolt = new Ballistica( curUser.pos, target, Ballistica.MAGIC_BOLT );
 				final Char ch = Actor.findChar(bolt.collisionPos);
 
 				if (ch == curUser){
-					JewelOfTeleportation.teleportChar(curUser);
+					ScrollOfTeleportation.teleportChar(curUser);
 					curUser.spendAndNext( 1f );
 				} else {
 					Sample.INSTANCE.play( Assets.Sounds.ZAP );
@@ -233,7 +233,7 @@ public class LloydsBeacon extends Artifact {
 
 										if (pos == -1 || Dungeon.bossLevel()) {
 
-											GLog.w( Messages.get(JewelOfTeleportation.class, "no_tele") );
+											GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 
 										} else if (ch.properties().contains(Char.Property.IMMOVABLE)) {
 

@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls;
 
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -39,7 +39,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.Elixir;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.Pickaxe;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.ExoticJewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
@@ -57,10 +57,10 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Reflection;
 
-public class JewelOfTransmutation extends InventoryJewel {
+public class ScrollOfTransmutation extends InventoryScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.JEWEL_TRANSMUTE;
+		icon = ItemSpriteSheet.Icons.SCROLL_TRANSMUTE;
 		
 		bones = true;
 
@@ -81,8 +81,8 @@ public class JewelOfTransmutation extends InventoryJewel {
 		} else if (item instanceof Potion){
 			return !(item instanceof Elixir || item instanceof Brew);
 
-		//all regular or exotic Jewels, except itself (unless un-ided, in which case it was already consumed)
-		} else if (item instanceof Jewel) {
+		//all regular or exotic scrolls, except itself (unless un-ided, in which case it was already consumed)
+		} else if (item instanceof Scroll) {
 			return item != this || item.quantity() > 1 || identifiedByUse;
 
 		//all non-unique artifacts (no holy tome or cloak of shadows, basically)
@@ -161,8 +161,8 @@ public class JewelOfTransmutation extends InventoryJewel {
 			return changeTippedDart( (TippedDart)item );
 		} else if (item instanceof MeleeWeapon || item instanceof MissileWeapon) {
 			return changeWeapon( (Weapon)item );
-		} else if (item instanceof Jewel) {
-			return changeScroll( (Jewel)item );
+		} else if (item instanceof Scroll) {
+			return changeScroll( (Scroll)item );
 		} else if (item instanceof Potion) {
 			return changePotion( (Potion)item );
 		} else if (item instanceof Ring) {
@@ -376,11 +376,11 @@ public class JewelOfTransmutation extends InventoryJewel {
 		return n;
 	}
 
-	private static Jewel changeJewel(Jewel s ) {
-		if (s instanceof ExoticJewel) {
-			return Reflection.newInstance(ExoticJewel.exoToReg.get(s.getClass()));
+	private static Scroll changeScroll( Scroll s ) {
+		if (s instanceof ExoticScroll) {
+			return Reflection.newInstance(ExoticScroll.exoToReg.get(s.getClass()));
 		} else {
-			return Reflection.newInstance(ExoticJewel.regToExo.get(s.getClass()));
+			return Reflection.newInstance(ExoticScroll.regToExo.get(s.getClass()));
 		}
 	}
 

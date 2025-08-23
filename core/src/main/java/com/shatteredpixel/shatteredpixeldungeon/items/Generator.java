@@ -81,6 +81,20 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTerror;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ExoticScroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Spell;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.Runestone;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAggression;
@@ -230,7 +244,7 @@ public class Generator {
 		POTION	( 8, 8, Potion.class ),
 		SEED	( 1, 1, Plant.Seed.class ),
 		
-		Jewel	( 8, 8, Jewel.class ),
+		SCROLL	( 8, 8, Scroll.class ),
 		STONE   ( 1, 1, Runestone.class),
 		
 		GOLD	( 10, 10,   Gold.class );
@@ -277,7 +291,7 @@ public class Generator {
 			subOrderings.put(Trinket.class, new ArrayList<>(Arrays.asList(Trinket.class, TrinketCatalyst.class)));
 			subOrderings.put(MissileWeapon.class, new ArrayList<>(Arrays.asList(MissileWeapon.class, Bomb.class)));
 			subOrderings.put(Potion.class, new ArrayList<>(Arrays.asList(Waterskin.class, Potion.class, ExoticPotion.class, Brew.class, Elixir.class, LiquidMetal.class)));
-			subOrderings.put(Jewel.class, new ArrayList<>(Arrays.asList(Jewel.class, ExoticJewel.class, Spell.class, ArcaneResin.class)));
+			subOrderings.put(Scroll.class, new ArrayList<>(Arrays.asList(Scroll.class, ExoticScroll.class, Spell.class, ArcaneResin.class)));
 		}
 
 		//in case there are multiple matches, this will return the latest match
@@ -343,23 +357,23 @@ public class Generator {
 			SEED.defaultProbs = new float[]{ 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1 };
 			SEED.probs = SEED.defaultProbs.clone();
 			
-			Jewel.classes = new Class<?>[]{
-					JewelOfUpgrade.class, //3 drop every chapter, see Dungeon.souNeeded()
-					JewelOfIdentify.class,
-					JewelOfRemoveCurse.class,
-					JewelOfMirrorImage.class,
-					JewelOfRecharging.class,
-					JewelOfTeleportation.class,
-					JewelOfLullaby.class,
-					JewelOfMagicMapping.class,
-					JewelOfRage.class,
-					JewelOfRetribution.class,
-					JewelOfTerror.class,
-					JewelOfTransmutation.class
+			SCROLL.classes = new Class<?>[]{
+					ScrollOfUpgrade.class, //3 drop every chapter, see Dungeon.souNeeded()
+					ScrollOfIdentify.class,
+					ScrollOfRemoveCurse.class,
+					ScrollOfMirrorImage.class,
+					ScrollOfRecharging.class,
+					ScrollOfTeleportation.class,
+					ScrollOfLullaby.class,
+					ScrollOfMagicMapping.class,
+					ScrollOfRage.class,
+					ScrollOfRetribution.class,
+					ScrollOfTerror.class,
+					ScrollOfTransmutation.class
 			};
-			Jewel.defaultProbs  = new float[]{ 0, 3, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1 };
-			Jewel.defaultProbs2 = new float[]{ 0, 3, 2, 2, 1, 2, 1, 1, 1, 1, 1, 0 };
-			Jewel.probs = Jewel.defaultProbs.clone();
+			SCROLL.defaultProbs  = new float[]{ 0, 3, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1 };
+			SCROLL.defaultProbs2 = new float[]{ 0, 3, 2, 2, 1, 2, 1, 1, 1, 1, 1, 0 };
+			SCROLL.probs = SCROLL.defaultProbs.clone();
 			
 			STONE.classes = new Class<?>[]{
 					StoneOfEnchantment.class,   //1 is guaranteed to drop on floors 6-19
@@ -712,9 +726,9 @@ public class Generator {
 					if (Random.Float() < ExoticCrystals.consumableExoticChance()){
 						itemCls = ExoticPotion.regToExo.get(itemCls);
 					}
-				} else if (ExoticJewel.regToExo.containsKey(itemCls)){
+				} else if (ExoticScroll.regToExo.containsKey(itemCls)){
 					if (Random.Float() < ExoticCrystals.consumableExoticChance()){
-						itemCls = ExoticJewel.regToExo.get(itemCls);
+						itemCls = ExoticScroll.regToExo.get(itemCls);
 					}
 				}
 
@@ -740,9 +754,9 @@ public class Generator {
 				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
 					itemCls = ExoticPotion.regToExo.get(itemCls);
 				}
-			} else if (ExoticJewel.regToExo.containsKey(itemCls)){
+			} else if (ExoticScroll.regToExo.containsKey(itemCls)){
 				if (Random.Float() < ExoticCrystals.consumableExoticChance()){
-					itemCls = ExoticJewel.regToExo.get(itemCls);
+					itemCls = ExoticScroll.regToExo.get(itemCls);
 				}
 			}
 

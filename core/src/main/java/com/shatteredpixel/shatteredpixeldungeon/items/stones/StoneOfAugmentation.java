@@ -25,8 +25,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfUpgrade;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfEnchantment;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -47,7 +47,7 @@ public class StoneOfAugmentation extends InventoryStone {
 
 	@Override
 	protected boolean usableOnItem(Item item) {
-		return JewelOfEnchantment.enchantable(item);
+		return ScrollOfEnchantment.enchantable(item);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class StoneOfAugmentation extends InventoryStone {
 		
 		weapon.augment = augment;
 		useAnimation();
-		JewelOfUpgrade.upgrade(curUser);
+		ScrollOfUpgrade.upgrade(curUser);
 		if (!anonymous) {
 			curItem.detach(curUser.belongings.backpack);
 			Catalog.countUse(getClass());
@@ -73,7 +73,7 @@ public class StoneOfAugmentation extends InventoryStone {
 		
 		armor.augment = augment;
 		useAnimation();
-		JewelOfUpgrade.upgrade(curUser);
+		ScrollOfUpgrade.upgrade(curUser);
 		if (!anonymous) {
 			curItem.detach(curUser.belongings.backpack);
 			Catalog.countUse(getClass());

@@ -25,7 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfChallenge;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfChallenge;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.SaltCube;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Document;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -65,7 +65,7 @@ public class Hunger extends Buff implements Hero.Doom {
 		if (Dungeon.level.locked
 				|| target.buff(WellFed.class) != null
 				|| SPDSettings.intro()
-				|| target.buff(JewelOfChallenge.ChallengeArena.class) != null){
+				|| target.buff(ScrollOfChallenge.ChallengeArena.class) != null){
 			spend(TICK);
 			return true;
 		}

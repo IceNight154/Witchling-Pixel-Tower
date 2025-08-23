@@ -35,7 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.DirectableAlly;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -146,7 +146,7 @@ public class BeamingRay extends TargetedClericSpell {
 		}
 
 		hero.sprite.zap(telePos);
-		JewelOfTeleportation.appear(ally, telePos);
+		ScrollOfTeleportation.appear(ally, telePos);
 
 		if (chTarget == null){
 			for (Char ch : Actor.chars()){

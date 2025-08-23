@@ -29,7 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Invisibility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
@@ -78,12 +78,12 @@ public class MagicalInfusion extends InventorySpell {
 
 		Catalog.countUse(curItem.getClass());
 		if (Random.Float() < ((Spell) curItem).talentChance) {
-			Talent.onJewelUsed(curUser, curUser.pos, ((Spell) curItem).talentFactor, getClass());
+			Talent.onScrollUsed(curUser, curUser.pos, ((Spell) curItem).talentFactor, getClass());
 		}
 	}
 
 	public Item upgradeItem( Item item ){
-		JewelOfUpgrade.upgrade(curUser);
+		ScrollOfUpgrade.upgrade(curUser);
 
 		Degrade.detach( curUser, Degrade.class );
 
@@ -122,7 +122,7 @@ public class MagicalInfusion extends InventorySpell {
 	public static class Recipe extends com.shatteredpixel.shatteredpixeldungeon.items.Recipe.SimpleRecipe {
 		
 		{
-			inputs =  new Class[]{JewelOfUpgrade.class};
+			inputs =  new Class[]{ScrollOfUpgrade.class};
 			inQuantity = new int[]{1};
 			
 			cost = 12;

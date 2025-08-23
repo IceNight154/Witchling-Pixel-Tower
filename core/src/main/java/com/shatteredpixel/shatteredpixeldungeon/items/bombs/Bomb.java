@@ -40,10 +40,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibili
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.GooBlob;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfMirrorImage;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRage;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Catalog;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Languages;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -348,16 +348,16 @@ public class Bomb extends Item {
 		public static final LinkedHashMap<Class<?extends Item>, Class<?extends Bomb>> validIngredients = new LinkedHashMap<>();
 		static {
 			validIngredients.put(PotionOfFrost.class,           FrostBomb.class);
-			validIngredients.put(JewelOfMirrorImage.class,     WoollyBomb.class);
+			validIngredients.put(ScrollOfMirrorImage.class,     WoollyBomb.class);
 			
 			validIngredients.put(PotionOfLiquidFlame.class,     Firebomb.class);
-			validIngredients.put(JewelOfRage.class,            Noisemaker.class);
+			validIngredients.put(ScrollOfRage.class,            Noisemaker.class);
 			
 			validIngredients.put(PotionOfInvisibility.class,    SmokeBomb.class);
-			validIngredients.put(JewelOfRecharging.class,      FlashBangBomb.class);
+			validIngredients.put(ScrollOfRecharging.class,      FlashBangBomb.class);
 			
 			validIngredients.put(PotionOfHealing.class,         RegrowthBomb.class);
-			validIngredients.put(JewelOfRemoveCurse.class,     HolyBomb.class);
+			validIngredients.put(ScrollOfRemoveCurse.class,     HolyBomb.class);
 			
 			validIngredients.put(GooBlob.class,                 ArcaneBomb.class);
 			validIngredients.put(MetalShard.class,              ShrapnelBomb.class);

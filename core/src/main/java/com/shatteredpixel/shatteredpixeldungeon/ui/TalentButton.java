@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic.JewelOfMetamorphosis;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfMetamorphosis;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -133,7 +133,7 @@ public class TalentButton extends Button {
 
 				@Override
 				public String prompt() {
-					return Messages.titleCase(Messages.get(JewelOfMetamorphosis.class, "metamorphose_talent"));
+					return Messages.titleCase(Messages.get(ScrollOfMetamorphosis.class, "metamorphose_talent"));
 				}
 
 				@Override
@@ -143,10 +143,10 @@ public class TalentButton extends Button {
 
 				@Override
 				public void call() {
-					if (JewelOfMetamorphosis.WndMetamorphChoose.INSTANCE != null){
-						JewelOfMetamorphosis.WndMetamorphChoose.INSTANCE.hide();
+					if (ScrollOfMetamorphosis.WndMetamorphChoose.INSTANCE != null){
+						ScrollOfMetamorphosis.WndMetamorphChoose.INSTANCE.hide();
 					}
-					GameScene.show(new JewelOfMetamorphosis.WndMetamorphReplace(talent, tier));
+					GameScene.show(new ScrollOfMetamorphosis.WndMetamorphReplace(talent, tier));
 				}
 			});
 		} else if (mode == Mode.METAMORPH_REPLACE && Dungeon.hero != null && Dungeon.hero.isAlive()) {
@@ -154,7 +154,7 @@ public class TalentButton extends Button {
 
 				@Override
 				public String prompt() {
-					return Messages.titleCase(Messages.get(JewelOfMetamorphosis.class, "metamorphose_talent"));
+					return Messages.titleCase(Messages.get(ScrollOfMetamorphosis.class, "metamorphose_talent"));
 				}
 
 				@Override
@@ -164,7 +164,7 @@ public class TalentButton extends Button {
 
 				@Override
 				public void call() {
-					Talent replacing = JewelOfMetamorphosis.WndMetamorphReplace.INSTANCE.replacing;
+					Talent replacing = ScrollOfMetamorphosis.WndMetamorphReplace.INSTANCE.replacing;
 
 					for (LinkedHashMap<Talent, Integer> tier : Dungeon.hero.talents){
 						if (tier.containsKey(replacing)){
@@ -196,15 +196,15 @@ public class TalentButton extends Button {
 									newTier.put(t, tier.get(t));
 								}
 							}
-							Dungeon.hero.talents.set(JewelOfMetamorphosis.WndMetamorphReplace.INSTANCE.tier-1, newTier);
+							Dungeon.hero.talents.set(ScrollOfMetamorphosis.WndMetamorphReplace.INSTANCE.tier-1, newTier);
 							break;
 						}
 					}
 
-					JewelOfMetamorphosis.onMetamorph(replacing, talent);
+					ScrollOfMetamorphosis.onMetamorph(replacing, talent);
 
-					if (JewelOfMetamorphosis.WndMetamorphReplace.INSTANCE != null){
-						JewelOfMetamorphosis.WndMetamorphReplace.INSTANCE.hide();
+					if (ScrollOfMetamorphosis.WndMetamorphReplace.INSTANCE != null){
+						ScrollOfMetamorphosis.WndMetamorphReplace.INSTANCE.hide();
 					}
 
 				}

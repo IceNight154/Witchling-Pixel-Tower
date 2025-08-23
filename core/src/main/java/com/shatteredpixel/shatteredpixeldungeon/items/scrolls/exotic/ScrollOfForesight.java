@@ -19,28 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package com.shatteredpixel.shatteredpixeldungeon.items.jewels.exotic;
+package com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Flare;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Foresight;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.watabou.noosa.audio.Sample;
 
-public class JewelOfAntiMagic extends ExoticJewel {
+public class ScrollOfForesight extends ExoticScroll {
 	
 	{
-		icon = ItemSpriteSheet.Icons.SCROLL_ANTIMAGIC;
+		icon = ItemSpriteSheet.Icons.SCROLL_FORESIGHT;
 	}
 	
 	@Override
 	public void doRead() {
 
 		detach(curUser.belongings.backpack);
-		Buff.affect( curUser, MagicImmune.class, MagicImmune.DURATION );
-		new Flare( 5, 32 ).color( 0x00FF00, true ).show( curUser.sprite, 2f );
+		Sample.INSTANCE.play( Assets.Sounds.READ );
+		
+		Buff.affect(curUser, Foresight.class, Foresight.DURATION);
 
 		identify();
 		
 		readAnimation();
 	}
+	
 }

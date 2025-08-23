@@ -138,8 +138,8 @@ public class Camera extends Gizmo {
 	
 	public synchronized void zoom( float value ) {
 		zoom( value,
-				scroll.x + width / 2f,
-				scroll.y + height / 2f );
+			scroll.x + width / 2f,
+			scroll.y + height / 2f );
 	}
 	
 	public synchronized void zoom( float value, float fx, float fy ) {

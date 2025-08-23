@@ -41,11 +41,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.Jewel;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfRegrowth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Bestiary;
@@ -294,7 +294,7 @@ public class WndJournal extends WndTabbed {
 				ItemSpriteSheet.STONE_HOLDER,
 				ItemSpriteSheet.FOOD_HOLDER,
 				ItemSpriteSheet.POTION_HOLDER,
-				ItemSpriteSheet.JEWEL_HOLDER,
+				ItemSpriteSheet.SCROLL_HOLDER,
 				ItemSpriteSheet.BOMB_HOLDER,
 				ItemSpriteSheet.MISSILE_HOLDER,
 				ItemSpriteSheet.ELIXIR_HOLDER,
@@ -761,8 +761,8 @@ public class WndJournal extends WndTabbed {
 						((Ring) item).anonymize();
 					} else if (item instanceof Potion) {
 						((Potion) item).anonymize();
-					} else if (item instanceof Jewel) {
-						((Jewel) item).anonymize();
+					} else if (item instanceof Scroll) {
+						((Scroll) item).anonymize();
 					}
 				}
 
@@ -778,7 +778,7 @@ public class WndJournal extends WndTabbed {
 				} else {
 					title = Messages.titleCase( item.name() );
 					//some items don't include direct stats, generally when they're not applicable
-					if (item instanceof ClassArmor || item instanceof SpiritBow){
+					if (item instanceof ClassArmor || item instanceof GrimoireAria){
 						desc += item.desc();
 					} else {
 						desc += item.info();

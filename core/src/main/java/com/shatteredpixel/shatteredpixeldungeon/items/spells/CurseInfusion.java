@@ -30,7 +30,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMight;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
@@ -111,7 +111,7 @@ public class CurseInfusion extends InventorySpell {
 		private static final int OUT_QUANTITY = 4;
 		
 		{
-			inputs =  new Class[]{JewelOfRemoveCurse.class, MetalShard.class};
+			inputs =  new Class[]{ScrollOfRemoveCurse.class, MetalShard.class};
 			inQuantity = new int[]{1, 1};
 			
 			cost = 6;

@@ -32,7 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
-import com.shatteredpixel.shatteredpixeldungeon.items.jewels.JewelOfTeleportation;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
@@ -341,7 +341,7 @@ public class Necromancer extends Mob {
 						
 						if (telePos != -1){
 							
-							JewelOfTeleportation.appear(mySkeleton, telePos);
+							ScrollOfTeleportation.appear(mySkeleton, telePos);
 							mySkeleton.teleportSpend();
 							
 							if (sprite != null && sprite.visible){

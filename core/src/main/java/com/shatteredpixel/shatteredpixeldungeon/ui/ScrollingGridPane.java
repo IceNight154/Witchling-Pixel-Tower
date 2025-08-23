@@ -45,13 +45,13 @@ public class ScrollingGridPane extends ScrollPane {
 	@Override
 	public void onClick(float x, float y) {
 		for (Component item : items) {
-			if ((item instanceof GridItem) && ((GridItem) item).onClick( x, y )) {
+			if ((item instanceof ScrollingGridPane.GridItem) && ((ScrollingGridPane.GridItem) item).onClick( x, y )) {
 				break;
 			}
 		}
 	}
 
-	public void addItem( GridItem item ){
+	public void addItem( ScrollingGridPane.GridItem item ){
 		content.add(item);
 		items.add(item);
 	}
