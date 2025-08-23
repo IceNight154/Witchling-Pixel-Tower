@@ -29,6 +29,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ExitButton;
@@ -217,8 +218,10 @@ public class StartScene extends PixelScene {
 				}
 				
 				if (hero == null){
-					Image image = new Image(info.heroClass.spritesheet(), 0, 60*info.armorTier, 48, 60);
+					Image image = new Image(info.heroClass.spritesheet(), 0, HeroSprite.FRAME_HEIGHT*info.armorTier, HeroSprite.FRAME_WIDTH, HeroSprite.FRAME_HEIGHT);
 					image.scale.set(0.35f, 0.35f);
+					hero = image;
+					add(hero);
 					
 					steps = new Image(Icons.get(Icons.STAIRS));
 					add(steps);
@@ -230,8 +233,10 @@ public class StartScene extends PixelScene {
 					level = new BitmapText(PixelScene.pixelFont);
 					add(level);
 				} else {
-					Image image = new Image(info.heroClass.spritesheet(), 0, 60*info.armorTier, 48, 60);
+					Image image = new Image(info.heroClass.spritesheet(), 0, HeroSprite.FRAME_HEIGHT*info.armorTier, HeroSprite.FRAME_WIDTH, HeroSprite.FRAME_HEIGHT);
 					image.scale.set(0.35f, 0.35f);
+					hero.copy(image);
+
 					classIcon.copy(Icons.get(info.heroClass));
 				}
 
@@ -293,7 +298,7 @@ public class StartScene extends PixelScene {
 			
 			if (hero != null){
 				hero.x = x+8;
-				hero.y = y + (height - hero.height())/2f;
+				hero.y = y + (height - hero.height())/2f-2;
 				align(hero);
 				
 				name.setPos(
