@@ -1,0 +1,133 @@
+package com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire;
+
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.watabou.utils.Random;
+
+import java.util.ArrayList;
+
+public class GrimoireAria extends Bag {
+
+    private static final String AC_SHOOT = "SHOOT";
+
+    {
+        image = ItemSpriteSheet.GRIMOIRE_ARIA;
+    }
+
+    @Override
+    public ArrayList<String> actions(Hero hero) {
+        ArrayList<String> actions = super.actions(hero);
+        actions.add(AC_SHOOT);
+        return actions;
+    }
+
+    @Override
+    public void execute(Hero hero, String action) {
+
+        super.execute(hero, action);
+
+        if (action.equals(AC_SHOOT)) {
+
+            curUser = hero;
+            curItem = this;
+            GameScene.selectCell( shooter );
+
+        }
+    }
+
+    @Override
+    public boolean canHold( Item item ) {
+        if (item instanceof Scroll){
+            return super.canHold(item);
+        } else {
+            return false;
+        }
+    }
+
+    public int capacity(){
+        return 5;
+    }
+
+    @Override
+    public void onDetach( ) {
+        super.onDetach();
+    }
+
+    @Override
+    public int value() {
+        return 40;
+    }
+
+    @Override
+    public int level() { //영웅 레벨에 따라 강화수치 증가
+        return Dungeon.hero == null ? 0 : Dungeon.hero.lvl/5;
+    }
+
+    public int min(int lvl) {
+        return 5+lvl;
+    }
+
+    public int max(int lvl) {
+        return 25+5*lvl;
+    }
+
+    public int magicDamage() {
+        return Hero.heroDamageIntRange(min(level()), max(level()));
+    }
+
+    public ManaBall knockBall(){
+        return new ManaBall();
+    }
+
+    public class ManaBall extends Item {
+        {
+            image = ItemSpriteSheet.MANA_BALL;
+        }
+
+        @Override
+        protected void onThrow(int cell) {
+            Char ch = Actor.findChar(cell);
+            if (ch != null) {
+                ch.damage(GrimoireAria.this.magicDamage(), this);
+            }
+        }
+
+        @Override
+        public void cast(Hero user, int dst) {
+            super.cast(user, dst);
+        }
+
+        @Override
+        public void throwSound() {
+            super.throwSound();
+        }
+    }
+
+    CellSelector.Listener shooter = new CellSelector.Listener() {
+
+        @Override
+        public void onSelect(Integer cell) {
+            if (cell == null) {
+                return;
+            }
+
+            knockBall().cast(Dungeon.hero, cell);
+        }
+
+        @Override
+        public String prompt() {
+            return Messages.get(SpiritBow.class, "prompt");
+        }
+    };
+}

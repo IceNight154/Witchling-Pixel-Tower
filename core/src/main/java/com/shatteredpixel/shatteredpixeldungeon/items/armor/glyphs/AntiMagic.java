@@ -44,6 +44,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Shaman;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Warlock;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogFist;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.ArcaneBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.HolyBomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRetribution;
@@ -63,7 +64,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.HolyDart;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.DisintegrationTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GrimTrap;
@@ -131,6 +131,8 @@ public class AntiMagic extends Armor.Glyph {
 		RESISTS.add( Eye.DeathGaze.class );
 		RESISTS.add( YogFist.BrightFist.LightBeam.class );
 		RESISTS.add( YogFist.DarkFist.DarkBolt.class );
+
+		RESISTS.add(GrimoireAria.ManaBall.class );
 	}
 	
 	@Override

@@ -105,6 +105,8 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		ANGULAR_SPEEDS.put(ScorpioSprite.ScorpioShot.class,   0);
 		ANGULAR_SPEEDS.put(HolyLance.HolyLanceVFX.class,      0);
 
+		ANGULAR_SPEEDS.put(GrimoireAria.ManaBall.class,      0);
+
 		//720 is default
 
 		ANGULAR_SPEEDS.put(GnollGeomancer.Boulder.class,   90);
@@ -169,7 +171,8 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 			
 		} else if (item instanceof SpiritBow.SpiritArrow
 				|| item instanceof ScorpioSprite.ScorpioShot
-				|| item instanceof TenguSprite.TenguShuriken){
+				|| item instanceof TenguSprite.TenguShuriken
+				|| item instanceof GrimoireAria.ManaBall){
 			speed *= 1.5f;
 		}
 		

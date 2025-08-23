@@ -72,7 +72,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurs
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -276,7 +276,7 @@ public enum HeroClass {
 
 	private static void initAria( Hero hero ) {
 
-		(hero.belongings.weapon = new GrimoireAria()).identify();
+		new GrimoireAria().collect();
 
 		Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
 
