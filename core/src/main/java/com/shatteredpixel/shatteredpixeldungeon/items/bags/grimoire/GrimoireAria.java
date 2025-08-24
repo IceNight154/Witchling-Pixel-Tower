@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -12,6 +13,8 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
@@ -21,6 +24,8 @@ public class GrimoireAria extends Bag {
 
     {
         image = ItemSpriteSheet.GRIMOIRE_ARIA;
+
+        defaultAction = AC_SHOOT;
     }
 
     @Override
@@ -108,7 +113,7 @@ public class GrimoireAria extends Bag {
 
         @Override
         public void throwSound() {
-            super.throwSound();
+            Sample.INSTANCE.play( Assets.Sounds.ATK_GRIMOIRE, 1, Random.Float(0.87f, 1.15f) );
         }
     }
 
@@ -120,6 +125,7 @@ public class GrimoireAria extends Bag {
                 return;
             }
 
+            if(cell == curUser.pos) return;
             knockBall().cast(Dungeon.hero, cell);
         }
 
