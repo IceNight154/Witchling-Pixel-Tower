@@ -61,6 +61,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfPrismaticLight;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfTransfusion;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfWarding;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blazing;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Shocking;
@@ -133,14 +134,16 @@ public class AntiMagic extends Armor.Glyph {
 		RESISTS.add( YogFist.DarkFist.DarkBolt.class );
 
 		RESISTS.add(GrimoireAria.ManaBall.class );
+		RESISTS.add(Codex.MagicDamage.class );
+
 	}
-	
+
 	@Override
 	public int proc(Armor armor, Char attacker, Char defender, int damage) {
 		//no proc effect, triggers in Char.damage
 		return damage;
 	}
-	
+
 	public static int drRoll( Char owner, int level ){
 		if (level == -1){
 			return 0;

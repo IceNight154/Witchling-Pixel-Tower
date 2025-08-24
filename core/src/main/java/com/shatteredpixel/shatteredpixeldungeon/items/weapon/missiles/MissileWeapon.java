@@ -39,7 +39,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ParchmentScrap;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Explosive;

@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicCannon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -287,6 +288,7 @@ public enum HeroClass {
 
 		new PotionOfLiquidFlame().identify().collect();
 		new ScrollOfIdentify().identify().collect();
+		new MagicCannon().identify().collect();
 
 		new PotionOfHealing().identify();
 		new ScrollOfRage().identify();
