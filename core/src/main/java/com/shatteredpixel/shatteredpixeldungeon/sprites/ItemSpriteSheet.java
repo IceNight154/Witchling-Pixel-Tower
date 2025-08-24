@@ -818,6 +818,18 @@ public class ItemSpriteSheet {
 		assignItemRect(HALLS_PAGE,  10, 11);
 	}
 
+	private static final int CODEX = xy(1, 33);
+	public static final int CODEX_CANNON = CODEX+idx(0);
+	static {
+		assignItemRect(CODEX_CANNON, 16, 16);
+	}
+
+	private static final int CODEX_MAGIC = xy(1, 34);
+	public static final int MAGIC_CANNON = CODEX_MAGIC+idx(0);
+	static {
+		assignItemRect(MAGIC_CANNON, 11, 11);
+	}
+
 	//for smaller 8x8 icons that often accompany an item sprite
 	public static class Icons {
 

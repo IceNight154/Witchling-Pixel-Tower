@@ -98,13 +98,13 @@ public class GrimoireAria extends Bag {
             image = ItemSpriteSheet.MANA_BALL;
         }
 
-    @Override
-    protected void onThrow(int cell) {
-        Char ch = Actor.findChar(cell);
-        if (ch != null && ch != Dungeon.hero) {
-            ch.damage(GrimoireAria.this.magicDamage(), this);
+        @Override
+        protected void onThrow(int cell) {
+            Char ch = Actor.findChar(cell);
+            if (ch != null && ch != Dungeon.hero) {
+                ch.damage(GrimoireAria.this.magicDamage(), this);
+            }
         }
-    }
 
         @Override
         public void cast(Hero user, int dst) {
