@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Bundle;
 
@@ -20,6 +21,8 @@ public class Codex extends Item {
 
     {
         defaultAction = AC_SHOOT;
+        
+        usesTargeting = true;
     }
 
     public int tier;
@@ -139,7 +142,21 @@ public class Codex extends Item {
         protected void onThrow(int cell) {
             Char ch = Actor.findChar(cell);
             if (ch != null && ch != Dungeon.hero) {
-                ch.damage(magicDamage(), this);
+                Char defender = ch;
+                Char attacker = Dungeon.hero;
+                boolean hit = Char.hit(attacker, defender, false);
+                if (hit) {
+                    ch.damage(magicDamage(), this);
+                } else {
+                    if (defender.sprite != null){
+                        if (Char.hitMissIcon != -1){
+                            defender.sprite.showStatusWithIcon(CharSprite.NEUTRAL, defender.defenseVerb(), Char.hitMissIcon);
+                            Char.hitMissIcon = -1;
+                        } else {
+                            defender.sprite.showStatus(CharSprite.NEUTRAL, defender.defenseVerb());
+                        }
+                    }
+                }
             }
 
             onCast();
