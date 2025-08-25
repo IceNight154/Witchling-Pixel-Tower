@@ -28,7 +28,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicArrow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicBullet;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicCannon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Bolas;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.FishingSpear;
@@ -108,7 +111,11 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		ANGULAR_SPEEDS.put(HolyLance.HolyLanceVFX.class,      0);
 
 		ANGULAR_SPEEDS.put(GrimoireAria.ManaBall.class,      0);
-		ANGULAR_SPEEDS.put(MagicCannon.class,      0);
+		ANGULAR_SPEEDS.put(MagicBullet.class,       0);
+		ANGULAR_SPEEDS.put(MagicArrow.class,  	    0);
+		ANGULAR_SPEEDS.put(MagicMissile.class,      0);
+		ANGULAR_SPEEDS.put(MagicCannon.class,       0);
+
 
 		//720 is default
 
