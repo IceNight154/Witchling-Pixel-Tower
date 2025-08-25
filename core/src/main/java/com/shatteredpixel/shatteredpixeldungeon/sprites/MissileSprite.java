@@ -25,9 +25,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.spells.HolyLance;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.GnollGeomancer;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicCannon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.Bolas;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.FishingSpear;
@@ -107,7 +108,7 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 		ANGULAR_SPEEDS.put(HolyLance.HolyLanceVFX.class,      0);
 
 		ANGULAR_SPEEDS.put(GrimoireAria.ManaBall.class,      0);
-		ANGULAR_SPEEDS.put(Codex.Magic.class,      0);
+		ANGULAR_SPEEDS.put(MagicCannon.class,      0);
 
 		//720 is default
 
@@ -175,7 +176,7 @@ public class MissileSprite extends ItemSprite implements Tweener.Listener {
 				|| item instanceof ScorpioSprite.ScorpioShot
 				|| item instanceof TenguSprite.TenguShuriken
 				|| item instanceof GrimoireAria.ManaBall
-				|| item instanceof Codex.Magic){
+				|| item instanceof MagicCannon){
 			speed *= 1.5f;
 		}
 		

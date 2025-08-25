@@ -689,7 +689,7 @@ public abstract class Char extends Actor {
 		}
 	}
 
-	public static int hitMissIcon = -1;
+	protected static int hitMissIcon = -1;
 
 	public int attackSkill( Char target ) {
 		return 0;

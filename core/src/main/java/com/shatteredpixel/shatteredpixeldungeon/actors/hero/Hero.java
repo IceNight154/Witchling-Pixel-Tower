@@ -135,6 +135,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
@@ -457,6 +458,24 @@ public class Hero extends Char {
 		} else {
 			return 0;
 		}
+	}
+
+	public boolean magicalShoot( Char enemy, Codex codex ) {
+		boolean hit = Char.hit(this, enemy, false);
+		if (hit) {
+			int damage = codex.proc(this, enemy, codex.damageRoll(this));
+			enemy.damage(damage, codex);
+		} else {
+			if (enemy.sprite != null){
+				if (Char.hitMissIcon != -1){
+					enemy.sprite.showStatusWithIcon(CharSprite.NEUTRAL, enemy.defenseVerb(), Char.hitMissIcon);
+					Char.hitMissIcon = -1;
+				} else {
+					enemy.sprite.showStatus(CharSprite.NEUTRAL, enemy.defenseVerb());
+				}
+			}
+		}
+		return hit;
 	}
 	
 	public boolean shoot( Char enemy, MissileWeapon wep ) {
