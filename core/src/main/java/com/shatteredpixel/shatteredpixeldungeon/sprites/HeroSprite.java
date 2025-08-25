@@ -73,28 +73,28 @@ public class HeroSprite extends CharSprite {
 
 		TextureFilm film = new TextureFilm( tiers(), Dungeon.hero.tier(), FRAME_WIDTH, FRAME_HEIGHT );
 
-		idle = new Animation( 1, true );
-		idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
+		idle = new Animation( 7, true );
+		idle.frames( film, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 3, 4, 5, 4, 3 );
 		
 		run = new Animation( RUN_FRAMERATE, true );
-		run.frames( film, 2, 3, 4, 5, 6, 7 );
+		run.frames( film, 6, 7, 8, 9, 10, 11 );
 		
 		die = new Animation( 20, false );
-		die.frames( film, 8, 9, 10, 11, 12 );
+		die.frames( film, 12, 13, 14, 15, 16 );
 		die = new Animation( 10, true );
-		die.frames( film, 13, 14, 15, 12 );
+		die.frames( film, 17, 18, 19, 16 );
 
 
 		attack = new Animation( 16, false );
-		attack.frames( film, 16 , 17, 18, 19, 18, 17, 16, 0 );
+		attack.frames( film, 20 , 21, 22, 23, 22, 21, 20, 0 );
 		
 		zap = attack.clone();
 		
 		operate = new Animation( 8, false );
-		operate.frames( film, 20, 21, 20, 21 );
+		operate.frames( film, 24, 25, 24, 25 );
 		
 		fly = new Animation( 5, true );
-		fly.frames( film, 22, 24, 22, 23 );
+		fly.frames( film, 26, 28, 26, 27 );
 
 		read = new Animation( 20, false );
 		read.frames( film, 22, 23, 23, 23, 23, 23, 23, 23, 23, 22 );

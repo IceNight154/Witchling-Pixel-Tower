@@ -74,7 +74,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicArrow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicBullet;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicCannon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -287,10 +290,12 @@ public enum HeroClass {
 			Catalog.setSeen(BrokenSeal.class);
 		}
 
-		new StoneOfEnchantment().identify().collect();
-		new PotionOfLiquidFlame().identify().collect();
-		new ScrollOfIdentify().identify().collect();
+		new MagicArrow().quantity(3).collect();
+		new MagicBullet().quantity(3).collect();
+		new MagicMissile().quantity(3).collect();
 		new MagicCannon().quantity(3).collect();
+		new PotionOfStrength().quantity(50).upgrade(50).collect();
+		new ScrollOfIdentify().identify().collect();
 
 		new PotionOfHealing().identify();
 		new ScrollOfRage().identify();

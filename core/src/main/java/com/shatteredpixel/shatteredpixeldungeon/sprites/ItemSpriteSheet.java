@@ -819,14 +819,26 @@ public class ItemSpriteSheet {
 	}
 
 	private static final int CODEX = xy(1, 33);
-	public static final int CODEX_CANNON = CODEX+idx(0);
+	public static final int CODEX_BULLET 	= CODEX+idx(0);
+	public static final int CODEX_ARROW  	= CODEX+idx(1);
+	public static final int CODEX_MISSILE	= CODEX+idx(2);
+	public static final int CODEX_CANNON 	= CODEX+idx(3);
 	static {
+		assignItemRect(CODEX_BULLET, 16, 16);
+		assignItemRect(CODEX_ARROW, 16, 16);
+		assignItemRect(CODEX_MISSILE, 16, 16);
 		assignItemRect(CODEX_CANNON, 16, 16);
 	}
 
 	private static final int CODEX_MAGIC = xy(1, 34);
+	public static final int MAGIC_BULLET = CODEX_MAGIC+idx(0);
+	public static final int MAGIC_ARROW = CODEX_MAGIC+idx(0);
+	public static final int MAGIC_MISSILE = CODEX_MAGIC+idx(0);
 	public static final int MAGIC_CANNON = CODEX_MAGIC+idx(0);
 	static {
+		assignItemRect(MAGIC_BULLET, 6, 6);
+		assignItemRect(MAGIC_ARROW, 11, 11);
+		assignItemRect(MAGIC_MISSILE, 11, 11);
 		assignItemRect(MAGIC_CANNON, 11, 11);
 	}
 

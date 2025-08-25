@@ -2,11 +2,11 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices;
 
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
-public class MagicCannon extends Codex {
+public class MagicBullet extends Codex {
     {
-        tier = 4;
-        image = ItemSpriteSheet.CODEX_CANNON;
-        magicImage = ItemSpriteSheet.MAGIC_CANNON;
+        tier = 1;
+        image = ItemSpriteSheet.CODEX_BULLET;
+        magicImage = ItemSpriteSheet.MAGIC_BULLET;
 
         baseUses = 10;
     }
