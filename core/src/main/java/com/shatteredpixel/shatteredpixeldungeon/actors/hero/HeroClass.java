@@ -294,7 +294,7 @@ public enum HeroClass {
 		new MagicBullet().quantity(3).collect();
 		new MagicMissile().quantity(3).collect();
 		new MagicCannon().quantity(3).collect();
-		new PotionOfStrength().quantity(50).upgrade(50).collect();
+		new PotionOfStrength().quantity(50).collect();
 		new ScrollOfIdentify().identify().collect();
 
 		new PotionOfHealing().identify();

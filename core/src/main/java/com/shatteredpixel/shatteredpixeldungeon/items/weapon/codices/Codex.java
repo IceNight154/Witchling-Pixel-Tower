@@ -65,7 +65,7 @@ public class Codex extends Weapon {
 
     public int tier;
     //투사체 이미지
-    public int magicImage = ItemSpriteSheet.MAGIC_CANNON;
+    public int magicImage = this.image;
     public boolean casting;
 
     protected int usesToID(){
@@ -283,7 +283,7 @@ public class Codex extends Weapon {
 
         int result = super.proc(attacker, defender, damage);
 
-        parent.identify();
+        if (parent != null) parent.identify(); else this.identify();
 
         if (!isIdentified() && ShardOfOblivion.passiveIDDisabled()){
             Buff.prolong(curUser, ShardOfOblivion.ThrownUseTracker.class, 50f);
