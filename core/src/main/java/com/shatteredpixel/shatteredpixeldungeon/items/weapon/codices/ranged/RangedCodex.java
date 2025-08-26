@@ -24,6 +24,7 @@ import com.watabou.utils.Bundle;
 
 import java.util.ArrayList;
 
+//원거리형 코덱스 상위 클래스입니다.
 public class RangedCodex extends Codex {
 
     {
@@ -33,7 +34,6 @@ public class RangedCodex extends Codex {
         casting = false;
 
         // 원거리형 코덱스의 기본 사용 횟수입니다. 따로 지정하지 않아도 이만큼의 사용 횟수를 가집니다.
-        // 전체가 아니라 개별 조정이 필요한 경우 여기가 아니라 해당 클래스의 초기화 블럭에서 baseUses를 다시 지정해 주시면 됩니다.
         baseUses = 8;
     }
 
@@ -55,7 +55,7 @@ public class RangedCodex extends Codex {
         actions.remove(AC_EQUIP);
         return actions;
     }
-
+    
     @Override
     public int min() {
         if (Dungeon.hero != null) {
@@ -67,10 +67,9 @@ public class RangedCodex extends Codex {
 
     @Override
     public int min(int lvl) {
-        // 원거리형 코덱스의 최소 피해량입니다.
-        //
-        return 2 * tier +                      //base
-                lvl;                            //level scaling
+        // 원거리형 코덱스의 최소 피해량입니다. 필요한 경우 오버라이딩하시면 됩니다.
+        return 2 * tier + //base
+                lvl;      //level scaling
     }
 
     @Override
@@ -84,11 +83,11 @@ public class RangedCodex extends Codex {
 
     @Override
     public int max(int lvl) {
-        return 5 * tier +                      //base
-                tier * lvl;                       //level scaling
+        // 원거리형 코덱스의 최대 피해량입니다.
+        return 5 * tier +   //base
+                tier * lvl; //level scaling
     }
 
-    //use the parent item if this has been thrown from a parent
     public int buffedLvl() {
         if (parent != null) {
             return parent.buffedLvl();
@@ -143,6 +142,7 @@ public class RangedCodex extends Codex {
         }
     }
 
+    // 정확성 배율입니다.
     @Override
     public float accuracyFactor(Char owner, Char target) {
         float accFactor = super.accuracyFactor(owner, target);
@@ -152,23 +152,13 @@ public class RangedCodex extends Codex {
         return accFactor;
     }
 
+    //근접 시 정확성 배율입니다.
     protected float adjacentAccFactor(Char owner, Char target) {
         if (Dungeon.level.adjacent(owner.pos, target.pos)) {
             return 0.5f;
         } else {
             return 1f;
         }
-    }
-
-    @Override
-    public int proc(Char attacker, Char defender, int damage) {
-        int result = super.proc(attacker, defender, damage);
-
-        if (!isIdentified() && ShardOfOblivion.passiveIDDisabled()) {
-            Buff.prolong(curUser, ShardOfOblivion.ThrownUseTracker.class, 50f);
-        }
-
-        return result;
     }
 
     @Override
@@ -231,8 +221,6 @@ public class RangedCodex extends Codex {
 
     @Override
     protected void decrementDurability() {
-        //if this weapon was thrown from a source stack, degrade that stack.
-        //unless a weapon is about to break, then break the one being thrown
         if (parent != null) {
             if (parent.durability <= parent.durabilityPerUse()) {
                 durability = 0;
@@ -318,7 +306,7 @@ public class RangedCodex extends Codex {
     @Override
     public float castDelay(Char user, int cell) {
         // onUse()에서 이미 castingTurn()만큼의 턴을 소모하기 때문에, 아이템 투척 자체로는 턴을 소모하지 않습니다.
-        // 사용에 필요한 턴 수정이 필요한 경우 해당 코덱스 클래스에서 castingTurn()를 오버라이딩해 주세요.
+        // 사용에 필요한 턴 수정이 필요한 경우 해당 코덱스 클래스에서 castingTurn()을 오버라이딩해 주세요.
         return 0;
     }
 
