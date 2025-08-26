@@ -1,6 +1,5 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices;
 
-import com.badlogic.gdx.Gdx;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
@@ -68,50 +67,50 @@ public class Codex extends Weapon {
     public int magicImage = this.image;
     public boolean casting;
 
-    protected int usesToID(){
+    protected int usesToID() {
         return 1;
     }
 
     @Override
     public int min() {
-        if (Dungeon.hero != null){
+        if (Dungeon.hero != null) {
             return Math.max(0, min(buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero)));
         } else {
-            return Math.max(0 , min( buffedLvl() ));
+            return Math.max(0, min(buffedLvl()));
         }
     }
 
     @Override
     public int min(int lvl) {
-        return  2 * tier +                      //base
+        return 2 * tier +                      //base
                 lvl;                            //level scaling
     }
 
     @Override
     public int max() {
-        if (Dungeon.hero != null){
-            return Math.max(0, max( buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero) ));
+        if (Dungeon.hero != null) {
+            return Math.max(0, max(buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero)));
         } else {
-            return Math.max(0 , max( buffedLvl() ));
+            return Math.max(0, max(buffedLvl()));
         }
     }
 
     @Override
     public int max(int lvl) {
-        return  5 * tier +                      //base
-                tier*lvl;                       //level scaling
+        return 5 * tier +                      //base
+                tier * lvl;                       //level scaling
     }
 
-    public int STRReq(int lvl){
+    public int STRReq(int lvl) {
         int req = STRReq(tier, lvl) - 1; //1 less str than normal for their tier
-        if (masteryPotionBonus){
+        if (masteryPotionBonus) {
             req -= 2;
         }
         return req;
     }
 
     //use the parent item if this has been thrown from a parent
-    public int buffedLvl(){
+    public int buffedLvl() {
         if (parent != null) {
             return parent.buffedLvl();
         } else {
@@ -119,7 +118,7 @@ public class Codex extends Weapon {
         }
     }
 
-    public Item upgrade( boolean enchant ) {
+    public Item upgrade(boolean enchant) {
         if (!bundleRestoring) {
             durability = MAX_DURABILITY;
             extraThrownLeft = false;
@@ -127,8 +126,8 @@ public class Codex extends Weapon {
         }
         //thrown weapons don't get curse weakened
         boolean wasCursed = cursed;
-        super.upgrade( enchant );
-        if (wasCursed && hasCurseEnchant()){
+        super.upgrade(enchant);
+        if (wasCursed && hasCurseEnchant()) {
             cursed = wasCursed;
         }
         return this;
@@ -145,9 +144,9 @@ public class Codex extends Weapon {
     }
 
     @Override
-    public ArrayList<String> actions( Hero hero ) {
-        ArrayList<String> actions = super.actions( hero );
-        actions.remove( AC_EQUIP );
+    public ArrayList<String> actions(Hero hero) {
+        ArrayList<String> actions = super.actions(hero);
+        actions.remove(AC_EQUIP);
         return actions;
     }
 
@@ -157,7 +156,7 @@ public class Codex extends Weapon {
         return super.collect(container);
     }
 
-    public boolean isSimilar( Item item ) {
+    public boolean isSimilar(Item item) {
         return trueLevel() == item.trueLevel() && getClass() == item.getClass();
     }
 
@@ -165,13 +164,13 @@ public class Codex extends Weapon {
     public int throwPos(Hero user, int dst) {
 
         int projecting = 0;
-        if (hasEnchant(Projecting.class, user)){
+        if (hasEnchant(Projecting.class, user)) {
             projecting += 4;
         }
 
         if (projecting > 0
                 && (Dungeon.level.passable[dst] || Dungeon.level.avoid[dst] || Actor.findChar(dst) != null)
-                && Dungeon.level.distance(user.pos, dst) <= Math.round(projecting * Enchantment.genericProcChanceMultiplier(user))){
+                && Dungeon.level.distance(user.pos, dst) <= Math.round(projecting * Enchantment.genericProcChanceMultiplier(user))) {
             return dst;
         } else {
             return super.throwPos(user, dst);
@@ -187,10 +186,10 @@ public class Codex extends Weapon {
         return accFactor;
     }
 
-    protected float adjacentAccFactor(Char owner, Char target){
-        if (Dungeon.level.adjacent( owner.pos, target.pos )) {
-            if (owner instanceof Hero){
-                return (0.5f + 0.2f*((Hero) owner).pointsInTalent(Talent.POINT_BLANK));
+    protected float adjacentAccFactor(Char owner, Char target) {
+        if (Dungeon.level.adjacent(owner.pos, target.pos)) {
+            if (owner instanceof Hero) {
+                return (0.5f + 0.2f * ((Hero) owner).pointsInTalent(Talent.POINT_BLANK));
             } else {
                 return 0.5f;
             }
@@ -203,14 +202,14 @@ public class Codex extends Weapon {
     public void doThrow(Hero hero) {
         parent = null; //reset parent before throwing, just in case
         if (((levelKnown && level() > 0) || hasGoodEnchant() || masteryPotionBonus || enchantHardened)
-                && !extraThrownLeft && quantity() == 1 && durabilityLeft() <= durabilityPerUse()){
+                && !extraThrownLeft && quantity() == 1 && durabilityLeft() <= durabilityPerUse()) {
             GameScene.show(new WndOptions(new ItemSprite(this), Messages.titleCase(title()),
                     Messages.get(MissileWeapon.class, "break_upgraded_warn_desc"),
                     Messages.get(MissileWeapon.class, "break_upgraded_warn_yes"),
-                    Messages.get(MissileWeapon.class, "break_upgraded_warn_no")){
+                    Messages.get(MissileWeapon.class, "break_upgraded_warn_no")) {
                 @Override
                 protected void onSelect(int index) {
-                    if (index == 0){
+                    if (index == 0) {
                         Codex.super.doThrow(hero);
                     } else {
                         QuickSlotButton.cancel();
@@ -232,17 +231,17 @@ public class Codex extends Weapon {
     }
 
     @Override
-    protected void onThrow( int cell ) {
-        Char enemy = Actor.findChar( cell );
+    protected void onThrow(int cell) {
+        Char enemy = Actor.findChar(cell);
 
         //기존 코드
         if (enemy == null || enemy == curUser) {
             parent = null;
         } else {
-            if (!curUser.magicalShoot( enemy, this )) {
-                rangedMiss( cell );
+            if (!curUser.magicalShoot(enemy, this)) {
+                rangedMiss(cell);
             } else {
-                rangedHit( enemy, cell );
+                rangedHit(enemy, cell);
             }
         }
 
@@ -275,7 +274,7 @@ public class Codex extends Weapon {
 
     @Override
     public int proc(Char attacker, Char defender, int damage) {
-        if ((cursed || hasCurseEnchant()) && !cursedKnown){
+        if ((cursed || hasCurseEnchant()) && !cursedKnown) {
             GLog.n(Messages.get(this, "curse_discover"));
         }
         cursedKnown = true;
@@ -283,9 +282,10 @@ public class Codex extends Weapon {
 
         int result = super.proc(attacker, defender, damage);
 
-        if (parent != null) parent.identify(); else this.identify();
+        if (parent != null) parent.identify();
+        else this.identify();
 
-        if (!isIdentified() && ShardOfOblivion.passiveIDDisabled()){
+        if (!isIdentified() && ShardOfOblivion.passiveIDDisabled()) {
             Buff.prolong(curUser, ShardOfOblivion.ThrownUseTracker.class, 50f);
         }
 
@@ -299,7 +299,7 @@ public class Codex extends Weapon {
         return item;
     }
 
-    public int defaultQuantity(){
+    public int defaultQuantity() {
         return 3;
     }
 
@@ -330,7 +330,7 @@ public class Codex extends Weapon {
         if (effectRoll < 0.3f * ParchmentScrap.curseChanceMultiplier()) {
             enchant(Enchantment.randomCurse());
             cursed = true;
-        } else if (effectRoll >= 1f - (0.1f * ParchmentScrap.enchantChanceMultiplier())){
+        } else if (effectRoll >= 1f - (0.1f * ParchmentScrap.enchantChanceMultiplier())) {
             enchant();
         }
 
@@ -341,49 +341,49 @@ public class Codex extends Weapon {
 
     public String status() {
         //show quantity even when it is 1
-        return Integer.toString( quantity );
+        return Integer.toString(quantity);
     }
 
     @Override
     public float castDelay(Char user, int cell) {
-        if (Actor.findChar(cell) != null && Actor.findChar(cell) != user){
-            return delayFactor( user );
+        if (Actor.findChar(cell) != null && Actor.findChar(cell) != user) {
+            return delayFactor(user);
         } else {
             return super.castDelay(user, cell);
         }
     }
 
-    protected void rangedHit( Char enemy, int cell ){
+    protected void rangedHit(Char enemy, int cell) {
         parent = null;
     }
 
-    protected void rangedMiss( int cell ) {
+    protected void rangedMiss(int cell) {
         parent = null;
     }
 
-    public float durabilityLeft(){
+    public float durabilityLeft() {
         return durability;
     }
 
-    public void repair( float amount ){
+    public void repair(float amount) {
         durability += amount;
         durability = Math.min(durability, MAX_DURABILITY);
     }
 
-    public void damage( float amount ){
+    public void damage(float amount) {
         durability -= amount;
         durability = Math.max(durability, 1); //cannot break from doing this
     }
 
-    public final float durabilityPerUse(){
+    public final float durabilityPerUse() {
         return durabilityPerUse(level());
     }
 
     //classes that add steps onto durabilityPerUse can turn rounding off, to do their own rounding after more logic
     protected boolean useRoundingInDurabilityCalc = true;
 
-    public float durabilityPerUse( int level ){
-        float usages = baseUses * (float)(Math.pow(1.5f, level));
+    public float durabilityPerUse(int level) {
+        float usages = baseUses * (float) (Math.pow(1.5f, level));
 
         if (holster) {
             usages *= MagicalHolster.HOLSTER_DURABILITY_FACTOR;
@@ -392,26 +392,26 @@ public class Codex extends Weapon {
         //+50% durability on speed aug, -33% durability on damage aug
         usages /= augment.delayFactor(1f);
 
-        if (Dungeon.hero != null) usages *= RingOfSharpshooting.durabilityMultiplier( Dungeon.hero );
+        if (Dungeon.hero != null) usages *= RingOfSharpshooting.durabilityMultiplier(Dungeon.hero);
 
         //at 100 uses, items just last forever.
         if (usages >= 100f) return 0;
 
-        if (useRoundingInDurabilityCalc){
+        if (useRoundingInDurabilityCalc) {
             usages = Math.round(usages);
             //add a tiny amount to account for rounding error for calculations like 1/3
-            return (MAX_DURABILITY/usages) + 0.001f;
+            return (MAX_DURABILITY / usages) + 0.001f;
         } else {
             //rounding can be disabled for classes that override durability per use
-            return MAX_DURABILITY/usages;
+            return MAX_DURABILITY / usages;
         }
     }
 
-    protected void decrementDurability(){
+    protected void decrementDurability() {
         //if this weapon was thrown from a source stack, degrade that stack.
         //unless a weapon is about to break, then break the one being thrown
-        if (parent != null){
-            if (parent.durability <= parent.durabilityPerUse()){
+        if (parent != null) {
+            if (parent.durability <= parent.durabilityPerUse()) {
                 durability = 0;
                 parent.durability = MAX_DURABILITY;
                 parent.extraThrownLeft = false;
@@ -420,16 +420,16 @@ public class Codex extends Weapon {
                 }
             } else {
                 parent.durability -= parent.durabilityPerUse();
-                if (parent.durability > 0 && parent.durability <= parent.durabilityPerUse()){
+                if (parent.durability > 0 && parent.durability <= parent.durabilityPerUse()) {
                     GLog.w(Messages.get(this, "about_to_break"));
                 }
             }
             parent = null;
         } else {
             durability -= durabilityPerUse();
-            if (durability > 0 && durability <= durabilityPerUse()){
+            if (durability > 0 && durability <= durabilityPerUse()) {
                 GLog.w(Messages.get(this, "about_to_break"));
-            } else if (durabilityPerUse() < 100f && durability <= 0){
+            } else if (durabilityPerUse() < 100f && durability <= 0) {
                 GLog.n(Messages.get(this, "has_broken"));
             }
         }
@@ -437,12 +437,12 @@ public class Codex extends Weapon {
 
     @Override
     public int damageRoll(Char owner) {
-        int damage = augment.damageFactor(super.damageRoll( owner ));
+        int damage = augment.damageFactor(super.damageRoll(owner));
 
         if (owner instanceof Hero) {
-            int exStr = ((Hero)owner).STR() - STRReq();
+            int exStr = ((Hero) owner).STR() - STRReq();
             if (exStr > 0) {
-                damage += Hero.heroDamageIntRange( 0, exStr );
+                damage += Hero.heroDamageIntRange(0, exStr);
             }
             if (owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()) {
                 damage = Math.round(damage * (1f + 0.1f * ((Hero) owner).pointsInTalent(Talent.PROJECTILE_MOMENTUM)));
@@ -464,9 +464,9 @@ public class Codex extends Weapon {
         if (isSimilar(other)) {
             extraThrownLeft = false;
 
-            durability += ((Codex)other).durability;
+            durability += ((Codex) other).durability;
             durability -= MAX_DURABILITY;
-            while (durability <= 0){
+            while (durability <= 0) {
                 quantity -= 1;
                 durability += MAX_DURABILITY;
             }
@@ -478,16 +478,16 @@ public class Codex extends Weapon {
 
             //if other has a curse/enchant status that's a higher priority, copy it. in the following order:
             //curse infused
-            if (!curseInfusionBonus && ((Codex) other).curseInfusionBonus && ((Codex) other).hasCurseEnchant()){
+            if (!curseInfusionBonus && ((Codex) other).curseInfusionBonus && ((Codex) other).hasCurseEnchant()) {
                 enchantment = ((Codex) other).enchantment;
                 curseInfusionBonus = true;
                 cursed = cursed || other.cursed;
                 //enchanted
-            } else if (!curseInfusionBonus && !hasGoodEnchant() && ((Codex) other).hasGoodEnchant()){
+            } else if (!curseInfusionBonus && !hasGoodEnchant() && ((Codex) other).hasGoodEnchant()) {
                 enchantment = ((Codex) other).enchantment;
                 cursed = other.cursed;
                 //nothing
-            } else if (!curseInfusionBonus && hasCurseEnchant() && !((Codex) other).hasCurseEnchant()){
+            } else if (!curseInfusionBonus && hasCurseEnchant() && !((Codex) other).hasCurseEnchant()) {
                 enchantment = ((Codex) other).enchantment;
                 cursed = other.cursed;
             }
@@ -495,7 +495,7 @@ public class Codex extends Weapon {
 
             //special case for explosive, as it tracks a variable
             if (((Codex) other).enchantment instanceof Explosive
-                    && enchantment instanceof Explosive){
+                    && enchantment instanceof Explosive) {
                 ((Explosive) enchantment).merge((Explosive) ((Codex) other).enchantment);
             }
         }
@@ -508,8 +508,8 @@ public class Codex extends Weapon {
         Item split = super.split(amount);
         bundleRestoring = false;
 
-        if (split != null){
-            Codex m = (Codex)split;
+        if (split != null) {
+            Codex m = (Codex) split;
             m.durability = MAX_DURABILITY;
             m.parent = this;
             extraThrownLeft = m.extraThrownLeft = true;
@@ -550,17 +550,17 @@ public class Codex extends Weapon {
             }
         }
 
-        if (enchantment != null && (cursedKnown || !enchantment.curse())){
+        if (enchantment != null && (cursedKnown || !enchantment.curse())) {
             info += "\n\n" + Messages.get(Weapon.class, "enchanted", enchantment.name());
             if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
             info += " " + enchantment.desc();
-        } else if (enchantHardened){
+        } else if (enchantHardened) {
             info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
         }
 
         if (cursedKnown && cursed) {
             info += "\n\n" + Messages.get(Weapon.class, "cursed");
-        } else if (!isIdentified() && cursedKnown){
+        } else if (!isIdentified() && cursedKnown) {
             info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
         }
 
@@ -587,7 +587,7 @@ public class Codex extends Weapon {
             } else {
                 info += "\n\n" + Messages.get(this, "unlimited_uses");
             }
-        }  else {
+        } else {
             if (durabilityPerUse(0) > 0) {
                 info += "\n\n" + Messages.get(this, "unknown_uses", (int) Math.ceil(MAX_DURABILITY / durabilityPerUse(0)));
             } else {
@@ -666,10 +666,10 @@ public class Codex extends Weapon {
 
         public HashMap<Long, Integer> levelThresholds = new HashMap<>();
 
-        public static boolean pickupValid(Hero h, MissileWeapon w){
-            if (h.buff(MissileWeapon.UpgradedSetTracker.class) != null){
+        public static boolean pickupValid(Hero h, MissileWeapon w) {
+            if (h.buff(MissileWeapon.UpgradedSetTracker.class) != null) {
                 HashMap<Long, Integer> levelThresholds = h.buff(MissileWeapon.UpgradedSetTracker.class).levelThresholds;
-                if (levelThresholds.containsKey(w.setID)){
+                if (levelThresholds.containsKey(w.setID)) {
                     return w.trueLevel() >= levelThresholds.get(w.setID);
                 }
                 return true;
@@ -686,7 +686,7 @@ public class Codex extends Weapon {
             long[] IDs = new long[levelThresholds.size()];
             int[] levels = new int[levelThresholds.size()];
             int i = 0;
-            for (Long ID : levelThresholds.keySet()){
+            for (Long ID : levelThresholds.keySet()) {
                 IDs[i] = ID;
                 levels[i] = levelThresholds.get(ID);
                 i++;
@@ -701,9 +701,41 @@ public class Codex extends Weapon {
             long[] IDs = bundle.getLongArray(SET_IDS);
             int[] levels = bundle.getIntArray(SET_LEVELS);
             levelThresholds.clear();
-            for (int i = 0; i <IDs.length; i++){
+            for (int i = 0; i < IDs.length; i++) {
                 levelThresholds.put(IDs[i], levels[i]);
             }
         }
+    }
+
+    protected void spendUse() {
+        decrementDurability();
+
+        // 2) 남은 내구도 확인 (부동소수 보정)
+        if (durabilityLeft() <= 0f) {
+            // 음수로 깎였을 수도 있으니 0으로 고정
+            durability = 0f;
+
+            // 수량 감소 (하한 0 보정)
+            quantity = Math.max(0, quantity - 1);
+
+            if (quantity <= 0) {
+                // 3) curUser가 비어있어도 영웅 가방에서 안전 분리
+                Bag bag = null;
+                if (curUser != null && curUser.belongings != null) {
+                    bag = curUser.belongings.backpack;
+                } else if (Dungeon.hero != null && Dungeon.hero.belongings != null) {
+                    bag = Dungeon.hero.belongings.backpack;
+                }
+                if (bag != null) {
+                    detach(bag);
+                }
+            } else {
+                // 4) 스택이 남아있다면 다음 개체를 위해 내구도 리셋
+                durability = MAX_DURABILITY;
+            }
+        }
+
+        // 5) 마지막에 퀵슬롯 갱신
+        updateQuickslot();
     }
 }

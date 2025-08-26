@@ -9,7 +9,7 @@ public class ManaExplosionParticle extends PixelParticle {
     // #38abab
     private static final int COLOR = 0x38ABAB;
 
-    // ✅ 외부에서 바로 쓰는 정적 팩토리(싱글턴)
+    // 외부에서 바로 쓰는 정적 팩토리(싱글턴)
     public static final Emitter.Factory FACTORY = new Factory();
     // (선택) 게터
     public static Emitter.Factory factory() { return FACTORY; }

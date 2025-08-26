@@ -21,19 +21,16 @@ public class MagicCannon extends Codex {
     }
 
     @Override
-    public int max(int lvl) {
-        return super.max(lvl);
-    }
+    public int max(int lvl) { return super.max(lvl); }
 
     @Override
-    public int min(int lvl) {
-        return super.min(lvl);
-    }
+    public int min(int lvl) { return super.min(lvl); }
 
     public void throwSound() {
         Sample.INSTANCE.play(Assets.Sounds.ATK_GRIMOIRE, 1, Random.Float(0.87f, 1.15f));
     }
 
+    //이펙트
     @Override
     public int proc(Char attacker, Char defender, int damage) {
         int result = super.proc(attacker, defender, damage);
@@ -47,7 +44,7 @@ public class MagicCannon extends Codex {
     }
 
     private void explodeAt(Char attacker, int center, int baseDamage) {
-        // 화면 흔들림 & 사운드 (옵션)
+        // 화면 흔들림 & 사운드
         Camera.main.shake(3, 0.25f);
         Sample.INSTANCE.play(Assets.Sounds.BLAST);
 
@@ -57,6 +54,7 @@ public class MagicCannon extends Codex {
         int cx = center % w;
         int cy = center / w;
 
+        //데미지 범위
         for (int dy = -1; dy <= 1; dy++) {
             for (int dx = -1; dx <= 1; dx++) {
                 int x = cx + dx;
