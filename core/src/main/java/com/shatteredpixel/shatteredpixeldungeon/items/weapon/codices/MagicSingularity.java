@@ -16,9 +16,9 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaFieldParti
 
 public class MagicSingularity extends Codex {
     {
-        tier = 1;
-        image = ItemSpriteSheet.CODEX_CANNON;
-        magicImage = ItemSpriteSheet.MAGIC_CANNON;
+        tier = 5;
+        image = ItemSpriteSheet.CODEX_SINGULARITY;
+        magicImage = ItemSpriteSheet.MAGIC_SINGULARITY;
 
         baseUses = 10;
     }
