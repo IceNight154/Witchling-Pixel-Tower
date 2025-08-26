@@ -21,14 +21,15 @@ public class MagicSingularity extends Codex {
         magicImage = ItemSpriteSheet.MAGIC_CANNON;
 
         baseUses = 10;
-
-        onoff = true;
     }
 
     private static boolean isEnemyMob(Char ch) {
         return ch instanceof Mob
                 && ((Mob) ch).alignment == Char.Alignment.ENEMY;
     }
+
+    private int lastAimCell = -1;
+
 
     @Override
     public int max(int lvl) { return super.max(lvl); }
@@ -44,14 +45,32 @@ public class MagicSingularity extends Codex {
     @Override
     public int proc(Char attacker, Char defender, int damage) {
         int result = super.proc(attacker, defender, damage);
+
         Sample.INSTANCE.play(Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f));
 
-        if (defender != null) {
-            // 맞은 위치에서 폭발 이펙트
-            explodeAt(attacker, defender.pos, result);
-        }
+        int cell = (defender != null) ? defender.pos : lastAimCell;
+
+        if (cell < 0) cell = attacker.pos;
+
+        explodeAt(attacker, cell, result);
         return result;
     }
+
+    // 예시: 지면에 닿았을 때도 발동
+    @Override
+    protected void onThrow(int cell) {
+        lastAimCell = cell;                // 마지막 겨냥 칸 기록
+        explodeAt(Dungeon.hero, cell, 0);  // 빈 칸이라도 무조건 발동
+        super.onThrow(cell);               // 원래 로직 유지 시
+    }
+
+    public void onMiss(Char attacker, Char defender) {
+        // 미스 시에도 동일하게 폭발
+        int cell = (defender != null) ? defender.pos : lastAimCell;
+        if (cell < 0) cell = attacker.pos;
+        explodeAt(attacker, cell, 0); // 데미지 기반이 필요 없으면 0 또는 고정값
+    }
+
 
     private void explodeAt(Char attacker, int center, int baseDamage) {
         // 화면 흔들림 & 사운드
@@ -159,11 +178,6 @@ public class MagicSingularity extends Codex {
             return true;
         }
 
-        @Override
-        protected void onRemove() {
-            stopAllEmitters();
-            super.onRemove();
-        }
 
         private void stopAllEmitters() {
             for (com.watabou.noosa.particles.Emitter e : emitters.values()) {

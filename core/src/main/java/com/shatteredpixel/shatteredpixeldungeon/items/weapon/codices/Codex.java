@@ -36,7 +36,6 @@ import com.watabou.utils.Random;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class Codex extends Weapon {
 
     {
@@ -53,8 +52,6 @@ public class Codex extends Weapon {
 
     //whether or not this instance of the item exists purely to trigger its effect. i.e. no dropping
     public boolean spawnedForEffect = true;
-
-    public boolean onoff = false;
 
     public static final float MAX_DURABILITY = 100;
     protected float durability = MAX_DURABILITY;
@@ -241,7 +238,7 @@ public class Codex extends Weapon {
         if (enemy == null || enemy == curUser) {
             parent = null;
         } else {
-            if (!curUser.magicalShoot(enemy, this) && !onoff ) {
+            if (!curUser.magicalShoot(enemy, this)) {
                 rangedMiss(cell);
             } else {
                 rangedHit(enemy, cell);
@@ -709,34 +706,15 @@ public class Codex extends Weapon {
             }
         }
     }
-
-    protected void spendUse() {
-        decrementDurability();
-
-        // 2) 남은 내구도 확인 (부동소수 보정)
-        if (durabilityLeft() <= 0f) {
-            // 음수로 깎였을 수도 있으니 0으로 고정
-            durability = 0f;
-
-            // 수량 감소 (하한 0 보정)
-            quantity = Math.max(0, quantity - 1);
-
-            if (quantity <= 0) {
-                // 3) curUser가 비어있어도 영웅 가방에서 안전 분리
-                Bag bag = null;
-                if (curUser != null && curUser.belongings != null) {
-                    bag = curUser.belongings.backpack;
-                } else if (Dungeon.hero != null && Dungeon.hero.belongings != null) {
-                    bag = Dungeon.hero.belongings.backpack;
-                }
-                if (bag != null) {
-                    detach(bag);
-                }
-            } else {
-                // 4) 스택이 남아있다면 다음 개체를 위해 내구도 리셋
+     protected void spendUse() {
+            this.identify();
+            decrementDurability();
+            if (durabilityLeft() <= 0f) {
+                detach(Dungeon.hero.belongings.backpack);
                 durability = MAX_DURABILITY;
             }
-        }
+            updateQuickslot();
+
 
         // 5) 마지막에 퀵슬롯 갱신
         updateQuickslot();
