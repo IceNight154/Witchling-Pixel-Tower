@@ -1,19 +1,20 @@
-package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices;
+package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaExplosionParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaHitSparkParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
-public class MagicMissile extends Codex {
+public class MagicArrow extends RangedCodex {
     {
-        tier = 3;
-        image = ItemSpriteSheet.CODEX_MISSILE;
-        magicImage = ItemSpriteSheet.MAGIC_MISSILE;
+        tier = 2;
+        image = ItemSpriteSheet.CODEX_ARROW;
+        magicImage = ItemSpriteSheet.MAGIC_ARROW;
 
         baseUses = 10;
     }
@@ -56,6 +57,6 @@ public class MagicMissile extends Codex {
         int cy = center / w;
 
         int c = cx + cy * w;
-        CellEmitter.center(c).burst(ManaExplosionParticle.FACTORY, 14);
+        CellEmitter.center(c).burst(ManaHitSparkParticle.FACTORY, 14);
     }
 }

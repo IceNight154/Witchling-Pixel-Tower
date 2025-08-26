@@ -1,7 +1,8 @@
-package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices;
+package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
@@ -11,7 +12,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaExplosionP
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 
-public class MagicCannon extends Codex {
+public class MagicCannon extends RangedCodex {
     {
         tier = 4;
         image = ItemSpriteSheet.CODEX_CANNON;

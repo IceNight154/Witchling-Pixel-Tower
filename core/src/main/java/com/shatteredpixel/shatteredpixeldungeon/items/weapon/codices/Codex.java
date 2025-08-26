@@ -2,145 +2,51 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ParchmentScrap;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ShardOfOblivion;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.curses.Explosive;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Projecting;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.ui.InventoryPane;
-import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Random;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Codex extends Weapon {
 
+    // 당부사항
+    // Codex, CastCodex, MeleeCodex, RangedCodex는 일종의 청사진으로, 여기의 값을 바꾸면 하위 코덱스 전체의 값을 조절합니다.
+    // 전체가 아니라 개별 조정이 필요한 경우 해당 하위 클래스의 초기화 블럭(아래와 같이 중괄호만 있는 것)에서 변수를 바꾸거나, 메서드를 오버라이드해서 사용해 주세요.
     {
         stackable = true;
         quantity = defaultQuantity();
 
-        bones = true;
-
-        defaultAction = AC_THROW;
-        usesTargeting = true;
-
-        casting = false;
+        bones = true; //무덤파기 가능
     }
-
-    //whether or not this instance of the item exists purely to trigger its effect. i.e. no dropping
-    public boolean spawnedForEffect = true;
 
     public static final float MAX_DURABILITY = 100;
     protected float durability = MAX_DURABILITY;
-    protected float baseUses = 8;
-
-    public boolean holster;
-
-    //used to reduce durability from the source weapon stack, rather than the one being thrown.
-    public Codex parent;
+    protected float baseUses;
 
     public int tier;
-    //투사체 이미지
-    public int magicImage = this.image;
-    public boolean casting;
 
-    protected int usesToID() {
-        return 1;
+    // 기본 개수
+    public int defaultQuantity() {
+        return 3;
     }
 
-    @Override
-    public int min() {
-        if (Dungeon.hero != null) {
-            return Math.max(0, min(buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero)));
-        } else {
-            return Math.max(0, min(buffedLvl()));
-        }
-    }
-
-    @Override
-    public int min(int lvl) {
-        return 2 * tier +                      //base
-                lvl;                            //level scaling
-    }
-
-    @Override
-    public int max() {
-        if (Dungeon.hero != null) {
-            return Math.max(0, max(buffedLvl() + RingOfSharpshooting.levelDamageBonus(Dungeon.hero)));
-        } else {
-            return Math.max(0, max(buffedLvl()));
-        }
-    }
-
-    @Override
-    public int max(int lvl) {
-        return 5 * tier +                      //base
-                tier * lvl;                       //level scaling
-    }
-
+    // 힘 요구치
     public int STRReq(int lvl) {
         int req = STRReq(tier, lvl) - 1; //1 less str than normal for their tier
         if (masteryPotionBonus) {
             req -= 2;
         }
         return req;
-    }
-
-    //use the parent item if this has been thrown from a parent
-    public int buffedLvl() {
-        if (parent != null) {
-            return parent.buffedLvl();
-        } else {
-            return super.buffedLvl();
-        }
-    }
-
-    public Item upgrade(boolean enchant) {
-        if (!bundleRestoring) {
-            durability = MAX_DURABILITY;
-            extraThrownLeft = false;
-            quantity = defaultQuantity();
-        }
-        //thrown weapons don't get curse weakened
-        boolean wasCursed = cursed;
-        super.upgrade(enchant);
-        if (wasCursed && hasCurseEnchant()) {
-            cursed = wasCursed;
-        }
-        return this;
-    }
-
-    @Override
-    public Item upgrade() {
-        if (!bundleRestoring) {
-            durability = MAX_DURABILITY;
-            extraThrownLeft = false;
-            quantity = defaultQuantity();
-        }
-        return super.upgrade();
     }
 
     @Override
@@ -151,230 +57,78 @@ public class Codex extends Weapon {
     }
 
     @Override
-    public boolean collect(Bag container) {
-        if (container instanceof MagicalHolster) holster = true;
-        return super.collect(container);
-    }
-
-    public boolean isSimilar(Item item) {
-        return trueLevel() == item.trueLevel() && getClass() == item.getClass();
+    public int min(int lvl) {
+        return 0;
     }
 
     @Override
-    public int throwPos(Hero user, int dst) {
-
-        int projecting = 0;
-        if (hasEnchant(Projecting.class, user)) {
-            projecting += 4;
-        }
-
-        if (projecting > 0
-                && (Dungeon.level.passable[dst] || Dungeon.level.avoid[dst] || Actor.findChar(dst) != null)
-                && Dungeon.level.distance(user.pos, dst) <= Math.round(projecting * Enchantment.genericProcChanceMultiplier(user))) {
-            return dst;
-        } else {
-            return super.throwPos(user, dst);
-        }
+    public int max(int lvl) {
+        return 0;
     }
 
-    @Override
-    public float accuracyFactor(Char owner, Char target) {
-        float accFactor = super.accuracyFactor(owner, target);
-
-        accFactor *= adjacentAccFactor(owner, target);
-
-        return accFactor;
+    // 코덱스 사용 시 사용하는 턴 수입니다.
+    protected float castingTurn() {
+        return 1f;
     }
 
-    protected float adjacentAccFactor(Char owner, Char target) {
-        if (Dungeon.level.adjacent(owner.pos, target.pos)) {
-            if (owner instanceof Hero) {
-                return (0.5f + 0.2f * ((Hero) owner).pointsInTalent(Talent.POINT_BLANK));
-            } else {
-                return 0.5f;
-            }
-        } else {
-            return 1.5f;
-        }
-    }
-
-    @Override
-    public void doThrow(Hero hero) {
-        parent = null; //reset parent before throwing, just in case
-        if (((levelKnown && level() > 0) || hasGoodEnchant() || masteryPotionBonus || enchantHardened)
-                && !extraThrownLeft && quantity() == 1 && durabilityLeft() <= durabilityPerUse()) {
-            GameScene.show(new WndOptions(new ItemSprite(this), Messages.titleCase(title()),
-                    Messages.get(MissileWeapon.class, "break_upgraded_warn_desc"),
-                    Messages.get(MissileWeapon.class, "break_upgraded_warn_yes"),
-                    Messages.get(MissileWeapon.class, "break_upgraded_warn_no")) {
-                @Override
-                protected void onSelect(int index) {
-                    if (index == 0) {
-                        Codex.super.doThrow(hero);
-                    } else {
-                        QuickSlotButton.cancel();
-                        InventoryPane.cancelTargeting();
-                    }
-                }
-
-                @Override
-                public void onBackPressed() {
-                    super.onBackPressed();
-                    QuickSlotButton.cancel();
-                    InventoryPane.cancelTargeting();
-                }
-            });
-
-        } else {
-            super.doThrow(hero);
-        }
-    }
-
-    @Override
-    protected void onThrow(int cell) {
-        Char enemy = Actor.findChar(cell);
-
-        //기존 코드
-        if (enemy == null || enemy == curUser) {
-            parent = null;
-        } else {
-            if (!curUser.magicalShoot(enemy, this)) {
-                rangedMiss(cell);
-            } else {
-                rangedHit(enemy, cell);
-            }
-        }
-
-        if (durabilityLeft() > 0) {
-            this.collect();
-        }
-
-        updateQuickslot();
-    }
-
-    @Override
-    public void cast(Hero user, int dst) {
-        this.casting = true;
-        super.cast(user, dst);
-        decrementDurability();
-        this.casting = false;
-
-        Weapon w = this;
-        //사용 시 감정
-        if (!w.isIdentified()) w.identify();
-        if (!w.cursed && curUser.STR() < w.STRReq(curItem.trueLevel())) {
-            w.enchantment = Weapon.Enchantment.randomCurse();
-            w.cursed = true;
-
-            CellEmitter.get(curUser.pos).burst(ShadowParticle.UP, 5);
-            Sample.INSTANCE.play(Assets.Sounds.CURSED);
-            GLog.w(Messages.get(Codex.class, "cursed"));
-        }
-    }
-
-    @Override
-    public int proc(Char attacker, Char defender, int damage) {
+    // 코덱스 사용 시 작동하는 코드입니다. 오버라이드 시 super.onUse();를 빼먹지 말아주세요.
+    public void onUse() {
         if ((cursed || hasCurseEnchant()) && !cursedKnown) {
             GLog.n(Messages.get(this, "curse_discover"));
         }
         cursedKnown = true;
-        if (parent != null) parent.cursedKnown = true;
 
-        int result = super.proc(attacker, defender, damage);
+        // 사용 시 감정
+        if (!isIdentified()) this.identify();
+        
+        // 힘이 부족할 경우 저주 부여
+        if (!cursed && curUser.STR() < STRReq(curItem.trueLevel())) {
+            enchantment = Weapon.Enchantment.randomCurse();
+            cursed = true;
 
-        if (parent != null) parent.identify();
-        else this.identify();
-
-        if (!isIdentified() && ShardOfOblivion.passiveIDDisabled()) {
-            Buff.prolong(curUser, ShardOfOblivion.ThrownUseTracker.class, 50f);
+            CellEmitter.get(curUser.pos).burst(ShadowParticle.UP, 5);
+            Sample.INSTANCE.play(Assets.Sounds.CURSED);
+            GLog.w(Messages.get(Codex.class, "heavy_cursed"));
         }
 
-        return result;
+        // 사용 시 턴 소모. 증강 시의 턴 변화를 반영합니다.
+        curUser.spendAndNext(augment.delayFactor(castingTurn()));
+
+        //사용 시 사용 횟수 감소
+        decrementDurability();
     }
+
+    // 공격형 코덱스의 공격 후 작동하는 코드입니다. 오버라이드해서 사용하시면 됩니다. hit가 true면 명중 시, false면 회피 시입니다.
+    protected void onAttackComplete(Char enemy, int cell, boolean hit) {}
 
     @Override
-    public Item virtual() {
-        Item item = super.virtual();
+    public int damageRoll(Char owner) {
+        // min()~max() 사이의 랜덤 값을 반환합니다. 증강 시의 공격력 변화를 반영합니다.
+        int damage = augment.damageFactor(super.damageRoll(owner));
 
-        return item;
-    }
-
-    public int defaultQuantity() {
-        return 3;
-    }
-
-    //mainly used to track warnings relating to throwing the last upgraded one, not super accurate
-    public boolean extraThrownLeft = false;
-
-    @Override
-    public Item random() {
-        //+0: 75% (3/4)
-        //+1: 20% (4/20)
-        //+2: 5%  (1/20)
-        int n = 0;
-        if (Random.Int(4) == 0) {
-            n++;
-            if (Random.Int(5) == 0) {
-                n++;
+        if (owner instanceof Hero) {
+            int exStr = ((Hero) owner).STR() - STRReq();
+            if (exStr > 0) {
+                damage += Hero.heroDamageIntRange(0, exStr);
             }
         }
-        level(n);
-
-        //we use a separate RNG here so that variance due to things like parchment scrap
-        //does not affect levelgen
-        Random.pushGenerator(Random.Long());
-
-        //30% chance to be cursed
-        //10% chance to be enchanted
-        float effectRoll = Random.Float();
-        if (effectRoll < 0.3f * ParchmentScrap.curseChanceMultiplier()) {
-            enchant(Enchantment.randomCurse());
-            cursed = true;
-        } else if (effectRoll >= 1f - (0.1f * ParchmentScrap.enchantChanceMultiplier())) {
-            enchant();
-        }
-
-        Random.popGenerator();
-
-        return this;
+        
+        return damage;
     }
 
-    public String status() {
-        //show quantity even when it is 1
-        return Integer.toString(quantity);
-    }
-
-    @Override
-    public float castDelay(Char user, int cell) {
-        if (Actor.findChar(cell) != null && Actor.findChar(cell) != user) {
-            return delayFactor(user);
-        } else {
-            return super.castDelay(user, cell);
-        }
-    }
-
-    protected void rangedHit(Char enemy, int cell) {
-        parent = null;
-    }
-
-    protected void rangedMiss(int cell) {
-        parent = null;
-    }
-
-    public float durabilityLeft() {
-        return durability;
-    }
-
+    // 코덱스 사용 횟수 회복 메서드입니다. amount만큼 회복됩니다.
     public void repair(float amount) {
         durability += amount;
         durability = Math.min(durability, MAX_DURABILITY);
     }
 
+    // 코덱스 사용 횟수 감소 메서드입니다. amount만큼 감소합니다.
     public void damage(float amount) {
         durability -= amount;
         durability = Math.max(durability, 1); //cannot break from doing this
     }
 
+    // 건드릴 필요 없습니다.
     public final float durabilityPerUse() {
         return durabilityPerUse(level());
     }
@@ -382,21 +136,21 @@ public class Codex extends Weapon {
     //classes that add steps onto durabilityPerUse can turn rounding off, to do their own rounding after more logic
     protected boolean useRoundingInDurabilityCalc = true;
 
+    // 사용 횟수 감소량입니다. 예를 들어 특성 등으로 추가 사용 횟수를 얻었다면, usages에 그 배율을 곱해 주세요.
     public float durabilityPerUse(int level) {
+        // 강화 시 기본 사용 횟수가 1.5배씩 증가합니다.
         float usages = baseUses * (float) (Math.pow(1.5f, level));
 
-        if (holster) {
-            usages *= MagicalHolster.HOLSTER_DURABILITY_FACTOR;
-        }
-
-        //+50% durability on speed aug, -33% durability on damage aug
+        // 속도 증강 시 +50%의 사용 횟수를 가지며, 공격력 증강 시 -33%의 사용 횟수를 가집니다.
         usages /= augment.delayFactor(1f);
 
+        // 저격의 반지 효과입니다.
         if (Dungeon.hero != null) usages *= RingOfSharpshooting.durabilityMultiplier(Dungeon.hero);
 
-        //at 100 uses, items just last forever.
+        // 사용 횟수가 100회가 넘어가면 무한이 됩니다.
         if (usages >= 100f) return 0;
 
+        // 건드릴 필요 없습니다.
         if (useRoundingInDurabilityCalc) {
             usages = Math.round(usages);
             //add a tiny amount to account for rounding error for calculations like 1/3
@@ -407,174 +161,75 @@ public class Codex extends Weapon {
         }
     }
 
+    // 사용 횟수 감소 로직입니다. 건드릴 필요 없습니다.
     protected void decrementDurability() {
-        //if this weapon was thrown from a source stack, degrade that stack.
-        //unless a weapon is about to break, then break the one being thrown
-        if (parent != null) {
-            if (parent.durability <= parent.durabilityPerUse()) {
-                durability = 0;
-                parent.durability = MAX_DURABILITY;
-                parent.extraThrownLeft = false;
-                if (parent.durabilityPerUse() < 100f) {
-                    GLog.n(Messages.get(this, "has_broken"));
-                }
-            } else {
-                parent.durability -= parent.durabilityPerUse();
-                if (parent.durability > 0 && parent.durability <= parent.durabilityPerUse()) {
-                    GLog.w(Messages.get(this, "about_to_break"));
-                }
-            }
-            parent = null;
-        } else {
-            durability -= durabilityPerUse();
-            if (durability > 0 && durability <= durabilityPerUse()) {
-                GLog.w(Messages.get(this, "about_to_break"));
-            } else if (durabilityPerUse() < 100f && durability <= 0) {
-                GLog.n(Messages.get(this, "has_broken"));
-            }
+        durability -= durabilityPerUse();
+        if (durability > 0 && durability <= durabilityPerUse()) {
+            GLog.w(Messages.get(this, "about_to_break"));
+        } else if (durabilityPerUse() < 100f && durability <= 0) {
+            GLog.n(Messages.get(this, "has_broken"));
+            detach(curUser.belongings.backpack);
+            durability = MAX_DURABILITY;
         }
     }
 
-    @Override
-    public int damageRoll(Char owner) {
-        int damage = augment.damageFactor(super.damageRoll(owner));
-
-        if (owner instanceof Hero) {
-            int exStr = ((Hero) owner).STR() - STRReq();
-            if (exStr > 0) {
-                damage += Hero.heroDamageIntRange(0, exStr);
-            }
-            if (owner.buff(Momentum.class) != null && owner.buff(Momentum.class).freerunning()) {
-                damage = Math.round(damage * (1f + 0.1f * ((Hero) owner).pointsInTalent(Talent.PROJECTILE_MOMENTUM)));
-            }
-        }
-
-        return damage;
+    // 남은 사용 횟수를 반환합니다.
+    public float durabilityLeft() {
+        return durability;
     }
 
+    // 건드릴 필요 없습니다.
     @Override
     public void reset() {
         super.reset();
         durability = MAX_DURABILITY;
     }
 
-    @Override
-    public Item merge(Item other) {
-        super.merge(other);
-        if (isSimilar(other)) {
-            extraThrownLeft = false;
-
-            durability += ((Codex) other).durability;
-            durability -= MAX_DURABILITY;
-            while (durability <= 0) {
-                quantity -= 1;
-                durability += MAX_DURABILITY;
-            }
-
-            masteryPotionBonus = masteryPotionBonus || ((Codex) other).masteryPotionBonus;
-            levelKnown = levelKnown || other.levelKnown;
-            cursedKnown = cursedKnown || other.cursedKnown;
-            enchantHardened = enchantHardened || ((Codex) other).enchantHardened;
-
-            //if other has a curse/enchant status that's a higher priority, copy it. in the following order:
-            //curse infused
-            if (!curseInfusionBonus && ((Codex) other).curseInfusionBonus && ((Codex) other).hasCurseEnchant()) {
-                enchantment = ((Codex) other).enchantment;
-                curseInfusionBonus = true;
-                cursed = cursed || other.cursed;
-                //enchanted
-            } else if (!curseInfusionBonus && !hasGoodEnchant() && ((Codex) other).hasGoodEnchant()) {
-                enchantment = ((Codex) other).enchantment;
-                cursed = other.cursed;
-                //nothing
-            } else if (!curseInfusionBonus && hasCurseEnchant() && !((Codex) other).hasCurseEnchant()) {
-                enchantment = ((Codex) other).enchantment;
-                cursed = other.cursed;
-            }
-            //cursed (no copy as other cannot have a higher priority status)
-
-            //special case for explosive, as it tracks a variable
-            if (((Codex) other).enchantment instanceof Explosive
-                    && enchantment instanceof Explosive) {
-                ((Explosive) enchantment).merge((Explosive) ((Codex) other).enchantment);
-            }
-        }
-        return this;
-    }
-
-    @Override
-    public Item split(int amount) {
-        bundleRestoring = true;
-        Item split = super.split(amount);
-        bundleRestoring = false;
-
-        if (split != null) {
-            Codex m = (Codex) split;
-            m.durability = MAX_DURABILITY;
-            m.parent = this;
-            extraThrownLeft = m.extraThrownLeft = true;
-        }
-
-        return split;
-    }
-
-    @Override
-    public int image() {
-        if (casting) return magicImage;
-        else return image;
-    }
-
-    @Override
-    public boolean isIdentified() {
-        return levelKnown && cursedKnown;
-    }
-
+    // 설명문을 작성하는 메서드입니다.
     @Override
     public String info() {
-
         String info = super.info();
 
         if (levelKnown) {
-            info += "\n\n" + Messages.get(MissileWeapon.class, "stats_known", tier, augment.damageFactor(min()), augment.damageFactor(max()), STRReq());
+            info += "\n\n" + Messages.get(this, "stats_known", tier, augment.damageFactor(min()), augment.damageFactor(max()), STRReq());
             if (Dungeon.hero != null) {
                 if (STRReq() > Dungeon.hero.STR()) {
-                    info += " " + Messages.get(Weapon.class, "too_heavy");
+                    info += " " + Messages.get(this, "too_heavy");
                 } else if (Dungeon.hero.STR() > STRReq()) {
-                    info += " " + Messages.get(Weapon.class, "excess_str", Dungeon.hero.STR() - STRReq());
+                    info += " " + Messages.get(this, "excess_str", Dungeon.hero.STR() - STRReq());
                 }
             }
         } else {
-            info += "\n\n" + Messages.get(MissileWeapon.class, "stats_unknown", tier, min(0), max(0), STRReq(0));
+            info += "\n\n" + Messages.get(this, "stats_unknown", tier, min(0), max(0), STRReq(0));
             if (Dungeon.hero != null && STRReq(0) > Dungeon.hero.STR()) {
-                info += " " + Messages.get(MissileWeapon.class, "probably_too_heavy");
+                info += " " + Messages.get(this, "probably_too_heavy");
             }
         }
 
         if (enchantment != null && (cursedKnown || !enchantment.curse())) {
-            info += "\n\n" + Messages.get(Weapon.class, "enchanted", enchantment.name());
-            if (enchantHardened) info += " " + Messages.get(Weapon.class, "enchant_hardened");
+            info += "\n\n" + Messages.get(this, "enchanted", enchantment.name());
+            if (enchantHardened) info += " " + Messages.get(this, "enchant_hardened");
             info += " " + enchantment.desc();
         } else if (enchantHardened) {
-            info += "\n\n" + Messages.get(Weapon.class, "hardened_no_enchant");
+            info += "\n\n" + Messages.get(this, "hardened_no_enchant");
         }
 
         if (cursedKnown && cursed) {
-            info += "\n\n" + Messages.get(Weapon.class, "cursed");
+            info += "\n\n" + Messages.get(this, "cursed");
         } else if (!isIdentified() && cursedKnown) {
-            info += "\n\n" + Messages.get(Weapon.class, "not_cursed");
+            info += "\n\n" + Messages.get(this, "not_cursed");
         }
 
         info += "\n\n";
         String statsInfo = Messages.get(this, "stats_desc");
-        if (!statsInfo.equals("")) info += statsInfo + " ";
-        info += Messages.get(MissileWeapon.class, "distance");
+        if (!statsInfo.isEmpty()) info += statsInfo + " ";
 
         switch (augment) {
             case SPEED:
-                info += " " + Messages.get(Weapon.class, "faster");
+                info += " " + Messages.get(this, "faster");
                 break;
             case DAMAGE:
-                info += " " + Messages.get(Weapon.class, "stronger");
+                info += " " + Messages.get(this, "stronger");
                 break;
             case NONE:
         }
@@ -598,6 +253,7 @@ public class Codex extends Weapon {
         return info;
     }
 
+    // 코덱스의 가격을 결정하는 메서드입니다. -1로 설정하는 경우 팔 수 없게 됩니다.
     @Override
     public int value() {
         int price = 5 * tier * quantity;
@@ -616,38 +272,39 @@ public class Codex extends Weapon {
         return price;
     }
 
-    private static final String SPAWNED = "spawned";
-    private static final String DURABILITY = "durability";
-    private static final String EXTRA_LEFT = "extra_left";
+    // 오른쪽 위에 나오는 숫자 혹은 문자입니다. 현재는 코덱스의 개수를 보여 줍니다.
+    @Override
+    public String status() {
+        //show quantity even when it is 1
+        return Integer.toString(quantity);
+    }
 
+    private static final String DURABILITY = "durability";
+
+    // 게임 세이브/로드 시 변수를 저장하고 불러오는 메서드입니다.
     @Override
     public void storeInBundle(Bundle bundle) {
         super.storeInBundle(bundle);
         bundle.put(DURABILITY, durability);
-        bundle.put(EXTRA_LEFT, extraThrownLeft);
     }
-
-    private static boolean bundleRestoring = false;
 
     @Override
     public void restoreFromBundle(Bundle bundle) {
-        bundleRestoring = true;
         super.restoreFromBundle(bundle);
-        bundleRestoring = false;
         durability = bundle.getFloat(DURABILITY);
-        extraThrownLeft = bundle.getBoolean(EXTRA_LEFT);
     }
 
-    public static class PlaceHolder extends MissileWeapon {
+    // 플레이스홀더란 해당 아이템의 종류를 나타내는 대표 이미지로, 검은색 외곽선만 있는 스프라이트로 묘사됩니다. 필요한 경우 SOMETHING을 수정하시면 됩니다.
+    public static class PlaceHolder extends Item {
 
         {
-            image = ItemSpriteSheet.MISSILE_HOLDER;
+            image = ItemSpriteSheet.SOMETHING;
         }
 
         @Override
         public boolean isSimilar(Item item) {
             //yes, even though it uses a dart outline
-            return item instanceof MissileWeapon && !(item instanceof Dart);
+            return item instanceof Codex;
         }
 
         @Override
@@ -659,64 +316,5 @@ public class Codex extends Weapon {
         public String info() {
             return "";
         }
-    }
-
-    //also used by liquid metal crafting to track when a set is consumed
-    public static class UpgradedSetTracker extends Buff {
-
-        public HashMap<Long, Integer> levelThresholds = new HashMap<>();
-
-        public static boolean pickupValid(Hero h, MissileWeapon w) {
-            if (h.buff(MissileWeapon.UpgradedSetTracker.class) != null) {
-                HashMap<Long, Integer> levelThresholds = h.buff(MissileWeapon.UpgradedSetTracker.class).levelThresholds;
-                if (levelThresholds.containsKey(w.setID)) {
-                    return w.trueLevel() >= levelThresholds.get(w.setID);
-                }
-                return true;
-            }
-            return true;
-        }
-
-        public static final String SET_IDS = "set_ids";
-        public static final String SET_LEVELS = "set_levels";
-
-        @Override
-        public void storeInBundle(Bundle bundle) {
-            super.storeInBundle(bundle);
-            long[] IDs = new long[levelThresholds.size()];
-            int[] levels = new int[levelThresholds.size()];
-            int i = 0;
-            for (Long ID : levelThresholds.keySet()) {
-                IDs[i] = ID;
-                levels[i] = levelThresholds.get(ID);
-                i++;
-            }
-            bundle.put(SET_IDS, IDs);
-            bundle.put(SET_LEVELS, levels);
-        }
-
-        @Override
-        public void restoreFromBundle(Bundle bundle) {
-            super.restoreFromBundle(bundle);
-            long[] IDs = bundle.getLongArray(SET_IDS);
-            int[] levels = bundle.getIntArray(SET_LEVELS);
-            levelThresholds.clear();
-            for (int i = 0; i < IDs.length; i++) {
-                levelThresholds.put(IDs[i], levels[i]);
-            }
-        }
-    }
-     protected void spendUse() {
-            this.identify();
-            decrementDurability();
-            if (durabilityLeft() <= 0f) {
-                detach(Dungeon.hero.belongings.backpack);
-                durability = MAX_DURABILITY;
-            }
-            updateQuickslot();
-
-
-        // 5) 마지막에 퀵슬롯 갱신
-        updateQuickslot();
     }
 }

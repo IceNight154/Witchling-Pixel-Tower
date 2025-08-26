@@ -73,13 +73,13 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicSingularity;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicSlash;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.SanctuaryManaField;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicArrow;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicBullet;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicCannon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSlash;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.cast.SanctuaryManaField;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicArrow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicBullet;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicCannon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicSingularity;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -292,10 +292,22 @@ public enum HeroClass {
 			Catalog.setSeen(BrokenSeal.class);
 		}
 
-		new MagicSlash().identify().collect();
-		new SanctuaryManaField().quantity(3).collect();
-		new PotionOfStrength().quantity(50).collect();
-		new ScrollOfIdentify().identify().collect();
+		//캐스팅 코덱스
+		new SanctuaryManaField().random().collect();
+
+		//근거리형 코덱스
+		new MagicSlash().random().collect();
+
+		//원거리형 코덱스
+		new MagicArrow().random().collect();
+		new MagicBullet().random().collect();
+		new MagicCannon().random().collect();
+		new MagicMissile().random().collect();
+		new MagicSingularity().random().collect();
+		new SanctuaryManaField().random().collect();
+
+		new PotionOfStrength().random().collect();
+//		new ScrollOfIdentify().identify().collect();
 
 		new PotionOfHealing().identify();
 		new ScrollOfRage().identify();

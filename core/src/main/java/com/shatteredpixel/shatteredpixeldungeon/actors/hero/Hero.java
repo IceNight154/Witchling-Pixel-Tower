@@ -133,7 +133,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.exotic.ScrollOfCha
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.ThirteenLeafClover;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
-import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Crossbow;
@@ -460,7 +459,7 @@ public class Hero extends Char {
 		}
 	}
 
-	public boolean magicalShoot( Char enemy, Codex codex ) {
+	public boolean codexAttack(Char enemy, Codex codex ) {
 		boolean hit = Char.hit(this, enemy, false);
 		if (hit) {
 			int damage = codex.proc(this, enemy, codex.damageRoll(this));

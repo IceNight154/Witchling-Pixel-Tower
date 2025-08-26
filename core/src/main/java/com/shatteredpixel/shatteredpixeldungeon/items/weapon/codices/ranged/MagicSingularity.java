@@ -1,4 +1,4 @@
-package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices;
+package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -8,13 +8,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaExplosionParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaStormParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaFieldParticle;
 
-public class MagicSingularity extends Codex {
+public class MagicSingularity extends RangedCodex {
     {
         tier = 5;
         image = ItemSpriteSheet.CODEX_SINGULARITY;

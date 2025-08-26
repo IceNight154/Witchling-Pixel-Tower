@@ -823,14 +823,14 @@ public class ItemSpriteSheet {
 	public static final int CODEX_ARROW  	 = CODEX+idx(1);
 	public static final int CODEX_MISSILE	 = CODEX+idx(2);
 	public static final int CODEX_CANNON 	 = CODEX+idx(3);
-	public static final int CODEX_MANAFIRELD = CODEX+idx(4);
+	public static final int CODEX_MANAFIELD = CODEX+idx(4);
 	public static final int CODEX_SINGULARITY= CODEX+idx(5);
 	static {
 		assignItemRect(CODEX_BULLET, 16, 16);
 		assignItemRect(CODEX_ARROW, 16, 16);
 		assignItemRect(CODEX_MISSILE, 16, 16);
 		assignItemRect(CODEX_CANNON, 16, 16);
-		assignItemRect(CODEX_MANAFIRELD, 16, 16);
+		assignItemRect(CODEX_MANAFIELD, 16, 16);
 		assignItemRect(CODEX_SINGULARITY, 16, 16);
 	}
 
