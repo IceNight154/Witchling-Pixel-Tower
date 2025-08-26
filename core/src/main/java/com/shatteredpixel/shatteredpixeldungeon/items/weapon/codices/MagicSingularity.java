@@ -7,6 +7,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaExplosionParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaStormParticle;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.audio.Sample;
@@ -20,6 +21,8 @@ public class MagicSingularity extends Codex {
         magicImage = ItemSpriteSheet.MAGIC_CANNON;
 
         baseUses = 10;
+
+        onoff = true;
     }
 
     private static boolean isEnemyMob(Char ch) {
@@ -74,6 +77,10 @@ public class MagicSingularity extends Codex {
 
                 int count = (dx == 0 && dy == 0) ? 14 : 8;
                 CellEmitter.center(c).burst(ManaExplosionParticle.FACTORY, count);
+
+                // 추가 연출: ManaStormParticle 대형 분출
+                int countStorm = (dx == 0 && dy == 0) ? 24 : 12;
+                CellEmitter.center(c).burst(ManaStormParticle.FACTORY, countStorm);
 
                 // 해당 칸에 캐릭터가 있으면 주변 피해
                 Char ch = Actor.findChar(c);

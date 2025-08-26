@@ -36,6 +36,7 @@ import com.watabou.utils.Random;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Codex extends Weapon {
 
     {
@@ -52,6 +53,8 @@ public class Codex extends Weapon {
 
     //whether or not this instance of the item exists purely to trigger its effect. i.e. no dropping
     public boolean spawnedForEffect = true;
+
+    public boolean onoff = false;
 
     public static final float MAX_DURABILITY = 100;
     protected float durability = MAX_DURABILITY;
@@ -238,7 +241,7 @@ public class Codex extends Weapon {
         if (enemy == null || enemy == curUser) {
             parent = null;
         } else {
-            if (!curUser.magicalShoot(enemy, this)) {
+            if (!curUser.magicalShoot(enemy, this) && !onoff ) {
                 rangedMiss(cell);
             } else {
                 rangedHit(enemy, cell);
