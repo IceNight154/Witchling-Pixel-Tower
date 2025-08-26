@@ -74,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicSingularity;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicSlash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.SanctuaryManaField;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicArrow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.MagicBullet;
@@ -291,7 +292,7 @@ public enum HeroClass {
 			Catalog.setSeen(BrokenSeal.class);
 		}
 
-		new MagicSingularity().identify().collect();
+		new MagicSlash().identify().collect();
 		new SanctuaryManaField().quantity(3).collect();
 		new PotionOfStrength().quantity(50).collect();
 		new ScrollOfIdentify().identify().collect();
