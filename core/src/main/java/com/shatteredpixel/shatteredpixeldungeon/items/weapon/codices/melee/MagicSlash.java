@@ -49,8 +49,9 @@ public class MagicSlash extends MeleeCodex {
         } catch (Throwable ignored) { /* 애니메이션 실패해도 전투는 진행 */ }
         if (hit) {
             Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH, 0.87f, 1.2f);
-        }
-    }
+        } else {
+            Sample.INSTANCE.play(Assets.Sounds.MISS, 0.87f, 1.2f);
+        } }
 
     @Override
     protected void onCodexAttack(Char enemy, int cell) {

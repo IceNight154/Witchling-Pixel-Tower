@@ -7,6 +7,9 @@ import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Game;
 import com.watabou.utils.PointF;
+import com.shatteredpixel.shatteredpixeldungeon.effects.ManaSlashAfterImage;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaSlashParticle;
+import com.watabou.noosa.particles.Emitter;
 
 /**
  * MagicImageAnimator (마법 이미지 반원 회전 애니메이션)
@@ -47,6 +50,8 @@ public class MagicImageAnimator extends Group {
     /* === 참조: 소유자 캐릭터 스프라이트 & 회전시킬 이미지 === */
     private final CharSprite owner;
     private final Image img;
+    private final int magicImageIndex;
+
 
     /* === 애니메이션 각도/시간 정보 === */
     private final float startDeg;
@@ -59,6 +64,12 @@ public class MagicImageAnimator extends Group {
 
     /* === 경과 시간 누적 === */
     private float elapsed = 0f;
+
+    // 클래스 필드에 추가
+    private Emitter manaEmitter;
+    private float afterImageCooldown = 0f;   // 잔상 간격
+    private float particleCooldown  = 0f;   // 파편 간격
+
 
     /* **********************************************************************
      * [정적 헬퍼] 가장 간단한 사용법
@@ -137,6 +148,9 @@ public class MagicImageAnimator extends Group {
         MagicImageAnimator fx = new MagicImageAnimator(owner, magicImageIndex, faceDeg, duration,
                 pivotAdjustX, pivotAdjustY, originFracX, originFracY, angleOffsetDeg, topToBottom);
         owner.parent.add(fx);
+
+        fx.manaEmitter = new Emitter();
+        owner.parent.add(fx.manaEmitter);
     }
 
     /* **********************************************************************
@@ -161,6 +175,7 @@ public class MagicImageAnimator extends Group {
         this.duration = Math.max(0.001f, duration);
         this.pivotAdjustX = pivotAdjustX;
         this.pivotAdjustY = pivotAdjustY;
+        this.magicImageIndex = magicImageIndex;
 
         this.img = new ItemSprite(magicImageIndex);
         add(img);
@@ -194,7 +209,7 @@ public class MagicImageAnimator extends Group {
         this.duration = Math.max(0.001f, duration); // 0에 근접한 시간 방지
         this.pivotAdjustX = pivotAdjustX;
         this.pivotAdjustY = pivotAdjustY;
-
+        this.magicImageIndex = magicImageIndex;
         // 아이템 스프라이트 인덱스로부터 회전 가능한 이미지 생성
         this.img = new ItemSprite(magicImageIndex);
         add(img);
@@ -249,6 +264,44 @@ public class MagicImageAnimator extends Group {
 
         // 스윙 중에도 캐릭터가 움직일 수 있으므로 매 프레임 위치 재동기화
         syncToOwner();
+
+        // --- ManaSlash 잔상/파편 가벼운 연동 시작 ---
+
+// 시간 경과
+        afterImageCooldown -= Game.elapsed;
+        particleCooldown   -= Game.elapsed;
+
+// 현재 회전 이미지의 화면 좌표/원점/스케일/각도
+        final float ix = img.x;
+        final float iy = img.y;
+        final float angDeg = img.angle;     // 도 단위
+        final float ox = img.origin.x;
+        final float oy = img.origin.y;
+        final float sx = img.scale.x;
+        final float sy = img.scale.y;
+
+// 1) 잔상: 너무 과하지 않게 0.05~0.07s 간격으로 한 장씩
+        if (afterImageCooldown <= 0f) {
+            ManaSlashAfterImage.spawn(
+                    owner.parent,          // Group parent
+                    magicImageIndex,       // 아이템 스프라이트 프레임 index
+                    ix, iy,                // 이미지 좌표
+                    angDeg,                // 이미지 각도(도)
+                    ox, oy,                // origin
+                    sx, sy                 // scale
+            );
+            afterImageCooldown = 0.06f;
+        }
+
+// 2) 파편: 각도 정렬된 짧은 파편 2~3개씩
+        if (manaEmitter != null && particleCooldown <= 0f) {
+            manaEmitter.pos(ix + ox, iy + oy); // 대략 이미지 기준점 근처
+            manaEmitter.burst(ManaSlashParticle.oriented(angDeg), 3);
+            particleCooldown = 0.016f; // 약 60fps라면 매 프레임
+        }
+
+// --- ManaSlash 잔상/파편 가벼운 연동 끝 ---
+
     }
 
     /* **********************************************************************
@@ -260,6 +313,11 @@ public class MagicImageAnimator extends Group {
             parent.remove(this);
         }
         kill();
+
+        if (manaEmitter != null) {
+            manaEmitter.kill();   // 또는 parent.remove(manaEmitter);
+            manaEmitter = null;
+        }
     }
 
     /* **********************************************************************
