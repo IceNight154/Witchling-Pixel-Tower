@@ -818,37 +818,50 @@ public class ItemSpriteSheet {
 		assignItemRect(HALLS_PAGE,  10, 11);
 	}
 
-	private static final int CODEX = xy(1, 33);
-	public static final int CODEX_BULLET 	 = CODEX+idx(0);
-	public static final int CODEX_ARROW  	 = CODEX+idx(1);
-	public static final int CODEX_MISSILE	 = CODEX+idx(2);
-	public static final int CODEX_CANNON 	 = CODEX+idx(3);
-	public static final int CODEX_MANAFIELD = CODEX+idx(4);
-	public static final int CODEX_SINGULARITY= CODEX+idx(5);
+	private static final int RANGED_CODEX = xy(1, 33);
+	public static final int CODEX_BULLET 	 = RANGED_CODEX+idx(0);
+	public static final int CODEX_ARROW  	 = RANGED_CODEX+idx(1);
+	public static final int CODEX_MISSILE	 = RANGED_CODEX+idx(2);
+	public static final int CODEX_CANNON 	 = RANGED_CODEX+idx(3);
+	public static final int CODEX_SINGULARITY= RANGED_CODEX+idx(4);
 	static {
 		assignItemRect(CODEX_BULLET, 16, 16);
 		assignItemRect(CODEX_ARROW, 16, 16);
 		assignItemRect(CODEX_MISSILE, 16, 16);
 		assignItemRect(CODEX_CANNON, 16, 16);
-		assignItemRect(CODEX_MANAFIELD, 16, 16);
 		assignItemRect(CODEX_SINGULARITY, 16, 16);
 	}
 
-	private static final int CODEX_MAGIC = xy(1, 34);
-	public static final int MAGIC_BULLET 	 = CODEX_MAGIC+idx(0);
-	public static final int MAGIC_ARROW 	 = CODEX_MAGIC+idx(1);
-	public static final int MAGIC_MISSILE 	 = CODEX_MAGIC+idx(2);
-	public static final int MAGIC_CANNON 	 = CODEX_MAGIC+idx(3);
-	public static final int MAGIC_SINGULARITY= CODEX_MAGIC+idx(5);
-
-
+	private static final int RANGED_CODEX_MAGIC = xy(1, 34);
+	public static final int MAGIC_BULLET 	 = RANGED_CODEX_MAGIC+idx(0);
+	public static final int MAGIC_ARROW 	 = RANGED_CODEX_MAGIC+idx(1);
+	public static final int MAGIC_MISSILE 	 = RANGED_CODEX_MAGIC+idx(2);
+	public static final int MAGIC_CANNON 	 = RANGED_CODEX_MAGIC+idx(3);
+	public static final int MAGIC_SINGULARITY= RANGED_CODEX_MAGIC+idx(5);
 	static {
 		assignItemRect(MAGIC_BULLET, 6, 6);
 		assignItemRect(MAGIC_ARROW, 11, 11);
 		assignItemRect(MAGIC_MISSILE, 11, 11);
 		assignItemRect(MAGIC_CANNON, 11, 11);
 		assignItemRect(MAGIC_SINGULARITY, 11, 11);
+	}
 
+	private static final int CAST_CODEX = xy(1, 35);
+	public static final int CODEX_MANAFIELD = CAST_CODEX+idx(0);
+	static {
+		assignItemRect(CODEX_MANAFIELD, 16, 16);
+	}
+
+	private static final int MELEE_CODEX = xy(1, 37);
+	public static final int CODEX_SLASH 	 = MELEE_CODEX+idx(0);
+	static {
+		assignItemRect(MELEE_CODEX, 16, 16);
+	}
+
+	private static final int MELEE_CODEX_MAGIC = xy(1, 38);
+	public static final int MAGIC_BLADE 	 = MELEE_CODEX_MAGIC+idx(0);
+	static {
+		assignItemRect(MAGIC_BLADE, 16, 16);
 	}
 
 	//for smaller 8x8 icons that often accompany an item sprite

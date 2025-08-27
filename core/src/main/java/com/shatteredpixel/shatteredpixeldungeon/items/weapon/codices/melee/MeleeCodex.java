@@ -22,6 +22,14 @@ public class MeleeCodex extends Codex {
 
     protected static final String AC_CAST = "cast";
 
+    // RangedCodex와 동일한 방식으로, 시전(캐스팅) 중에 교체 표시될 이미지 인덱스입니다.
+    // 각 근접 코덱스 서브클래스에서 적절한 스프라이트 인덱스로 재지정하세요.
+    public int magicImage = this.image;
+
+    // 현재 코덱스를 사용(캐스팅)하는 중인지 여부.
+    private boolean casting = false;
+
+
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
@@ -41,6 +49,13 @@ public class MeleeCodex extends Codex {
             GameScene.selectCell( selector );
 
         }
+    }
+
+
+    @Override
+    public int image() {
+        // 캐스팅 중에는 magicImage를 보여주고, 아니면 기본 이미지를 보여줍니다.
+        return casting ? magicImage : image;
     }
 
     // 코덱스 공격 시 작동하는 메서드입니다.
@@ -84,10 +99,12 @@ public class MeleeCodex extends Codex {
             }
 
             // 적 캐릭터에 대해서 코덱스 공격을 수행합니다.
+            casting = true;
             onCodexAttack(enemy, target);
 
-            // 영웅의 공격 모션을 출력합니다.
+            // 영웅의 공격(휘두르기/참격) 연출을 출력합니다.
             curUser.sprite.zap(target);
+            casting = false;
         }
         @Override
         public String prompt() {

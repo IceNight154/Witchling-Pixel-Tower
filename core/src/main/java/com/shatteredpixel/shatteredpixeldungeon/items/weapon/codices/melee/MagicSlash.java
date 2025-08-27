@@ -11,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicImageAnimator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Callback;
@@ -31,8 +32,9 @@ import com.watabou.noosa.particles.Emitter;
 public class MagicSlash extends MeleeCodex {
 
     {
-        tier = 2;
-        image = ItemSpriteSheet.CODEX_ARROW;
+        tier = 1;
+        image = ItemSpriteSheet.CODEX_SLASH;
+        magicImage = ItemSpriteSheet.MAGIC_BLADE;
         baseUses = 50;
     }
 
@@ -50,6 +52,12 @@ public class MagicSlash extends MeleeCodex {
     @Override
     protected void onAttackComplete(Char enemy, int cell, boolean hit) {
         super.onAttackComplete(enemy, cell, hit);
+
+        // 마법 베기 애니메이션 (MAGIC_BLADE)
+        try {
+            int dir8 = dir8For(curUser.pos, cell);
+            MagicImageAnimator.sweep(curUser.sprite, ItemSpriteSheet.MAGIC_BLADE, dir8);
+        } catch (Throwable ignored) { /* 애니메이션 실패해도 전투는 진행 */ }
         Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH, 0.87f, 1.2f);
     }
 
@@ -102,5 +110,23 @@ public class MagicSlash extends MeleeCodex {
     public float accuracyFactor(Char owner, Char target) {
         // 명중률 보정을 넣어 두셨길래 똑같이 추가했습니다.
         return 1.25f * super.accuracyFactor(owner, target);
+    }
+
+    /** curUser.pos -> targetPos 를 8방향(0=N,1=NE,2=E,3=SE,4=S,5=SW,6=W,7=NW) 인덱스로 변환 */
+    private static int dir8For(int fromPos, int toPos){
+        int w = Dungeon.level.width();
+        int fx = fromPos % w, fy = fromPos / w;
+        int tx = toPos % w, ty = toPos / w;
+        int dx = Integer.signum(tx - fx);
+        int dy = Integer.signum(ty - fy);
+        if (dx == 0 && dy == -1) return 0;   // N
+        if (dx == 1 && dy == -1)  return 1;  // NE
+        if (dx == 1 && dy == 0)   return 2;  // E
+        if (dx == 1 && dy == 1)   return 3;  // SE
+        if (dx == 0 && dy == 1)   return 4;  // S
+        if (dx == -1 && dy == 1)  return 5;  // SW
+        if (dx == -1 && dy == 0)  return 6;  // W
+        if (dx == -1 && dy == -1) return 7;  // NW
+        return 2; // 제자리거나 예외면 E로
     }
 }
