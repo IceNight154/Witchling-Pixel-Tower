@@ -837,7 +837,7 @@ public class ItemSpriteSheet {
 	public static final int MAGIC_ARROW 	 = RANGED_CODEX_MAGIC+idx(1);
 	public static final int MAGIC_MISSILE 	 = RANGED_CODEX_MAGIC+idx(2);
 	public static final int MAGIC_CANNON 	 = RANGED_CODEX_MAGIC+idx(3);
-	public static final int MAGIC_SINGULARITY= RANGED_CODEX_MAGIC+idx(5);
+	public static final int MAGIC_SINGULARITY= RANGED_CODEX_MAGIC+idx(4);
 	static {
 		assignItemRect(MAGIC_BULLET, 6, 6);
 		assignItemRect(MAGIC_ARROW, 11, 11);

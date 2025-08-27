@@ -29,6 +29,10 @@ public class MagicImageAnimator extends Group {
     private static final float DEFAULT_ORIGIN_FRACTION_X = 0.20f;
     private static final float DEFAULT_ORIGIN_FRACTION_Y = 0.80f;
 
+    // 찌르기(STAB) 기본 보조 파라미터
+    private static final float STAB_BACK_RATIO  = 0.28f; // 전진 전, 살짝 뒤로 빠지는 거리 비율
+    private static final float STAB_FADE_START  = 0.90f; // 사라지기 시작하는 비율(0..1)
+
     // --- 모드(애니메이션 종류) ---
     private enum Mode { SWEEP, STAB }
 
@@ -115,10 +119,10 @@ public class MagicImageAnimator extends Group {
         float dx = -6f * owner.scale.x;
         float dy = -8f * owner.scale.y;
         float faceDeg = dir8ToDeg(dir8);
-        float maxDist = 22f * owner.scale.x;  // 기본 전진 거리
+        float maxDist = 48f * owner.scale.x;  // 기본 전진 거리
         stabAngle(owner, magicImageIndex, faceDeg, DEFAULT_DURATION,
                 dx, dy, DEFAULT_ORIGIN_FRACTION_X, DEFAULT_ORIGIN_FRACTION_Y,
-                maxDist, 0.5f);
+                maxDist, 0.25f);
     }
 
     public static void stabVector(CharSprite owner, int magicImageIndex, int dx, int dy, boolean snapTo8) {
@@ -126,10 +130,10 @@ public class MagicImageAnimator extends Group {
         if (snapTo8) face = Math.round(face / 45f) * 45f;
         float adjX = -6f * owner.scale.x;
         float adjY = -8f * owner.scale.y;
-        float maxDist = 22f * owner.scale.x;
+        float maxDist = 48f * owner.scale.x;
         stabAngle(owner, magicImageIndex, face, DEFAULT_DURATION,
                 adjX, adjY, DEFAULT_ORIGIN_FRACTION_X, DEFAULT_ORIGIN_FRACTION_Y,
-                maxDist, 0.5f);
+                maxDist, 0.25f);
     }
 
     /**
@@ -264,26 +268,36 @@ public class MagicImageAnimator extends Group {
             img.y = py - img.origin.y;
         } else {
             // 찌르기: 피벗에서 바라보는 방향으로 전진/후퇴
-            // 삼각형 파형(0->1->0)을 bias로 분할
+            // 살짝 뒤로 → 앞으로 '돌진' 형태 (뒤로 약간 물러난 후 급가속 전진)
             float tb = clamp01(stabRetractBias);
+            float back = stabMaxDist * STAB_BACK_RATIO; // 뒤로 빠질 거리
             float d;
             if (t <= tb) {
+                // 후퇴 구간: 빠르게 뒤로 살짝 물러남
                 float tt = t / Math.max(0.0001f, tb);
-                d = easeOutCubic(tt) * stabMaxDist;
+                d = -easeOutCubic(tt) * back;
             } else {
+                // 돌진 구간: 점점 가속하며 전진(-back → +stabMaxDist)
                 float tt = (t - tb) / Math.max(0.0001f, (1f - tb));
-                d = (1f - easeInCubic(tt)) * stabMaxDist;
+                d = -back + easeInCubic(tt) * (stabMaxDist + back);
             }
 
             float rad = (float)Math.toRadians(FLIP_FACING ? -faceDeg : faceDeg);
-            float dx = (float)Math.cos(rad) * d;
-            float dy = (float)Math.sin(rad) * d;
+            float dx = (float)Math.sin(rad) * d;
+            float dy = (float)-Math.cos(rad) * d;
 
             img.x = px - img.origin.x + dx;
             img.y = py - img.origin.y + dy;
 
             // 각도는 기본 바라보는 방향에 고정
             img.angle = (FLIP_FACING ? -faceDeg : faceDeg) - BASE_DIAGONAL_DEG;
+
+            // 후반부에 자연스럽게 사라지는 느낌
+            if (t >= STAB_FADE_START) {
+                float ft = (t - STAB_FADE_START) / Math.max(0.0001f, (1f - STAB_FADE_START));
+                float fade = 1f - easeInCubic(clamp01(ft));
+                try { img.alpha(fade); } catch (Throwable ignore) {}
+            }
         }
     }
 
