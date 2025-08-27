@@ -203,10 +203,12 @@ public class RangedCodex extends Codex {
             onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
         }
 
+        // ← 여기서 한 번만 사용 처리(감정/저주 메시지/턴 소비/내구도 감소)
+        onUse();
+
         if (durabilityLeft() > 0) {
             this.collect();
         }
-
         updateQuickslot();
     }
 
@@ -215,8 +217,6 @@ public class RangedCodex extends Codex {
         this.casting = true;
         super.cast(user, dst);
         this.casting = false;
-
-        onUse();
     }
 
     @Override
@@ -305,10 +305,10 @@ public class RangedCodex extends Codex {
 
     @Override
     public float castDelay(Char user, int cell) {
-        // onUse()에서 이미 castingTurn()만큼의 턴을 소모하기 때문에, 아이템 투척 자체로는 턴을 소모하지 않습니다.
-        // 사용에 필요한 턴 수정이 필요한 경우 해당 코덱스 클래스에서 castingTurn()을 오버라이딩해 주세요.
-        return 0;
+        return super.castDelay(user, cell);
     }
+        // onUse()에서 이미 castingTurn()만큼의 턴을 소모하기 때문에, 아이템 투척 자체로는 턴을 소모하지 않습니다.
+        // 사용에 필요한 턴 수정이 필요한 경우 해당 코덱스 클래스에서 castingTurn()을 오버라이딩해 주세요. }
 
     @Override
     protected void onAttackComplete(Char enemy, int cell, boolean hit) {
