@@ -20,6 +20,9 @@ import com.watabou.noosa.tweeners.Tweener;
  */
 public class MagicSlash extends MeleeCodex {
 
+    /** 다음 1회 공격 애니메이션을 찌르기(stab)로 강제할지 여부 */
+    private boolean nextAnimStab = false;
+
     {
         tier = 1;
         image = ItemSpriteSheet.CODEX_SLASH;
@@ -43,10 +46,21 @@ public class MagicSlash extends MeleeCodex {
         super.onAttackComplete(enemy, cell, hit);
 
         // 마법 베기 애니메이션 (MAGIC_BLADE)
+        // 마법 베기/찌르기 애니메이션 (MAGIC_BLADE)
         try {
             int dir8 = dir8For(curUser.pos, cell);
-            MagicImageAnimator.sweep(curUser.sprite, ItemSpriteSheet.MAGIC_BLADE, dir8);
+            if (nextAnimStab) {
+                // 두번째 타격: 찌르기(stab)
+                MagicImageAnimator.stab(curUser.sprite, ItemSpriteSheet.MAGIC_BLADE, dir8);
+            } else {
+                // 첫번째 타격: 베기(sweep)
+                MagicImageAnimator.sweep(curUser.sprite, ItemSpriteSheet.MAGIC_BLADE, dir8);
+            }
         } catch (Throwable ignored) { /* 애니메이션 실패해도 전투는 진행 */ }
+        finally {
+            // 한 번 소비 후 항상 초기화
+            nextAnimStab = false;
+        }
         if (hit) {
             Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH, 0.87f, 1.2f);
         } else {
@@ -67,7 +81,10 @@ public class MagicSlash extends MeleeCodex {
             @Override
             protected void onComplete() { // interval 값으로 넣은 0.1초가 흐른 후에 실행되는 함수입니다.
                 super.onComplete();
-                // 공격자의 위치 → 피격자의 위치 방향으로 단단한 지형 앞에서 멈추는 직선 경로를 만듭니다.
+
+                // 두번째 타격은 찌르기(stab) 애니메이션을 사용하도록 플래그 설정
+                nextAnimStab = true;
+// 공격자의 위치 → 피격자의 위치 방향으로 단단한 지형 앞에서 멈추는 직선 경로를 만듭니다.
                 Ballistica path = new Ballistica(curUser.pos, enemy.pos, Ballistica.STOP_SOLID);
 
                 // 두번째 적을 공격했는지를 확인하는 변수입니다.
@@ -87,6 +104,7 @@ public class MagicSlash extends MeleeCodex {
                 }
 
                 if (!isAttackedSecond && enemy.isAlive()) { // 두번째 적을 공격하지 않았는데, 원래 적이 살아있다면...
+                    nextAnimStab = true;
                     onAttackComplete(enemy, enemy.pos, curUser.codexAttack(enemy, MagicSlash.this)); // 원래의 적인 enemy에게 한번 더 코덱스 공격을 합니다.
                 }
 
