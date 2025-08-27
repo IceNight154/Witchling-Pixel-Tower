@@ -17,10 +17,6 @@ import com.watabou.utils.PointF;
  *  - 스윕 궤적을 이동 에펙으로 그리는 것이 아니라, 이미지 자체를 캐릭터 중심에서
  *    회전시키는 방식.
  *
- * 전제:
- *  - magicImage의 기본 도트가 우상향(NE, +45°)을 바라보도록 그려져 있다고 가정한다.
- *    이 클래스는 이 기울기를 보정하기 위해 최종 각도에서 45°를 빼 준다.
- *
  * 스프라이트 크기 보정(중심축 드리프트 보정):
  *  - 캐릭터 스프라이트가 12×16px → 24×32px로 커지고, 화면 출력은 0.35배로 축소되는 경우
  *    시각적 중심이 우하단으로 치우치는 경향이 있다.
@@ -40,7 +36,7 @@ public class MagicImageAnimator extends Group {
     private static final float BASE_DIAGONAL_DEG = 45f;
 
     // 공격 방향이 반대로 보일 때 true로 설정하여 좌우를 뒤집습니다.
-    private static final boolean FLIP_FACING = true;
+    private static final boolean FLIP_FACING = false;
 
     /* === 상수: 이미지 내부의 '손잡이(피벗)' 위치(비율 0..1) ===
        - 이 값은 이미지의 어느 지점을 회전 중심으로 둘지 정한다.
@@ -285,18 +281,19 @@ public class MagicImageAnimator extends Group {
     /* **********************************************************************
      * [유틸] 8방향 → 각도 변환
      *  - 매핑: 0=N,1=NE,2=E,3=SE,4=S,5=SW,6=W,7=NW
-     *  - 기준: 오른쪽=0°, 아래=+90°, 반시계(-)는 위쪽 방향
+     *  - 기준: 오른쪽=0°, 아래=+90°, 시계방향(+) / 반시계(-)
      * ********************************************************************** */
     private static float dir8ToDeg(int dir8) {
         switch (dir8 & 7) {
-            case 0:  return -90f;   // N
-            case 1:  return  45f;   // NE
-            case 2:  return   0f;   // E
-            case 3:  return -45f;   // SE
-            case 4:  return  90f;   // S
+
+            case 0:  return    0f;   // N
+            case 1:  return   45f;   // NE
+            case 2:  return   90f;   // E
+            case 3:  return  135f;   // SE
+            case 4:  return  180f;   // S
             case 5:  return -135f;   // SW
-            case 6:  return 180f;   // W
-            case 7:  return  135f;  // NW
+            case 6:  return  -90f;   // W
+            case 7:  return  -45f;   // NW
             default: return   0f;
         }
     }

@@ -5,21 +5,10 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.BlastParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicImageAnimator;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.Tweener;
-import com.watabou.utils.Callback;
-import com.watabou.utils.GameMath;
-import com.watabou.utils.Random;
-import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaSwordSweepParticle;
-import com.watabou.noosa.particles.Emitter;
 
 /**
  * Magic Slash (instant, short‑range Codex)
@@ -58,7 +47,9 @@ public class MagicSlash extends MeleeCodex {
             int dir8 = dir8For(curUser.pos, cell);
             MagicImageAnimator.sweep(curUser.sprite, ItemSpriteSheet.MAGIC_BLADE, dir8);
         } catch (Throwable ignored) { /* 애니메이션 실패해도 전투는 진행 */ }
-        Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH, 0.87f, 1.2f);
+        if (hit) {
+            Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH, 0.87f, 1.2f);
+        }
     }
 
     @Override
