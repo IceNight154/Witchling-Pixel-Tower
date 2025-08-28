@@ -174,6 +174,7 @@ public class Assets {
 		public static final String HIT_PARRY        = "sounds/hit_parry.mp3";
 		public static final String HIT_ARROW        = "sounds/hit_arrow.mp3";
 		public static final String ATK_SPIRITBOW    = "sounds/atk_spiritbow.mp3";
+		public static final String ATK_SWORD_SLASH  = "sounds/atk_sword_slash.mp3";
 		public static final String ATK_GRIMOIRE     = "sounds/atk_grimoire.mp3";
 		public static final String ATK_CROSSBOW     = "sounds/atk_crossbow.mp3";
 		public static final String HEALTH_WARN      = "sounds/health_warn.mp3";
@@ -228,7 +229,7 @@ public class Assets {
 				OPEN, UNLOCK, ITEM, DEWDROP, STEP, WATER, GRASS, TRAMPLE, STURDY,
 
 				HIT, MISS, HIT_SLASH, HIT_STAB, HIT_CRUSH, HIT_MAGIC, HIT_STRONG, HIT_PARRY,
-				HIT_ARROW, ATK_SPIRITBOW, ATK_CROSSBOW, ATK_GRIMOIRE, HEALTH_WARN, HEALTH_CRITICAL,
+				HIT_ARROW, ATK_SPIRITBOW, ATK_SWORD_SLASH, ATK_CROSSBOW, ATK_GRIMOIRE, HEALTH_WARN, HEALTH_CRITICAL,
 
 				DESCEND, EAT, READ, LULLABY, DRINK, SHATTER, ZAP, LIGHTNING, LEVELUP, DEATH,
 				CHALLENGE, CURSED, TRAP, EVOKE, TOMB, ALERT, MELD, BOSS, BLAST, PLANT, RAY, BEACON,
