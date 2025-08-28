@@ -29,6 +29,7 @@ public class ManaBuffFireflyParticle extends PixelParticle {
     // --------------------------------------------------
 
     private float baseSize;
+    private float sizeMul = 1f;
     private float phase;     // 개별 파티클 위상(깜빡임/펄스)
     private float freq;      // 깜빡임 주파수
     private float reAimT;    // 부드러운 방향 재설정 타이머
@@ -43,6 +44,12 @@ public class ManaBuffFireflyParticle extends PixelParticle {
     public void reset(float x, float y) {
         resetWithRange(x, y, 1f);
     }
+    // reset with range and custom size multiplier (for layered parallax usage)
+    public void resetWithParams(float x, float y, float rangeMul, float sizeMul) {
+        this.sizeMul = Math.max(0.25f, sizeMul);
+        resetWithRange(x, y, rangeMul);
+    }
+
 
     // 범위 배수(rangeMul)로 간편 조절 가능한 reset
     public void resetWithRange(float x, float y, float rangeMul) {
@@ -62,7 +69,7 @@ public class ManaBuffFireflyParticle extends PixelParticle {
         left = lifespan = Random.Float(LIFESPAN_MIN, LIFESPAN_MAX) * (0.85f + 0.3f * rangeMul);
 
         // 아주 작은 크기(더 작게)
-        baseSize = Random.Float(0.9f, 1.4f);
+        baseSize = Random.Float(0.9f, 1.4f) * sizeMul;
         size(baseSize);
 
         // 부유 속도: 방사 방향 가중 + 약간의 랜덤성
@@ -135,4 +142,21 @@ public class ManaBuffFireflyParticle extends PixelParticle {
         @Override
         public boolean lightMode() { return true; }
     }
+    /** Layer-specific factory to control range & size per parallax layer */
+    public static class LayerFactory extends Emitter.Factory {
+        private final float rangeMul;
+        private final float sizeMul;
+        public LayerFactory(float rangeMul, float sizeMul){
+            this.rangeMul = rangeMul;
+            this.sizeMul  = sizeMul;
+        }
+        @Override
+        public void emit(Emitter emitter, int index, float x, float y) {
+            ManaBuffFireflyParticle p = (ManaBuffFireflyParticle) emitter.recycle(ManaBuffFireflyParticle.class);
+            p.resetWithParams(x, y, rangeMul, sizeMul);
+        }
+        @Override
+        public boolean lightMode() { return true; }
+    }
+
 }

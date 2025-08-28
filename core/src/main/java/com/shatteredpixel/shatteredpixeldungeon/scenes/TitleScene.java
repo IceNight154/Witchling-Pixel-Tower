@@ -26,6 +26,8 @@ import com.watabou.noosa.ColorBlock;
 import com.watabou.input.PointerEvent;
 
 import java.util.Date;
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.watabou.noosa.audio.Music;
 
 /**
  * TitleScene (filled v11)
@@ -75,6 +77,13 @@ public class TitleScene extends PixelScene {
 	public void create() {
 
 		super.create();
+
+		// Play title theme tracks
+		Music.INSTANCE.playTracks(
+				new String[]{Assets.Music.TITLE},
+				new float[]{1},
+				false);
+
 		uiCamera.visible = false;
 
 		Archs archs = new Archs();
@@ -94,7 +103,7 @@ public class TitleScene extends PixelScene {
 
 		glowImage = new Image(BannerSprites.get( landscape() ? BannerSprites.Type.TITLE_GLOW_LAND : BannerSprites.Type.TITLE_GLOW_PORT )){
 			private float time = 0f;
-			
+
 			public void update(){
 				super.update();
 				time += Game.elapsed;
@@ -116,7 +125,7 @@ public class TitleScene extends PixelScene {
 				idleT = 0f;
 			}
 
-			
+
 			protected void onDrag(PointerEvent e) {
 				if (firstTapDone && dragging) {
 					float dy = e.current.y - lastDragY;
@@ -132,7 +141,7 @@ public class TitleScene extends PixelScene {
 				idleT = 0f;
 			}
 
-			
+
 			protected void onClick(PointerEvent event) {
 				if (!firstTapDone) {
 					firstTapDone = true;
@@ -221,7 +230,7 @@ public class TitleScene extends PixelScene {
 		final Chrome.Type BTN_STYLE = Chrome.Type.GREY_BUTTON_TR;
 
 		StyledButton btnPlay = new StyledButton(BTN_STYLE, Messages.get(this, "enter", "Play")) {
-			
+
 			protected void onClick() {
 				sShowMenuOnStart = true;
 				if (GamesInProgress.checkAll().size() == 0){
@@ -237,7 +246,7 @@ public class TitleScene extends PixelScene {
 		menuLayer.add(btnPlay);
 
 		StyledButton btnSupport = new StyledButton(BTN_STYLE, Messages.get(this, "support", "Support")) {
-			
+
 			protected void onClick() {
 				sShowMenuOnStart = true;
 				ShatteredPixelDungeon.switchNoFade(SupporterScene.class);
@@ -247,7 +256,7 @@ public class TitleScene extends PixelScene {
 		menuLayer.add(btnSupport);
 
 		StyledButton btnRankings = new StyledButton(BTN_STYLE, Messages.get(this, "rankings", "Rankings")) {
-			
+
 			protected void onClick() {
 				sShowMenuOnStart = true;
 				ShatteredPixelDungeon.switchNoFade( RankingsScene.class );
@@ -257,7 +266,7 @@ public class TitleScene extends PixelScene {
 		menuLayer.add(btnRankings);
 
 		StyledButton btnJournal = new StyledButton(BTN_STYLE, Messages.get(this, "journal", "Journal")) {
-			
+
 			protected void onClick() {
 				sShowMenuOnStart = true;
 				ShatteredPixelDungeon.switchNoFade( JournalScene.class );
@@ -275,7 +284,7 @@ public class TitleScene extends PixelScene {
 		menuLayer.add(btnChanges);
 
 		StyledButton btnSettings = new StyledButton(BTN_STYLE, Messages.get(this, "settings", "Settings")) {
-			
+
 			protected void onClick() {
 				if (Messages.lang().status() == Languages.Status.X_UNFINISH){
 					WndSettings.last_index = 5;
@@ -287,7 +296,7 @@ public class TitleScene extends PixelScene {
 		menuLayer.add(btnSettings);
 
 		StyledButton btnAbout = new StyledButton(BTN_STYLE, Messages.get(this, "about", "About")) {
-			
+
 			protected void onClick() {
 				sShowMenuOnStart = true;
 				ShatteredPixelDungeon.switchScene( AboutScene.class );
@@ -327,7 +336,7 @@ public class TitleScene extends PixelScene {
 		if (scrollOffset > maxScroll) scrollOffset = maxScroll;
 	}
 
-	
+
 	public void update() {
 		super.update();
 
@@ -405,7 +414,7 @@ public class TitleScene extends PixelScene {
 		}
 	}
 
-	
+
 	protected void onBackPressed() {
 		ShatteredPixelDungeon.instance.finish();
 	}
@@ -421,7 +430,7 @@ public class TitleScene extends PixelScene {
 
 		int unreadCount = -1;
 
-		
+
 		public void update(){
 			super.update();
 
@@ -441,7 +450,7 @@ public class TitleScene extends PixelScene {
 			}
 		}
 
-		
+
 		protected void onClick(){
 			super.onClick();
 			sShowMenuOnStart = true;
@@ -456,7 +465,7 @@ public class TitleScene extends PixelScene {
 			if (SPDSettings.updates()) Updates.checkForUpdate();
 		}
 
-		
+
 		protected void onClick(){
 			if (Updates.updateAvailable()){
 				final AvailableUpdateData update = Updates.updateData();
@@ -467,7 +476,7 @@ public class TitleScene extends PixelScene {
 						Messages.get(this,"update"),
 						Messages.get(this,"changes")
 				){
-					
+
 					protected void onSelect(int index){
 						if (index == 0){
 							Updates.launchUpdate(update);
