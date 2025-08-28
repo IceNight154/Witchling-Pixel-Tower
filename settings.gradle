@@ -1,3 +1,9 @@
+// === Place these lines at the VERY TOP of settings.gradle (Groovy DSL) ===
+// Must come before pluginManagement {}, dependencyResolutionManagement {}, and any other blocks.
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.9.0'
+}
+
 //core game code modules
 include ':SPD-classes'
 include ':core'

@@ -71,6 +71,18 @@ public class Assets {
 		public static final String ARCS_BG  = "interfaces/arcs1.png";
 		public static final String ARCS_FG  = "interfaces/arcs2.png";
 
+		public static final String TITLE_0  = "interfaces/title0.png";
+		public static final String TITLE_1  = "interfaces/title1.png";
+		public static final String TITLE_2  = "interfaces/title2.png";
+		public static final String TITLE_3  = "interfaces/title3.png";
+		public static final String TITLE_4  = "interfaces/title4.png";
+		public static final String TITLE_5  = "interfaces/title5.png";
+		public static final String TITLE_6  = "interfaces/title6.png";
+		public static final String TITLE_7  = "interfaces/title7.png";
+		public static final String TITLE_8  = "interfaces/title8.png";
+		public static final String TITLE_9  = "interfaces/title9.png";
+
+
 		public static final String BANNERS  = "interfaces/banners.png";
 		public static final String BADGES   = "interfaces/badges.png";
 		public static final String LOCKED   = "interfaces/locked_badge.png";
@@ -147,6 +159,8 @@ public class Assets {
 		public static final String HALLS_TENSE          = "music/halls_tense.ogg";
 		public static final String HALLS_BOSS           = "music/halls_boss.ogg";
 		public static final String HALLS_BOSS_FINALE    = "music/halls_boss_finale.ogg";
+		public static final String TITLE   			    = "music/title.mp3";
+
 	}
 
 	public static class Sounds {
@@ -174,6 +188,7 @@ public class Assets {
 		public static final String HIT_PARRY        = "sounds/hit_parry.mp3";
 		public static final String HIT_ARROW        = "sounds/hit_arrow.mp3";
 		public static final String ATK_SPIRITBOW    = "sounds/atk_spiritbow.mp3";
+		public static final String ATK_SWORD_SLASH  = "sounds/atk_sword_slash.mp3";
 		public static final String ATK_GRIMOIRE     = "sounds/atk_grimoire.mp3";
 		public static final String ATK_CROSSBOW     = "sounds/atk_crossbow.mp3";
 		public static final String HEALTH_WARN      = "sounds/health_warn.mp3";
@@ -228,7 +243,7 @@ public class Assets {
 				OPEN, UNLOCK, ITEM, DEWDROP, STEP, WATER, GRASS, TRAMPLE, STURDY,
 
 				HIT, MISS, HIT_SLASH, HIT_STAB, HIT_CRUSH, HIT_MAGIC, HIT_STRONG, HIT_PARRY,
-				HIT_ARROW, ATK_SPIRITBOW, ATK_CROSSBOW, ATK_GRIMOIRE, HEALTH_WARN, HEALTH_CRITICAL,
+				HIT_ARROW, ATK_SPIRITBOW, ATK_SWORD_SLASH, ATK_CROSSBOW, ATK_GRIMOIRE, HEALTH_WARN, HEALTH_CRITICAL,
 
 				DESCEND, EAT, READ, LULLABY, DRINK, SHATTER, ZAP, LIGHTNING, LEVELUP, DEATH,
 				CHALLENGE, CURSED, TRAP, EVOKE, TOMB, ALERT, MELD, BOSS, BLAST, PLANT, RAY, BEACON,
