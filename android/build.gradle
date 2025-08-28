@@ -1,96 +1,67 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
-    namespace 'com.shatteredpixel.shatteredpixeldungeon.android'
-    compileSdk appAndroidCompileSDK
-    compileOptions.sourceCompatibility = compileOptions.targetCompatibility = appJavaCompatibility
-
-    sourceSets.main.assets.srcDirs = [new File(project(':core').projectDir, "/src/main/assets")]
+    namespace 'com.shatteredpixel.shatteredpixeldungeon-mod-2.android'
+    compileSdk 34
 
     defaultConfig {
-        manifestPlaceholders = [appName:appName]
-        applicationId appPackageName
-
-        versionCode appVersionCode
-        versionName appVersionName
-
-        //noinspection MinSdkTooLow
-        minSdkVersion appAndroidMinSDK
-        targetSdkVersion appAndroidTargetSDK
-        resourceConfigurations += ['en_US', 'cs', 'de', 'el', 'es', 'fr', 'hu', 'in', 'it', 'ja', 'ko', 'nl', 'pl', 'pt', 'ru', 'tr', 'uk', 'vi', 'zh_CN']
-
+        applicationId 'com.shatteredpixel.shatteredpixeldungeon-mod-2.android'
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
         debug {
             applicationIdSuffix ".indev"
-            versionNameSuffix '-INDEV'
-            dependencies {
-                debugImplementation project(':services:updates:debugUpdates')
-                debugImplementation project(':services:news:debugNews')
-            }
+            versionNameSuffix "-INDEV"
         }
         release {
-
-            //These lines enable R8, which is a code shrinker/optimizer/obfuscator.
-            //This makes release APKs smaller and more efficient, but also makes debugging trickier
-            //as the information produced in stack traces must be de-obfuscated.
-            //See here: https://developer.android.com/studio/build/shrink-code#decode-stack-trace
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            dependencies {
-                releaseImplementation project(':services:updates:githubUpdates')
-                releaseImplementation project(':services:news:shatteredNews')
-            }
         }
     }
 
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
+    packaging {
+        jniLibs { useLegacyPackaging true }
+        resources {
+            excludes += ["META-INF/AL2.0", "META-INF/LGPL2.1"]
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
-configurations { natives }
-
+// --- Put your existing dependencies here (example for libGDX) ---
+// If your root build.gradle defines `ext.gdxVersion`, this will work.
+// Otherwise, replace `$gdxVersion` with the actual version string (e.g., "1.12.1").
 dependencies {
     implementation project(':core')
 
-    // We are using the natives from 1.11.0 to maintain compatibility with Android 4.0-4.3 for now
-    // The 1.12.0+ natives are compiled with a version of the NDK which drops 4.3- support
-    // YES, THIS IS VERY DANGEROUS! 1.11.0 natives may only incidentally work with later libGDX versions
+    // libGDX Android backend + natives (adjust if your project differs)
     implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-armeabi-v7a"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-arm64-v8a"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-x86"
-    natives "com.badlogicgames.gdx:gdx-platform:1.11.0:natives-x86_64"
-    implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-armeabi-v7a"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-arm64-v8a"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-x86"
-    natives "com.badlogicgames.gdx:gdx-freetype-platform:1.11.0:natives-x86_64"
-    implementation "com.badlogicgames.gdx-controllers:gdx-controllers-android:$gdxControllersVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
 }
 
-// called every time gradle gets executed, takes the native dependencies of
-// the natives configuration, and extracts them to the proper libs/ folders
-// so they get packed with the APK.
-task copyAndroidNatives() {
+// Optional: task to extract .so from native jars (keep if you need it)
+tasks.register("copyAndroidNatives") {
     doFirst {
-        file("libs/armeabi-v7a/").mkdirs()
-        file("libs/arm64-v8a/").mkdirs()
-        file("libs/x86/").mkdirs()
-        file("libs/x86_64/").mkdirs()
-
-        configurations.natives.copy().files.each { jar ->
+        configurations["implementation"].files.each { jar ->
             def outputDir = null
             if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
-            if (jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
-            if (jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
-            if (jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
+            if (jar.name.endsWith("natives-arm64-v8a.jar"))   outputDir = file("libs/arm64-v8a")
+            if (jar.name.endsWith("natives-x86.jar"))         outputDir = file("libs/x86")
+            if (jar.name.endsWith("natives-x86_64.jar"))      outputDir = file("libs/x86_64")
             if (outputDir != null) {
                 copy {
                     from zipTree(jar)
@@ -100,8 +71,4 @@ task copyAndroidNatives() {
             }
         }
     }
-}
-
-tasks.matching { it.name.contains("merge") && it.name.contains("JniLibFolders") }.configureEach { packageTask ->
-    packageTask.dependsOn 'copyAndroidNatives'
 }
