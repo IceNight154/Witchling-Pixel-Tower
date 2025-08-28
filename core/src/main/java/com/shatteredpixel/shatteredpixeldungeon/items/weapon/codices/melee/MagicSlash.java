@@ -26,7 +26,7 @@ public class MagicSlash extends MeleeCodex {
     {
         tier = 1;
         image = ItemSpriteSheet.CODEX_SLASH;
-        magicImage = ItemSpriteSheet.MAGIC_SLASH;
+        magicImage = ItemSpriteSheet.MAGIC_BLADE;
         baseUses = 50;
     }
 
@@ -51,10 +51,10 @@ public class MagicSlash extends MeleeCodex {
             int dir8 = dir8For(curUser.pos, cell);
             if (nextAnimStab) {
                 // 두번째 타격: 찌르기(stab)
-                MagicImageAnimator.stab(curUser.sprite, ItemSpriteSheet.MAGIC_SLASH, dir8);
+                MagicImageAnimator.stab(curUser.sprite, ItemSpriteSheet.MAGIC_BLADE, dir8);
             } else {
                 // 첫번째 타격: 베기(sweep)
-                MagicImageAnimator.sweep(curUser.sprite, ItemSpriteSheet.MAGIC_SLASH, dir8);
+                MagicImageAnimator.sweep(curUser.sprite, ItemSpriteSheet.MAGIC_BLADE, dir8);
             }
         } catch (Throwable ignored) { /* 애니메이션 실패해도 전투는 진행 */ }
         finally {
@@ -129,14 +129,14 @@ public class MagicSlash extends MeleeCodex {
         int tx = toPos % w, ty = toPos / w;
         int dx = Integer.signum(tx - fx);
         int dy = Integer.signum(ty - fy);
-        if (dx ==  0 && dy == -1)  return 0;  // N
-        if (dx ==  1 && dy == -1)  return 1;  // NE
-        if (dx ==  1 && dy ==  0)  return 2;  // E
-        if (dx ==  1 && dy ==  1)  return 3;  // SE
-        if (dx ==  0 && dy ==  1)  return 4;  // S
-        if (dx == -1 && dy ==  1)  return 5;  // SW
-        if (dx == -1 && dy ==  0)  return 6;  // W
-        if (dx == -1 && dy == -1)  return 7;  // NW
+        if (dx == 0 && dy == -1) return 0;   // N
+        if (dx == 1 && dy == -1)  return 1;  // NE
+        if (dx == 1 && dy == 0)   return 2;  // E
+        if (dx == 1 && dy == 1)   return 3;  // SE
+        if (dx == 0 && dy == 1)   return 4;  // S
+        if (dx == -1 && dy == 1)  return 5;  // SW
+        if (dx == -1 && dy == 0)  return 6;  // W
+        if (dx == -1 && dy == -1) return 7;  // NW
         return 2; // 제자리거나 예외면 E로
     }
 }

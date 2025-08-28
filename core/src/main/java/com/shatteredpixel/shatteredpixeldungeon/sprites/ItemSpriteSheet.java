@@ -854,18 +854,14 @@ public class ItemSpriteSheet {
 
 	private static final int MELEE_CODEX = xy(1, 37);
 	public static final int CODEX_SLASH 	 = MELEE_CODEX+idx(0);
-	public static final int CODEX_RAMPAGE 	 = MELEE_CODEX+idx(1);
 	static {
-		assignItemRect(CODEX_SLASH, 16, 16);
-		assignItemRect(CODEX_RAMPAGE, 16, 16);
+		assignItemRect(MELEE_CODEX, 16, 16);
 	}
 
 	private static final int MELEE_CODEX_MAGIC = xy(1, 38);
-	public static final int MAGIC_SLASH 	 = MELEE_CODEX_MAGIC+idx(0);
-	public static final int MAGIC_RAMPAGE 	 = MELEE_CODEX_MAGIC+idx(0);
+	public static final int MAGIC_BLADE 	 = MELEE_CODEX_MAGIC+idx(0);
 	static {
-		assignItemRect(MAGIC_SLASH, 16, 16);
-		assignItemRect(MAGIC_RAMPAGE, 16, 16);
+		assignItemRect(MAGIC_BLADE, 16, 16);
 	}
 
 	//for smaller 8x8 icons that often accompany an item sprite

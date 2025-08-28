@@ -71,13 +71,6 @@ public class MeleeCodex extends Codex {
         usesTargeting = false;
     }
 
-    // 일부 코덱스가 비인접 타겟을 허용할 수 있도록 하는 훅.
-    // 기본은 false이며, 서브클래스에서 필요 시 override 하세요.
-    protected boolean allowNonAdjacentTarget(int from, int to){
-        return false;
-    }
-
-
     private CellSelector.Listener selector = new CellSelector.Listener() {
         @Override
         public void onSelect( Integer target ) {
@@ -99,15 +92,13 @@ public class MeleeCodex extends Codex {
                 return;
             }
 
-
-            // 영웅의 위치와 캐릭터의 위치가 근접하지 않았다면, 서브클래스 훅으로 허용 여부를 판정합니다.
+            // 영웅의 위치와 캐릭터의 위치가 근접하지 않았다면 다음 문구를 출력하고 마칩니다.
             if (!Dungeon.level.adjacent(curUser.pos, enemy.pos)) {
-                if (!allowNonAdjacentTarget(curUser.pos, enemy.pos)){
-                    GLog.w(Messages.get(MeleeCodex.class, "not_adjacent"));
-                    return;
-                }
+                GLog.w(Messages.get(MeleeCodex.class, "not_adjacent"));
+                return;
             }
-// 적 캐릭터에 대해서 코덱스 공격을 수행합니다.
+
+            // 적 캐릭터에 대해서 코덱스 공격을 수행합니다.
             casting = true;
             onCodexAttack(enemy, target);
 

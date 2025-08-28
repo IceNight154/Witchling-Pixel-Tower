@@ -21,16 +21,16 @@ import java.lang.reflect.Method;
 public class MagicImageAnimator extends Group {
 
     /* === 기본 파라미터 === */
-    public static final float DEFAULT_DURATION = 0.25f;      // 전체 애니메이션 시간(초)
+    public static final float DEFAULT_DURATION = 0.18f;      // 전체 애니메이션 시간(초)
     private static final float BASE_DIAGONAL_DEG = 45f;      // 리소스 기본 기울기 보정(NE)
     private static final boolean FLIP_FACING = false;        // 좌우 반전 필요시 true
 
     // 이미지 내부 피벗(손잡이 지점)에 대한 기본 비율(0..1)
-    private static final float DEFAULT_ORIGIN_FRACTION_X = 0.08f;
-    private static final float DEFAULT_ORIGIN_FRACTION_Y = 0.92f;
+    private static final float DEFAULT_ORIGIN_FRACTION_X = 0.20f;
+    private static final float DEFAULT_ORIGIN_FRACTION_Y = 0.80f;
 
     // 찌르기(STAB) 기본 보조 파라미터
-    private static final float STAB_BACK_RATIO  = 0.5f; // 전진 전, 살짝 뒤로 빠지는 거리 비율
+    private static final float STAB_BACK_RATIO  = 0.28f; // 전진 전, 살짝 뒤로 빠지는 거리 비율
     private static final float STAB_FADE_START  = 0.90f; // 사라지기 시작하는 비율(0..1)
 
     // --- 모드(애니메이션 종류) ---
