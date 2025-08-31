@@ -234,11 +234,6 @@ public class MagicRampage extends MeleeCodex {
         }
         super.execute(hero, action);
     }
-    public static String descFallback() {
-        return "전방 " + RANGE + "칸(반지름) 이내에서 벽에 가로막히지 않는 모든 직선 방향으로 돌진합니다. " +
-                "경로상의 모든 적에게 마나 피해를 주며, 지정한 칸까지 이동합니다. " +
-                "벽과 장애물은 통과하지 못합니다.";
-    }
 
     /**
      * from->to를 향해 '모든 직선 방향'으로 브레젠험(Bresenham) 라인을 만든 뒤,

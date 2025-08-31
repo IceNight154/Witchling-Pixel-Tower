@@ -17,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.services.updates.AvailableUpdate
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 
+import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
@@ -28,6 +29,8 @@ import com.watabou.input.PointerEvent;
 import java.util.Date;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.audio.Music;
+import com.watabou.noosa.particles.Emitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaBuffFireflyParticle;
 
 /**
  * TitleScene (filled v11)
@@ -60,6 +63,13 @@ public class TitleScene extends PixelScene {
 
 	private Image titleImage;
 	private Image glowImage;
+
+	private Emitter firefliesBack;
+	private Emitter firefliesFront;
+
+	// Spread multipliers to widen firefly emission area around the title
+	private float fireflySpreadBack = 1.6f; // was 1.0 (center) → now 1.6x of title half-size
+	private float fireflySpreadFront = 1.3f;
 
 	private float scrollOffset = 0f;
 	private float minScroll = 0f;
@@ -103,9 +113,31 @@ public class TitleScene extends PixelScene {
 
 		glowImage = new Image(BannerSprites.get( landscape() ? BannerSprites.Type.TITLE_GLOW_LAND : BannerSprites.Type.TITLE_GLOW_PORT )){
 			private float time = 0f;
-
 			public void update(){
+
+				// Sync firefly emitters with title fade (Emitter has no alpha(); use on/off)
+				try {
+					float __a = 1f;
+					if (firstTapDone && !returningToTitle){
+						__a = Math.max(0f, 1f - revealT);
+					} else if (returningToTitle){
+						__a = returnT;
+					}
+					boolean __on = __a > 0.02f;
+					if (firefliesBack != null) firefliesBack.on = __on;
+					if (firefliesFront != null) firefliesFront.on = __on;
+				} catch (Throwable __ignored) { /* keep scene robust */ }
+
 				super.update();
+
+				// keep firefly emitters following the title every frame
+// keep firefly emitters following the title every frame
+				if (titleImage != null && firefliesBack != null) {
+					float cx = titleImage.x + titleImage.width()/2f;
+					float cy = titleImage.y + titleImage.height()/2f;
+					float __hw_b=(titleImage.width()/2f)*fireflySpreadBack; float __hh_b=(titleImage.height()/2f)*fireflySpreadBack; float __ox_b=(float)((Math.random()*2.0-1.0)*__hw_b); float __oy_b=(float)((Math.random()*2.0-1.0)*__hh_b); firefliesBack.pos(cx+__ox_b, cy+__oy_b);
+					if (firefliesFront != null){ float __hw_f=(titleImage.width()/2f)*fireflySpreadFront; float __hh_f=(titleImage.height()/2f)*fireflySpreadFront; float __ox_f=(float)((Math.random()*2.0-1.0)*__hw_f); float __oy_f=(float)((Math.random()*2.0-1.0)*__hh_f); firefliesFront.pos(cx+__ox_f, cy+__oy_f);}
+				}
 				time += Game.elapsed;
 				float a = 0.8f + (float)Math.sin(time * 2.0f) * 0.2f;
 				alpha(a * (firstTapDone ? Math.max(0f, 1f - revealT) : 1f));
@@ -113,6 +145,23 @@ public class TitleScene extends PixelScene {
 				y = titleImage.y;
 			}
 		};
+		// --- Firefly particle emitters (behind and in front of the title) ---
+		// Back layer: sits behind the title (attach to gradientLayer)
+		firefliesBack = new Emitter();
+		firefliesBack.autoKill = false;
+		firefliesBack.pour(new ManaBuffFireflyParticle.LayerFactory(1.15f, 0.95f), 0.08f);
+		gradientLayer.add(firefliesBack);
+		// Front layer: sits above the glow/title (attach to gateLayer)
+		firefliesFront = new Emitter();
+		firefliesFront.autoKill = false;
+		firefliesFront.pour(new ManaBuffFireflyParticle.LayerFactory(1.05f, 1.10f), 0.10f);
+		gateLayer.add(firefliesFront);
+		// Position them now; they'll be kept in place by centerTitle()/update()
+		float cx_now = titleImage.x + titleImage.width()/2f;
+		float cy_now = titleImage.y + titleImage.height()/2f;
+		firefliesBack.pos(cx_now, cy_now);
+		firefliesFront.pos(cx_now, cy_now);
+
 		gateLayer.add(glowImage);
 
 		centerTitle();
@@ -158,6 +207,18 @@ public class TitleScene extends PixelScene {
 
 		buildMenu();
 
+		// --- Version label (matches TitleScene0) ---
+		{
+			float w = Camera.main.width;
+			float h = Camera.main.height;
+			BitmapText version = new BitmapText("v" + Game.version, pixelFont);
+			version.measure();
+			version.hardlight(0x888888);
+			version.x = w - version.width() - 4;
+			version.y = h - version.height() - 2;
+			add(version);
+		}
+
 		Badges.loadGlobal();
 
 		if (sShowMenuOnStart){
@@ -202,6 +263,11 @@ public class TitleScene extends PixelScene {
 		glowImage.y  = titleImage.y;
 		align(titleImage);
 		align(glowImage);
+
+		// keep firefly emitters centered on the title
+		if (firefliesBack != null){ float __hw_b = (titleImage.width()/2f) * fireflySpreadBack; float __hh_b = (titleImage.height()/2f) * fireflySpreadBack; float __ox_b = (float)((Math.random()*2.0-1.0) * __hw_b); float __oy_b = (float)((Math.random()*2.0-1.0) * __hh_b); firefliesBack.pos(titleImage.x + titleImage.width()/2f + __ox_b, titleImage.y + titleImage.height()/2f + __oy_b);}
+		if (firefliesFront != null){ float __hw_f = (titleImage.width()/2f) * fireflySpreadFront; float __hh_f = (titleImage.height()/2f) * fireflySpreadFront; float __ox_f = (float)((Math.random()*2.0-1.0) * __hw_f); float __oy_f = (float)((Math.random()*2.0-1.0) * __hh_f); firefliesFront.pos(titleImage.x + titleImage.width()/2f + __ox_f, titleImage.y + titleImage.height()/2f + __oy_f);}
+
 	}
 
 	private void jumpToMenuState(){
@@ -210,20 +276,11 @@ public class TitleScene extends PixelScene {
 		menuLayer.visible = true;
 		titleImage.visible = false;
 		glowImage.visible = false;
+		if (firefliesBack != null){ firefliesBack.on = false; /* Emitter has no alpha(); particles will fade out naturally. */ }
+		if (firefliesFront != null){ firefliesFront.on = false; /* Emitter has no alpha(); particles will fade out naturally. */ }
+
+
 		updateScrollBounds();
-		float contentHeight = menuButtons.length * BTN_H + (menuButtons.length - 1) * BTN_GAP;
-		float centerX = (Camera.main.width - BTN_W) / 2f;
-		float baseTop = (Camera.main.height - contentHeight)/2f;
-		for (int i = 0; i < menuButtons.length; i++) {
-			float targetY = baseTop + scrollOffset + i*(BTN_H + BTN_GAP);
-			StyledButton b = menuButtons[i];
-			b.setRect(centerX, targetY, BTN_W, BTN_H);
-			align(b);
-			b.alpha(1f);
-		}
-		idleT = 0f;
-		returningToTitle = false;
-		returnT = 0f;
 	}
 
 	private void buildMenu() {
@@ -275,11 +332,11 @@ public class TitleScene extends PixelScene {
 		btnJournal.icon(Icons.get(Icons.JOURNAL));
 		menuLayer.add(btnJournal);
 
-		StyledButton btnNews = new NewsButton(BTN_STYLE, Messages.get(this, "news", "News"));
+		StyledButton btnNews = new com.shatteredpixel.shatteredpixeldungeon.scenes.TitleScene.NewsButton(BTN_STYLE, Messages.get(this, "news", "News"));
 		btnNews.icon(Icons.get(Icons.NEWS));
 		menuLayer.add(btnNews);
 
-		StyledButton btnChanges = new ChangesButton(BTN_STYLE, Messages.get(this, "changes", "Changes"));
+		StyledButton btnChanges = new com.shatteredpixel.shatteredpixeldungeon.scenes.TitleScene.ChangesButton(BTN_STYLE, Messages.get(this, "changes", "Changes"));
 		btnChanges.icon(Icons.get(Icons.CHANGES));
 		menuLayer.add(btnChanges);
 
@@ -366,6 +423,9 @@ public class TitleScene extends PixelScene {
 				glowImage.visible = true;
 				titleImage.alpha(1f);
 				glowImage.alpha(1f);
+				// restore particles when title returns
+				if (firefliesBack != null){ /* no alpha() on Emitter */ firefliesBack.on = true; }
+				if (firefliesFront != null){ /* no alpha() on Emitter */ firefliesFront.on = true; }
 				centerTitle();
 				idleT = 0f;
 			}
@@ -411,6 +471,15 @@ public class TitleScene extends PixelScene {
 			}
 			titleImage.alpha(titleA);
 			glowImage.alpha(titleA);
+			// keep firefly particles fading in sync with the logo
+			if (firefliesBack != null){
+				/* fade: handled by particle life; Emitter has no alpha() */
+				firefliesBack.on = titleA > 0.001f;
+			}
+			if (firefliesFront != null){
+				/* fade: handled by particle life; Emitter has no alpha() */
+				firefliesFront.on = titleA > 0.001f;
+			}
 		}
 	}
 

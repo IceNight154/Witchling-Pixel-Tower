@@ -74,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicRampage;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSheildBash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSlash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.cast.SanctuaryManaField;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicArrow;
@@ -299,6 +300,7 @@ public enum HeroClass {
 		//근거리형 코덱스
 		new MagicSlash().random().collect();
 		new MagicRampage().random().collect();
+		new MagicSheildBash().random().collect();
 
 		//원거리형 코덱스
 		new MagicArrow().random().collect();
@@ -406,7 +408,7 @@ public enum HeroClass {
 			case CLERIC:
 				return Badges.isUnlocked(Badges.Badge.UNLOCK_CLERIC);
 			case ARIA:
-				return Badges.isUnlocked(Badges.Badge.UNLOCK_ARIA);
+				return (true);
 		}
 	}
 
