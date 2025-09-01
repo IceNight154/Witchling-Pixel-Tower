@@ -42,7 +42,7 @@ public class MagicRampage extends MeleeCodex {
         }
     };
 
-    public static final String AC_RAMPAGE = "AC_RAMPAGE";
+    public static final String AC_RAMPAGE = "rampage";
 
     /** 최대 돌진 거리 */
     public static final int RANGE = 5;
