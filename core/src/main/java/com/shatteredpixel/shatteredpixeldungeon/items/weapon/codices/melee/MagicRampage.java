@@ -101,7 +101,7 @@ public class MagicRampage extends MeleeCodex {
 
         // 이동: 밀쳐내기 이펙트로 자연스럽게
         if (lastWalkable != hero.pos) {
-            Sample.INSTANCE.play(Assets.Sounds.ATK_SWORD_SLASH); // 임시 돌진 효과음
+            Sample.INSTANCE.play(Assets.Sounds.ATK_SWORD_SLASH1);
             try { Actor.add(new Pushing(hero, hero.pos, lastWalkable)); } catch (Throwable ignored) {}/* 안전 이동: sprite null-safe */
             hero.pos = lastWalkable;
             if (hero.sprite != null) hero.sprite.place(lastWalkable);

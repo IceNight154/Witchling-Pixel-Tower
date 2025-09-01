@@ -50,7 +50,7 @@ public class Codex extends Weapon {
     }
 
     public void hitSound() {
-        Sample.INSTANCE.play(Assets.Sounds.HIT);
+        Sample.INSTANCE.play(this);
     }
 
     @Override

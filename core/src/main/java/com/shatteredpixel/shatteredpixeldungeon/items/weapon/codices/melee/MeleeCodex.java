@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
@@ -10,6 +11,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.noosa.audio.Sample;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,11 @@ public class MeleeCodex extends Codex {
 
     // 현재 코덱스를 사용(캐스팅)하는 중인지 여부.
     private boolean casting = false;
+
+    @Override
+    public void hitSound() {
+        Sample.INSTANCE.play(Assets.Sounds.ATK_SWORD_SLASH2);
+    }
 
 
     @Override

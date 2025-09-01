@@ -30,6 +30,9 @@ public class MagicSlash extends MeleeCodex {
         baseUses = 50;
     }
 
+    private static final String SFX_HIT_SWEEP = Assets.Sounds.ATK_SWORD_SLASH2;
+    private static final String SFX_HIT_STAB  = Assets.Sounds.ATK_SWORD_SWEEP;
+
     @Override
     public int min(int lvl) {
         return tier + lvl;
@@ -44,6 +47,8 @@ public class MagicSlash extends MeleeCodex {
     @Override
     protected void onAttackComplete(Char enemy, int cell, boolean hit) {
         super.onAttackComplete(enemy, cell, hit);
+
+        final boolean wasStab = nextAnimStab;
 
         // 마법 베기 애니메이션 (MAGIC_BLADE)
         // 마법 베기/찌르기 애니메이션 (MAGIC_BLADE)
@@ -62,7 +67,7 @@ public class MagicSlash extends MeleeCodex {
             nextAnimStab = false;
         }
         if (hit) {
-            Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH, 0.87f, 1.2f);
+            Sample.INSTANCE.play(wasStab ? SFX_HIT_STAB : SFX_HIT_SWEEP, 0.87f, 1.2f);
         } else {
             Sample.INSTANCE.play(Assets.Sounds.MISS, 0.87f, 1.2f);
         } }

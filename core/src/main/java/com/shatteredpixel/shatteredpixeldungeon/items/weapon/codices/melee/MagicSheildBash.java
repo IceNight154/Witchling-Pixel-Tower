@@ -47,9 +47,6 @@ public class MagicSheildBash extends MeleeCodex {
         // MagicRampage 스타일: 전방 기준 magicImage 찌르기 연출
         try { MagicImageAnimator.stab(curUser.sprite, magicImage, dir8); } catch (Throwable ignored) {}
 
-        // 기본 공격 사운드
-        Sample.INSTANCE.play(Assets.Sounds.ATK_SHEILD, 0.9f, 1.1f);
-
         // 전방 1~2칸 대상 수집
         final int step1 = stepFrom(curUser.pos, dir8, 1);
         final int step2 = stepFrom(curUser.pos, dir8, 2);
@@ -69,7 +66,7 @@ public class MagicSheildBash extends MeleeCodex {
                 @Override protected boolean act() {
                     boolean h = curUser.codexAttack(enemy, MagicSheildBash.this);
                     if (h) {
-                        Sample.INSTANCE.play(Assets.Sounds.HIT_SLASH, 0.9f, 1.15f);
+                        Sample.INSTANCE.play(Assets.Sounds.ATK_SHEILD, 0.9f, 1.15f);
                         spawnBackShock(enemy.pos, dir8, 8);
                     } else {
                         Sample.INSTANCE.play(Assets.Sounds.MISS, 0.9f, 1.0f);
