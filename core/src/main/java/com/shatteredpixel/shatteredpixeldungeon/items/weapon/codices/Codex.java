@@ -49,6 +49,10 @@ public class Codex extends Weapon {
         return req;
     }
 
+    public void hitSound() {
+        Sample.INSTANCE.play(Assets.Sounds.HIT);
+    }
+
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);

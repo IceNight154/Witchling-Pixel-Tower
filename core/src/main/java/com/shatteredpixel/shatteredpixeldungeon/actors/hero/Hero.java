@@ -462,9 +462,11 @@ public class Hero extends Char {
 	public boolean codexAttack(Char enemy, Codex codex ) {
 		boolean hit = Char.hit(this, enemy, false);
 		if (hit) {
+			codex.hitSound();
 			int damage = codex.proc(this, enemy, codex.damageRoll(this));
 			enemy.damage(damage, codex);
 		} else {
+			Sample.INSTANCE.play(Assets.Sounds.MISS);
 			if (enemy.sprite != null){
 				if (Char.hitMissIcon != -1){
 					enemy.sprite.showStatusWithIcon(CharSprite.NEUTRAL, enemy.defenseVerb(), Char.hitMissIcon);
