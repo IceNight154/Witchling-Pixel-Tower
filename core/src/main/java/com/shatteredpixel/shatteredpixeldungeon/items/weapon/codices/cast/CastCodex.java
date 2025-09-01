@@ -38,9 +38,10 @@ public class CastCodex extends Codex {
 
         if (action.equals(AC_CAST)) {
 
+            beforeUse();
             curUser = hero;
             curItem = this;
-            onUse();
+            afterUse();
             ((HeroSprite)hero.sprite).read();
         }
     }

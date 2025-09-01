@@ -69,6 +69,7 @@ public class MagicSlash extends MeleeCodex {
 
     @Override
     protected void onCodexAttack(Char enemy, int cell) {
+        beforeUse();
         // 먼저 처음에 지정한 대상에게 1타를 구사합니다.
         onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
 
@@ -111,7 +112,7 @@ public class MagicSlash extends MeleeCodex {
                 // 모든 게 끝났으면 onUse()를 호출합니다.
                 // onComplete() 바깥에서 onUse()를 호출하면 spendAndNext()를 먼저 호출하게 되어,
                 // 앞서 curUser.busy()를 호출해 영웅을 움직이지 못하게 했던 것이 딜레이가 다 지나기 전에 풀려버립니다.
-                onUse();
+                afterUse();
             }
         });
     }

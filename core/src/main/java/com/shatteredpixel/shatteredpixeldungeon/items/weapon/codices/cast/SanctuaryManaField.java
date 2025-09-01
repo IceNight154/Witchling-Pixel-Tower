@@ -10,10 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barrier;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaBuffFireflyParticle;
 import com.watabou.noosa.particles.Emitter;
@@ -63,8 +60,8 @@ public class SanctuaryManaField extends CastCodex {
     }
 
     @Override
-    public void onUse() {
-        super.onUse();
+    public void afterUse() {
+        super.afterUse();
 
         // 연출
         Sample.INSTANCE.play(Assets.Sounds.READ);

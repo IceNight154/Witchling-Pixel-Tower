@@ -16,9 +16,6 @@ import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.watabou.noosa.audio.Sample;
-import java.util.ArrayList;
-
-import java.util.List;
 
 /**
  * MagicRampage — 찌르기 전용 돌진 코덱스
@@ -119,7 +116,7 @@ public class MagicRampage extends MeleeCodex {
         // 소모
         // 사용 판정: curItem을 현재 코덱스로 설정하여 안전하게 onUse 실행
         Item __prevItem = curItem;
-        try { curItem = this; onUse(); } finally { curItem = __prevItem; }
+        try { curItem = this; afterUse(); } finally { curItem = __prevItem; }
         hero.spendAndNext(castDelay());
     }
 

@@ -3,7 +3,6 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
@@ -42,9 +41,7 @@ public class MagicBullet extends RangedCodex {
         // 유효 대상 없으면 정상 소비만
         if (enemy == null || enemy == curUser) {
             parent = null;
-            onUse();
-            if (durabilityLeft() > 0) this.collect();
-            updateQuickslot();
+            super.onThrow(cell);
             return;
         }
 
@@ -70,8 +67,6 @@ public class MagicBullet extends RangedCodex {
         }
 
         // 한 번만 턴 소모/내구도 감소/퀵슬롯 갱신
-        onUse();
-        if (durabilityLeft() > 0) this.collect();
-        updateQuickslot();
+        super.onThrow(cell);
     }
 }

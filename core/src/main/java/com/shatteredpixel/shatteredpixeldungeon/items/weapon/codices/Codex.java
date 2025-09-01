@@ -71,8 +71,8 @@ public class Codex extends Weapon {
         return 1f;
     }
 
-    // 코덱스 사용 시 작동하는 코드입니다. 오버라이드 시 super.onUse();를 빼먹지 말아주세요.
-    public void onUse() {
+    // 코덱스 사용 시 작동하는 코드입니다. 코덱스의 공격이나 작동 등 무언가 하기 이전에 아이템 사용 즉시 작동합니다.
+    public void beforeUse() {
         if ((cursed || hasCurseEnchant()) && !cursedKnown) {
             GLog.n(Messages.get(this, "curse_discover"));
         }
@@ -80,7 +80,7 @@ public class Codex extends Weapon {
 
         // 사용 시 감정
         if (!isIdentified()) this.identify();
-        
+
         // 힘이 부족할 경우 저주 부여
         if (!cursed && curUser.STR() < STRReq(curItem.trueLevel())) {
             enchantment = Weapon.Enchantment.randomCurse();
@@ -90,7 +90,10 @@ public class Codex extends Weapon {
             Sample.INSTANCE.play(Assets.Sounds.CURSED);
             GLog.w(Messages.get(Codex.class, "heavy_cursed"));
         }
+    }
 
+    // 코덱스 사용 후 작동하는 코드입니다. 코덱스의 공격이나 작동 등 무언가 하고 나서 작동합니다.
+    public void afterUse() {
         // 사용 시 턴 소모. 증강 시의 턴 변화를 반영합니다.
         curUser.spendAndNext(augment.delayFactor(castingTurn()));
 
