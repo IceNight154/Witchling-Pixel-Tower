@@ -30,13 +30,14 @@ import com.watabou.utils.PointF;
 
 public class MirrorSprite extends MobSprite {
 	
-	private static final int FRAME_WIDTH	= 12;
-	private static final int FRAME_HEIGHT	= 15;
+	private static final int FRAME_WIDTH	= 48;
+	private static final int FRAME_HEIGHT	= 60;
 	
 	public MirrorSprite() {
 		super();
+		this.scale.set(0.35f, 0.35f);
 		
-		texture( Dungeon.hero != null ? Dungeon.hero.heroClass.spritesheet() : HeroClass.WARRIOR.spritesheet() );
+		texture( Dungeon.hero != null ? Dungeon.hero.heroClass.spritesheet() : HeroClass.ARIA.spritesheet() );
 		updateArmor( 0 );
 		idle();
 	}
@@ -58,18 +59,21 @@ public class MirrorSprite extends MobSprite {
 	
 	public void updateArmor( int tier ) {
 		TextureFilm film = new TextureFilm( HeroSprite.tiers(), tier, FRAME_WIDTH, FRAME_HEIGHT );
-		
-		idle = new Animation( 1, true );
-		idle.frames( film, 0, 0, 0, 1, 0, 0, 1, 1 );
-		
+
+		idle = new Animation( 7, true );
+		idle.frames( film, 0, 1, 2, 1, 0, 1, 2, 1, 0, 1, 2, 1, 0, 3, 4, 5, 4, 3 );
+
 		run = new Animation( 20, true );
-		run.frames( film, 2, 3, 4, 5, 6, 7 );
-		
+		run.frames( film, 6, 7, 8, 9, 10, 11 );
+
 		die = new Animation( 20, false );
-		die.frames( film, 0 );
-		
-		attack = new Animation( 15, false );
-		attack.frames( film, 13, 14, 15, 0 );
+		die.frames( film, 12, 13, 14, 15, 16 );
+		die = new Animation( 10, true );
+		die.frames( film, 17, 18, 19, 16 );
+
+
+		attack = new Animation( 16, false );
+		attack.frames( film, 20 , 21, 22, 23, 22, 21, 20, 0 );
 		
 		idle();
 	}
