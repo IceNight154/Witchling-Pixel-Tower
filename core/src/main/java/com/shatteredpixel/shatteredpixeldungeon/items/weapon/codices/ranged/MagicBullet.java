@@ -1,62 +1,77 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaHitSparkParticle;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
+/**
+ * MagicBullet – 한 턴 3연타(동기 실행)
+ *
+ * - 같은 대상에게 최대 3번 연속 타격(지연/트위너/busy 없음)
+ * - 각 타마다 throwSound + 히트/미스 사운드 재생
+ * - 필수 필드 사용: tier, image=ItemSpriteSheet.*, magicImage, baseUses
+ * - MagicImageAnimator 미사용
+ */
 public class MagicBullet extends RangedCodex {
+
     {
         tier = 1;
         image = ItemSpriteSheet.CODEX_BULLET;
         magicImage = ItemSpriteSheet.MAGIC_BULLET;
-
-        baseUses = 10;
+        baseUses = 30;
     }
 
     @Override
-    public int max(int lvl) {
-        return super.max(lvl);
-    }
+    public int min(int lvl) { return (tier + 1) + lvl; }
 
     @Override
-    public int min(int lvl) {
-        return super.min(lvl);
-    }
+    public int max(int lvl) { return 5 * (tier + 1) + lvl * (tier + 1); }
 
     public void throwSound() {
-        Sample.INSTANCE.play(Assets.Sounds.ATK_GRIMOIRE, 1, Random.Float(0.87f, 1.15f));
+        Sample.INSTANCE.play(Assets.Sounds.ATK_GRIMOIRE, 1f, Random.Float(0.87f, 1.15f));
     }
 
-    //이펙트
     @Override
-    public int proc(Char attacker, Char defender, int damage) {
-        int result = super.proc(attacker, defender, damage);
-        Sample.INSTANCE.play(Assets.Sounds.HIT_MAGIC, 1, Random.Float(0.87f, 1.15f));
+    protected void onThrow(final int cell) {
+        final Char enemy = Actor.findChar(cell);
 
-        if (defender != null) {
-            // 맞은 위치에서 이펙트
-            explodeAt(attacker, defender.pos, result);
+        // 유효 대상 없으면 정상 소비만
+        if (enemy == null || enemy == curUser) {
+            parent = null;
+            onUse();
+            if (durabilityLeft() > 0) this.collect();
+            updateQuickslot();
+            return;
         }
-        return result;
-    }
-    private void explodeAt(Char attacker, int center, int baseDamage) {
 
-        // 사운드
-        Sample.INSTANCE.play(Assets.Sounds.BLAST);
+        // === 3연타: 즉시(동기)로 3회 처리 ===
+        for (int i = 0; i < 3; i++) {
+            if (!enemy.isAlive()) break;
 
+            // magicImage 표기를 위해 잠깐 casting on
+            boolean prevCasting = this.casting;
+            this.casting = true;
 
-        int w = Dungeon.level.width();
-        int h = Dungeon.level.height();
-        int cx = center % w;
-        int cy = center / w;
+            boolean hit = curUser.codexAttack(enemy, this);
+            onAttackComplete(enemy, cell, hit);
 
-        int c = cx + cy * w;
-        CellEmitter.center(c).burst(ManaHitSparkParticle.FACTORY, 14);
+            // 히트/미스 사운드
+            if (hit) {
+                Sample.INSTANCE.play(Assets.Sounds.HIT_BULLET, 0.92f, 1.08f);
+            } else {
+                Sample.INSTANCE.play(Assets.Sounds.MISS,  0.92f, 1.18f);
             }
+
+            this.casting = prevCasting;
         }
+
+        // 한 번만 턴 소모/내구도 감소/퀵슬롯 갱신
+        onUse();
+        if (durabilityLeft() > 0) this.collect();
+        updateQuickslot();
+    }
+}
