@@ -1,4 +1,3 @@
-
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
@@ -15,13 +14,13 @@ import java.lang.reflect.Method;
 /**
  * MagicImageAnimator
  *
- * - "베기(sweep)" 반원 회전 애니메이션 + "찌르기(stab)" 전진 애니메이션을 지원.
- * - 외부에서는 정적 헬퍼(sweep*, stab*)로 호출합니다.
+ * - 물리적으로 아이템 이미지를 캐릭터 스프라이트 위에서 회전/이동시키는 유틸.
+ * - sweep(베기), stab(찌르기)에 더해 charge(뒤로 젖힘+떨림), smash(큰 호로 내려찍기) 포함.
+ * - 이번 수정: SMASH는 **스윙 속도는 원래대로**, **사라짐은 더 천천히**, **항상 화면 위→아래로** 보이도록 경로 선택 고정.
  */
 public class MagicImageAnimator extends Group {
 
-    /* === 기본 파라미터 === */
-    public static final float DEFAULT_DURATION = 0.25f;      // 전체 애니메이션 시간(초)
+    public static final float DEFAULT_DURATION = 0.25f;      // sweep/stab 기본
     private static final float BASE_DIAGONAL_DEG = 45f;      // 리소스 기본 기울기 보정(NE)
     private static final boolean FLIP_FACING = false;        // 좌우 반전 필요시 true
 
@@ -29,12 +28,27 @@ public class MagicImageAnimator extends Group {
     private static final float DEFAULT_ORIGIN_FRACTION_X = 0.08f;
     private static final float DEFAULT_ORIGIN_FRACTION_Y = 0.92f;
 
-    // 찌르기(STAB) 기본 보조 파라미터
-    private static final float STAB_BACK_RATIO  = 0.5f; // 전진 전, 살짝 뒤로 빠지는 거리 비율
-    private static final float STAB_FADE_START  = 0.90f; // 사라지기 시작하는 비율(0..1)
+    // 찌르기(STAB)
+    private static final float STAB_BACK_RATIO  = 0.5f;
+    private static final float STAB_FADE_START  = 0.90f;
+
+    // 차징(CHARGE)
+    private static final float DEFAULT_CHARGE_DURATION = 0.7f;
+    private static final float CHARGE_TILT_DEG = 32f;
+    private static final float CHARGE_SHAKE_PX = 1.25f;
+
+    // 스매시(SMASH)
+    // 전체 duration 은 **스윙(원래 속도~0.5s) + 잔상/페이드 테일**의 합으로 구성
+    private static final float DEFAULT_SMASH_DURATION =  0.35f;
+    private static final float SMASH_START_OFFSET_DEG = -110f;
+    private static final float SMASH_END_OFFSET_DEG   =   30f;
+    private static final float SMASH_SWING_FRAC       = 0.56f;        // 총 시간 중 스윙 구간 비율(≈0.5/0.9)
+    private static final float SMASH_WINDUP_FRAC      = 0.45f;        // (스윙 내부 비율) 준비 동작
+    private static final float SMASH_IMPACT_FRAC      = 0.92f;        // (스윙 내부 비율) 타격 시점
+    private static final float SMASH_FADE_START_FRAC  = 0.62f;        // 총 시간 비율, 이 뒤로 서서히 사라짐
 
     // --- 모드(애니메이션 종류) ---
-    private enum Mode { SWEEP, STAB }
+    private enum Mode { SWEEP, STAB, CHARGE, SMASH }
 
     /* === 참조/상태 === */
     private final CharSprite owner;
@@ -60,7 +74,17 @@ public class MagicImageAnimator extends Group {
 
     // --- STAB 전용 ---
     private float stabMaxDist;      // 최대 전진 거리(픽셀)
-    private float stabRetractBias;  // 0.0~1.0: (0.5 = 전진/후퇴 시간 동일)
+    private float stabRetractBias;  // 0.0~1.0
+
+    // --- CHARGE 전용 ---
+    private float chargeTiltDeg;
+    private float chargeShakePx;
+
+    // --- SMASH 전용 ---
+    private float smashStartDeg;
+    private float smashEndDeg;
+    private float smashImpactFracAbs;   // 절대시간 기준 임팩트 시점(0..1)
+    private boolean smashImpactTriggered = false;
 
     // 이펙트(선택적)
     private Emitter manaEmitter;
@@ -71,20 +95,11 @@ public class MagicImageAnimator extends Group {
      * 정적 헬퍼: 8방향 베기
      ********************************************************************** */
     public static void sweep(CharSprite owner, int magicImageIndex, int dir8) {
-        float dx = -6f * owner.scale.x;
-        float dy = -8f * owner.scale.y;
         float faceDeg = dir8ToDeg(dir8);
+        float adjX = -6f * owner.scale.x;
+        float adjY = -8f * owner.scale.y;
         sweepAngle(owner, magicImageIndex, faceDeg, DEFAULT_DURATION,
-                dx, dy, DEFAULT_ORIGIN_FRACTION_X, DEFAULT_ORIGIN_FRACTION_Y,
-                0f, true);
-    }
-
-    public static void sweep(CharSprite owner, int magicImageIndex, int dir8,
-                             float duration, float pivotAdjustX, float pivotAdjustY,
-                             float originFracX, float originFracY) {
-        float faceDeg = dir8ToDeg(dir8);
-        sweepAngle(owner, magicImageIndex, faceDeg, duration,
-                pivotAdjustX, pivotAdjustY, originFracX, originFracY,
+                adjX, adjY, DEFAULT_ORIGIN_FRACTION_X, DEFAULT_ORIGIN_FRACTION_Y,
                 0f, true);
     }
 
@@ -106,7 +121,9 @@ public class MagicImageAnimator extends Group {
                 owner, magicImageIndex, Mode.SWEEP, faceDeg, duration,
                 pivotAdjustX, pivotAdjustY, originFracX, originFracY,
                 angleOffsetDeg, topToBottom,
-                /* stab params */ 0f, 0.5f
+                /* stab params */ 0f, 0.5f,
+                /* charge */ CHARGE_TILT_DEG, CHARGE_SHAKE_PX,
+                /* smash  */ 0f, 0f
         );
         owner.parent.add(fx);
         fx.attachEmitterIfPossible();
@@ -136,10 +153,6 @@ public class MagicImageAnimator extends Group {
                 maxDist, 0.25f);
     }
 
-    /**
-     * @param stabMaxDist      최대 전진 거리(픽셀). 피벗에서 이만큼 전/후진
-     * @param retractBias01    0..1. 0.5=전진/후퇴 동일, 작으면 전진이 길고, 크면 후퇴가 김
-     */
     public static void stabAngle(CharSprite owner, int magicImageIndex, float faceDeg,
                                  float duration, float pivotAdjustX, float pivotAdjustY,
                                  float originFracX, float originFracY,
@@ -148,15 +161,70 @@ public class MagicImageAnimator extends Group {
                 owner, magicImageIndex, Mode.STAB, faceDeg, duration,
                 pivotAdjustX, pivotAdjustY, originFracX, originFracY,
                 /* angleOffset/topToBottom for sweep (ignored) */ 0f, true,
-                /* stab params */ stabMaxDist, clamp01(retractBias01)
+                /* stab params */ stabMaxDist, clamp01(retractBias01),
+                /* charge */ CHARGE_TILT_DEG, CHARGE_SHAKE_PX,
+                /* smash  */ 0f, 0f
         );
         owner.parent.add(fx);
         fx.attachEmitterIfPossible();
     }
 
     /* **********************************************************************
-     * 내부 생성자
+     * 정적 헬퍼: 차징(뒤로 젖히고 떨림)
      ********************************************************************** */
+    public static void charge(CharSprite owner, int magicImageIndex, int dir8) {
+        float faceDeg = dir8ToDeg(dir8);
+        float adjX = -6f * owner.scale.x;
+        float adjY = -10f * owner.scale.y;
+        chargeAngle(owner, magicImageIndex, faceDeg, DEFAULT_CHARGE_DURATION,
+                adjX, adjY, DEFAULT_ORIGIN_FRACTION_X, DEFAULT_ORIGIN_FRACTION_Y,
+                CHARGE_TILT_DEG, CHARGE_SHAKE_PX);
+    }
+
+    public static void chargeAngle(CharSprite owner, int magicImageIndex, float faceDeg,
+                                   float duration, float pivotAdjustX, float pivotAdjustY,
+                                   float originFracX, float originFracY,
+                                   float tiltDeg, float shakePx) {
+        MagicImageAnimator fx = new MagicImageAnimator(
+                owner, magicImageIndex, Mode.CHARGE, faceDeg, duration,
+                pivotAdjustX, pivotAdjustY, originFracX, originFracY,
+                /* sweep params (unused) */ 0f, true,
+                /* stab params (unused)  */ 0f, 0.5f,
+                /* charge */ tiltDeg, shakePx,
+                /* smash */ 0f, 0f
+        );
+        owner.parent.add(fx);
+        fx.attachEmitterIfPossible();
+    }
+
+    /* **********************************************************************
+     * 정적 헬퍼: 스매시(큰 호로 내려찍기)
+     ********************************************************************** */
+    public static void smash(CharSprite owner, int magicImageIndex, int dir8) {
+        float faceDeg = dir8ToDeg(dir8);
+        float adjX = -6f * owner.scale.x;
+        float adjY = -8f * owner.scale.y;
+        smashAngle(owner, magicImageIndex, faceDeg, DEFAULT_SMASH_DURATION,
+                adjX, adjY, DEFAULT_ORIGIN_FRACTION_X, DEFAULT_ORIGIN_FRACTION_Y,
+                SMASH_START_OFFSET_DEG, SMASH_END_OFFSET_DEG);
+    }
+
+    public static void smashAngle(CharSprite owner, int magicImageIndex, float faceDeg,
+                                  float duration, float pivotAdjustX, float pivotAdjustY,
+                                  float originFracX, float originFracY,
+                                  float startOffsetDeg, float endOffsetDeg) {
+        MagicImageAnimator fx = new MagicImageAnimator(
+                owner, magicImageIndex, Mode.SMASH, faceDeg, duration,
+                pivotAdjustX, pivotAdjustY, originFracX, originFracY,
+                /* sweep params (unused) */ 0f, true,
+                /* stab params (unused)  */ 0f, 0.5f,
+                /* charge */ CHARGE_TILT_DEG, CHARGE_SHAKE_PX,
+                /* smash  */ startOffsetDeg, endOffsetDeg
+        );
+        owner.parent.add(fx);
+        fx.attachEmitterIfPossible();
+    }
+
     private MagicImageAnimator(CharSprite owner,
                                int magicImageIndex,
                                Mode mode,
@@ -169,16 +237,24 @@ public class MagicImageAnimator extends Group {
                                float angleOffsetDeg,
                                boolean topToBottom,
                                float stabMaxDist,
-                               float stabRetractBias) {
+                               float stabRetractBias,
+                               float chargeTiltDeg,
+                               float chargeShakePx,
+                               float smashStartOffsetDeg,
+                               float smashEndOffsetDeg) {
         this.owner = owner;
         this.magicImageIndex = magicImageIndex;
         this.mode = mode;
         this.faceDeg = faceDeg;
-        this.duration = Math.max(0.001f, duration);
+        this.duration = Math.max(0.02f, duration);
         this.pivotAdjustX = pivotAdjustX;
         this.pivotAdjustY = pivotAdjustY;
         this.stabMaxDist = Math.max(0f, stabMaxDist);
         this.stabRetractBias = clamp01(stabRetractBias);
+
+        // CHARGE
+        this.chargeTiltDeg = chargeTiltDeg;
+        this.chargeShakePx = chargeShakePx;
 
         this.img = new ItemSprite(magicImageIndex);
         add(img);
@@ -192,7 +268,6 @@ public class MagicImageAnimator extends Group {
         float base = (FLIP_FACING ? -faceDeg : faceDeg) - BASE_DIAGONAL_DEG;
 
         if (mode == Mode.SWEEP) {
-            // sweep은 (base + 추가 오프셋) 기준의 반원 회전
             float sweepBase = base + angleOffsetDeg;
             if (topToBottom) {
                 this.startDeg = sweepBase - 90f;
@@ -203,9 +278,33 @@ public class MagicImageAnimator extends Group {
             }
             this.topToBottom = topToBottom;
             img.angle = startDeg;
-        } else {
-            // stab은 기본적으로 바라보는 각도에 맞춰 고정
+
+        } else if (mode == Mode.STAB) {
             img.angle = base;
+
+        } else if (mode == Mode.CHARGE) {
+            img.angle = base - this.chargeTiltDeg;
+
+        } else { // Mode.SMASH
+            // s: 등 뒤, eRaw: 목표 내려찍기 각도 (기본계)
+            float s = base + smashStartOffsetDeg;
+            float eRaw = base + smashEndOffsetDeg;
+
+            // 바라보는 방향의 수직 성분을 기준으로 스윙 방향 고정(항상 화면 위→아래)
+            float rad = (float)Math.toRadians(FLIP_FACING ? -faceDeg : faceDeg);
+            float facingY = (float)-Math.cos(rad); // Noosa 좌표: 아래로 +
+            // inlined: facingY >= 0f for swing direction
+
+            if (facingY >= 0f) {
+                this.smashStartDeg = s;
+                this.smashEndDeg   = unwrapForward(s, eRaw);
+            } else {
+                this.smashStartDeg = s;
+                this.smashEndDeg   = unwrapBackward(s, eRaw);
+            }
+            // 임팩트 절대 시점(총 시간 비율) = 스윙 구간 내 0.92 지점
+            this.smashImpactFracAbs = SMASH_SWING_FRAC * SMASH_IMPACT_FRAC;
+            img.angle = this.smashStartDeg;
         }
 
         // 최초 위치 동기화
@@ -221,14 +320,10 @@ public class MagicImageAnimator extends Group {
                 add(manaEmitter);
             }
         } catch (Throwable t) {
-            // 이펙트가 없는 변형 빌드 대비 (무시)
             manaEmitter = null;
         }
     }
 
-    /* **********************************************************************
-     * 프레임 업데이트
-     ********************************************************************** */
     @Override
     public void update() {
         super.update();
@@ -242,7 +337,6 @@ public class MagicImageAnimator extends Group {
         elapsed += dt;
         float t = elapsed / duration;
         if (t >= 1f) {
-            // 마지막 프레임 한 번 동기화 후 제거
             syncToOwner(1f);
             dispose();
             return;
@@ -252,32 +346,27 @@ public class MagicImageAnimator extends Group {
         spawnEffects(dt, t);
     }
 
-    /* **********************************************************************
-     * 위치/각도 동기화
-     ********************************************************************** */
     private void syncToOwner(float t) {
-        // 캐릭터 중심 + 보정
         PointF c = owner.center();
         float px = c.x + pivotAdjustX;
         float py = c.y + pivotAdjustY;
+
+        float baseFacing = (FLIP_FACING ? -faceDeg : faceDeg) - BASE_DIAGONAL_DEG;
 
         if (mode == Mode.SWEEP) {
             float a = lerp(startDeg, endDeg, t);
             img.angle = a;
             img.x = px - img.origin.x;
             img.y = py - img.origin.y;
-        } else {
-            // 찌르기: 피벗에서 바라보는 방향으로 전진/후퇴
-            // 살짝 뒤로 → 앞으로 '돌진' 형태 (뒤로 약간 물러난 후 급가속 전진)
+
+        } else if (mode == Mode.STAB) {
             float tb = clamp01(stabRetractBias);
             float back = stabMaxDist * STAB_BACK_RATIO; // 뒤로 빠질 거리
             float d;
             if (t <= tb) {
-                // 후퇴 구간: 빠르게 뒤로 살짝 물러남
                 float tt = t / Math.max(0.0001f, tb);
                 d = -easeOutCubic(tt) * back;
             } else {
-                // 돌진 구간: 점점 가속하며 전진(-back → +stabMaxDist)
                 float tt = (t - tb) / Math.max(0.0001f, (1f - tb));
                 d = -back + easeInCubic(tt) * (stabMaxDist + back);
             }
@@ -288,24 +377,73 @@ public class MagicImageAnimator extends Group {
 
             img.x = px - img.origin.x + dx;
             img.y = py - img.origin.y + dy;
+            img.angle = baseFacing;
 
-            // 각도는 기본 바라보는 방향에 고정
-            img.angle = (FLIP_FACING ? -faceDeg : faceDeg) - BASE_DIAGONAL_DEG;
-
-            // 후반부에 자연스럽게 사라지는 느낌
             if (t >= STAB_FADE_START) {
                 float ft = (t - STAB_FADE_START) / Math.max(0.0001f, (1f - STAB_FADE_START));
+                float fade = 1f - easeInCubic(clamp01(ft));
+                try { img.alpha(fade); } catch (Throwable ignore) {}
+            }
+
+        } else if (mode == Mode.CHARGE) {
+            float amp = chargeShakePx * (0.6f + 0.4f * clamp01(t));
+            float jx = (float)(Math.sin(elapsed * 45.0) + Math.sin(elapsed * 87.0)) * 0.5f * amp;
+            float jy = (float)(Math.cos(elapsed * 52.0) + Math.sin(elapsed * 73.0)) * 0.5f * amp;
+
+            img.x = px - img.origin.x + jx;
+            img.y = py - img.origin.y + jy;
+
+            float wobble = (float)Math.sin(elapsed * 8.0) * 2f;
+            img.angle = (baseFacing - this.chargeTiltDeg) + wobble;
+
+            try { img.alpha(0.9f + 0.1f * (float)Math.sin(elapsed * 10.0)); } catch (Throwable ignore) {}
+
+        } else { // Mode.SMASH
+            float swingPortion = SMASH_SWING_FRAC;
+            float tSwing = clamp01(t / Math.max(0.0001f, swingPortion));
+
+            float a;
+            if (tSwing <= SMASH_WINDUP_FRAC) {
+                float wt = clamp01(tSwing / Math.max(0.0001f, SMASH_WINDUP_FRAC));
+                a = lerp(smashStartDeg, smashStartDeg + (smashEndDeg - smashStartDeg) * 0.15f, easeOutCubic(wt));
+            } else {
+                float dt2 = (tSwing - SMASH_WINDUP_FRAC) / Math.max(0.0001f, (1f - SMASH_WINDUP_FRAC));
+                a = lerp(smashStartDeg, smashEndDeg, easeInCubic(clamp01(dt2)));
+            }
+            img.angle = a;
+            img.x = px - img.origin.x;
+            img.y = py - img.origin.y;
+
+            // 임팩트 연출 (스윙 진행 내부 92% 시점)
+            if (!smashImpactTriggered && t >= smashImpactFracAbs) {
+                smashImpactTriggered = true;
+                try { img.scale.set(1.15f, 1.15f); } catch (Throwable ignore) {}
+                try {
+                    if (manaEmitter != null) {
+                        manaEmitter.pos(img.x, img.y, img.width, img.height);
+                        manaEmitter.burst(ManaSlashParticle.FACTORY, 8);
+                    }
+                } catch (Throwable ignore) {}
+                trySpawnAfterImage(1.0f);
+            } else if (smashImpactTriggered) {
+                // scale 복귀
+                try {
+                    // 스윙이 끝난 이후에도 약간의 여운을 주며 복귀
+                    float k = clamp01((t - smashImpactFracAbs) / 0.08f);
+                    float s = 1.0f + (1.15f - 1.0f) * (1f - k);
+                    img.scale.set(s, s);
+                } catch (Throwable ignore) {}
+            }
+
+            // 페이드 아웃: 스윙이 끝난 뒤부터 서서히 사라지게
+            if (t >= SMASH_FADE_START_FRAC) {
+                float ft = (t - SMASH_FADE_START_FRAC) / Math.max(0.0001f, (1f - SMASH_FADE_START_FRAC));
                 float fade = 1f - easeInCubic(clamp01(ft));
                 try { img.alpha(fade); } catch (Throwable ignore) {}
             }
         }
     }
 
-    /* **********************************************************************
-     * 이펙트(선택): 잔상/파티클 간격으로 소량 뿌리기
-     * - ManaSlashAfterImage.spawn(...)은 빌드마다 시그니처가 달라질 수 있어
-     *   리플렉션으로 최대한 맞춰 호출하고, 실패 시 조용히 무시합니다.
-     ********************************************************************** */
     private void spawnEffects(float dt, float t) {
         // 잔상
         afterImageCooldown -= dt;
@@ -327,17 +465,12 @@ public class MagicImageAnimator extends Group {
         }
     }
 
-    /**
-     * 빌드별 ManaSlashAfterImage.spawn(...) 오버로드에 최대한 맞춰 호출.
-     * 실패하면 아무 것도 하지 않음(컴파일 안전).
-     */
     private void trySpawnAfterImage(float alpha) {
         try {
             Class<?> cls = Class.forName("com.shatteredpixel.shatteredpixeldungeon.effects.ManaSlashAfterImage");
             Method[] methods = cls.getMethods();
             Group parentGroup = (owner != null && owner.parent != null) ? owner.parent : this;
 
-            // 후보 1: spawn(Group,int,float,float,float,float,float,float,float,float,float) [총 12 인자]
             for (Method m : methods) {
                 if (!"spawn".equals(m.getName())) continue;
                 Class<?>[] ps = m.getParameterTypes();
@@ -348,13 +481,13 @@ public class MagicImageAnimator extends Group {
                             img.width, img.height,
                             img.origin.x, img.origin.y,
                             img.angle,
-                            1f,         // scale
-                            alpha       // alpha
+                            1f,
+                            alpha,
+                            0f, 0f
                     );
                     return;
                 }
             }
-            // 후보 2: spawn(Group,int,float,float,float,float,float,float,float) [총 10 인자]
             for (Method m : methods) {
                 if (!"spawn".equals(m.getName())) continue;
                 Class<?>[] ps = m.getParameterTypes();
@@ -364,20 +497,16 @@ public class MagicImageAnimator extends Group {
                             img.x, img.y,
                             img.width, img.height,
                             img.angle,
-                            1f,         // scale
-                            alpha       // alpha
+                            1f,
+                            alpha
                     );
                     return;
                 }
             }
         } catch (Throwable ignore) {
-            // 잔상 효과는 옵션이므로 조용히 무시
         }
     }
 
-    /* **********************************************************************
-     * 파괴/정리
-     ********************************************************************** */
     private void dispose() {
         if (parent != null) parent.remove(this);
         kill();
@@ -390,9 +519,6 @@ public class MagicImageAnimator extends Group {
         }
     }
 
-    /* **********************************************************************
-     * 유틸
-     ********************************************************************** */
     private static float dir8ToDeg(int dir8) {
         switch (dir8 & 7) {
             case 0:  return   0f;   // N
@@ -424,5 +550,17 @@ public class MagicImageAnimator extends Group {
 
     private static float easeInCubic(float x) {
         return x*x*x;
+    }
+
+    private static float unwrapForward(float s, float e) {
+        float d = e - s;
+        while (d <= 0f) d += 360f;
+        return s + d;
+    }
+
+    private static float unwrapBackward(float s, float e) {
+        float d = e - s;
+        while (d >= 0f) d -= 360f;
+        return s + d;
     }
 }

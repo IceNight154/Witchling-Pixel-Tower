@@ -73,6 +73,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.grimoire.GrimoireAria;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicGavel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicRampage;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSheildBash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSlash;
@@ -301,14 +302,17 @@ public enum HeroClass {
 		new MagicSlash().random().collect();
 		new MagicRampage().random().collect();
 		new MagicSheildBash().random().collect();
+		new MagicGavel().random().collect();
 
 		//원거리형 코덱스
-		new MagicArrow().random().collect();
+/*		new MagicArrow().random().collect();
 		new MagicBullet().random().collect();
 		new MagicCannon().random().collect();
 		new MagicMissile().random().collect();
 		new MagicSingularity().random().collect();
 		new SanctuaryManaField().random().collect();
+
+ */
 
 		new PotionOfStrength().random().collect();
 
