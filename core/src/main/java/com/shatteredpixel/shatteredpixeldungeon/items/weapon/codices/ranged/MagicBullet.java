@@ -4,7 +4,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Random;
 
 /**
@@ -38,35 +40,50 @@ public class MagicBullet extends RangedCodex {
     protected void onThrow(final int cell) {
         final Char enemy = Actor.findChar(cell);
 
-        // 유효 대상 없으면 정상 소비만
         if (enemy == null || enemy == curUser) {
             parent = null;
-            super.onThrow(cell);
-            return;
-        }
 
-        // === 3연타: 즉시(동기)로 3회 처리 ===
-        for (int i = 0; i < 3; i++) {
-            if (!enemy.isAlive()) break;
+            afterUse(); // 상위 클래스는 이 블록을 벗어나서 afterUse()를 실행하지만, 여기에서는 afterUse() 가 특수한 조건에서 작동하므로 여기서 실행합니다.
+        } else {
+            onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
 
-            // magicImage 표기를 위해 잠깐 casting on
-            boolean prevCasting = this.casting;
-            this.casting = true;
+            final float DELAY = 0.05f; // 각 공격 간의 딜레이입니다.
+            final int HITS = 3; // 총 공격 횟수입니다.
 
-            boolean hit = curUser.codexAttack(enemy, this);
-            onAttackComplete(enemy, cell, hit);
+            // 앞서 한 번 공격했으니 이후 공격 횟수는 총 공격 횟수-1입니다. 이것만큼 트위너(실제 시간 기반 딜레이)를 반복해서 추가합니다.
+            for (int hit = 1; hit <= HITS-1; hit++) {
+                boolean isLast = hit == HITS-1;
+                curUser.sprite.parent.add(new Tweener(curUser.sprite.parent, DELAY*hit) { // 기본 딜레이에 반복 횟수를 곱합니다. 0.05초 다음에는 0.1초, 이런 식입니다.
+                    @Override
+                    protected void updateValues(float progress) {
+                        if (!enemy.isAlive()) { // 적이 이미 죽은 상태면 트위너를 즉시 종료합니다.
+                            curUser.next(); // 움직일 수 없는 상태를 해제합니다.
+                            kill();
+                            return;
+                        }
+                        curUser.busy(); // 트위너가 지속되는 한 시전자는 움직일 수 없습니다.
+                    }
 
-            // 히트/미스 사운드
-            if (hit) {
-                Sample.INSTANCE.play(Assets.Sounds.HIT_BULLET, 0.92f, 1.08f);
-            } else {
-                Sample.INSTANCE.play(Assets.Sounds.MISS,  0.92f, 1.18f);
+                    @Override
+                    protected void onComplete() {
+                        super.onComplete();
+                        if (enemy.isAlive()) {
+                            curUser.codexAttack(enemy, MagicBullet.this); // 여기에서 적을 공격합니다.
+                        }
+
+                        if (isLast) { // 마지막 트위너일 경우 턴 소모 등 코덱스 사용 후 작업을 수행합니다.
+                            curUser.next();
+                            afterUse();
+                        }
+                    }
+                });
             }
-
-            this.casting = prevCasting;
         }
 
-        // 한 번만 턴 소모/내구도 감소/퀵슬롯 갱신
-        super.onThrow(cell);
+        if (durabilityLeft() > 0) {
+            MagicBullet.this.collect();
+        }
+
+        updateQuickslot();
     }
 }
