@@ -9,6 +9,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -69,7 +70,9 @@ public class MagicGavel extends MeleeCodex {
         // 차징 해제(발동): 방향 선택 → SMASH 처리
         if (buff.turns >= 1) {
             GameScene.selectCell(new CellSelector.Listener() {
-                @Override public String prompt() { return ""; }
+                @Override public String prompt()  {
+                    return Messages.get(MagicGavel.this, "prompt");
+                }
                 @Override
                 public void onSelect(Integer cell) {
                     if (cell == null) {
