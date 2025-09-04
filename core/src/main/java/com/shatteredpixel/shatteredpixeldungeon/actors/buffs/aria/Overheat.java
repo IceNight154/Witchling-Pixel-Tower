@@ -30,10 +30,11 @@
  * - act()/tick 이후 또는 조정 결과 meltdownTriggered()가 true라면, consumeMeltdown()으로
  *   (반경, 피해) 페이로드를 받아 외부에서 광역 처리(dealDamageAround())를 수행하세요.
  */
-package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
+package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
@@ -61,7 +62,7 @@ public class Overheat extends Buff {
     private int gauge = 0;                     // 현재 과열 게이지(0~MAX_OVERHEAT).
     private Element element = Element.FIRE;    // 현재 원소 상태(FIRE/WATER/WIND/EARTH).
 
-// 스펙 훅(특성에 의해 조정 가능)
+    // 스펙 훅(특성에 의해 조정 가능)
     private int sameElementPerTurn = 12;       // 같은 원소 유지 시 턴당 증가량(기본 +12).
     private int perSkillUse = 8;               // 스킬/코덱스 사용 시 증가량(기본 +8).
     private int onSwitchReduction = 25;        // 원소 전환 시 감소량(기본 -25). 특성 보너스로 추가 감소.
@@ -70,7 +71,7 @@ public class Overheat extends Buff {
     private int codexMaxDamage = 0;            // 코덱스 최대 피해(멜트다운 피해 계산에 사용). 외부에서 설정.
 
 
-// 원소별 기본 패시브(명세: FIRE +10% 피해, WATER 피해감소 8%/턴당 자힐+1, WIND 회피 +8%, EARTH 기절 2배 & 전환 시 5% 보호막)
+    // 원소별 기본 패시브(명세: FIRE +10% 피해, WATER 피해감소 8%/턴당 자힐+1, WIND 회피 +8%, EARTH 기절 2배 & 전환 시 5% 보호막)
     private float fireDamageBonus = 0.10f;          // FIRE: 아리아의 가하는 피해 증가율(+10% 기본).
     private float waterDamageReduction = 0.08f;     // WATER: 받는 피해 감소율(-8% 기본).
     private int waterHealPerTurn = 1;               // WATER: 자동 회복량(턴당, 기본 +1). 외부에서 실제 회복 처리 가능.
@@ -78,7 +79,7 @@ public class Overheat extends Buff {
     private float earthSwitchShieldPct = 0.05f;     // EARTH: 원소 전환 시 1턴 보호막 비율(최대체력의 %).
 
 
-// 외부 시스템에 멜트다운 정보를 전달하기 위한 내부 상태
+    // 외부 시스템에 멜트다운 정보를 전달하기 위한 내부 상태
     private boolean meltdownPending = false;        // 멜트다운 페이로드 준비 상태 플래그.
     private int meltdownDamageCached = 0;           // 멜트다운 피해 캐시값(외부 광역에 전달할 값).
 
@@ -89,17 +90,27 @@ public class Overheat extends Buff {
     }
 
     public void onSameElementTurn(Hero hero) {
-        addGauge(hero, sameElementPerTurn);
+        int reduce = 0;
+        try {
+            reduce = com.shatteredpixel.shatteredpixeldungeon.actors.talents.AriaT1Talents.Hooks.sameElementAccumulationReduce(hero);
+        } catch (Throwable t) { /* optional dependency */ }
+        addGauge(hero, sameElementPerTurn - reduce);
     }
 
     public void onSkillOrCodexUsed(Hero hero) {
-        addGauge(hero, perSkillUse);
+        int extra = 0;
+        try {
+            extra = com.shatteredpixel.shatteredpixeldungeon.actors.talents.AriaT1Talents.Hooks.onSkillOrCodexUsed(hero);
+        } catch (Throwable t) { /* optional dependency */ }
+        addGauge(hero, perSkillUse + extra);
     }
 
     public float onElementSwitch(Hero hero, Element newElement, int extraReductionFromTalents) {
         // 기본 -25에 특성으로 인한 추가 감소를 합산
-        int totalReduction = onSwitchReduction + Math.max(0, extraReductionFromTalents);
-        addGauge(hero, -totalReduction);
+        int delta = -onSwitchReduction;
+        // extraReductionFromTalents is negative (e.g., -5..-8): add as-is to increase reduction
+        delta += extraReductionFromTalents;
+        addGauge(hero, delta);
 
         float shieldPct = 0f;
         // EARTH: 전환 시 최대 체력 5% 보호막 1턴(외부 적용)
@@ -149,6 +160,7 @@ public class Overheat extends Buff {
     public boolean act() {
         if (target instanceof Hero) {
             Hero hero = (Hero) target;
+            try { com.shatteredpixel.shatteredpixeldungeon.actors.talents.AriaT1Talents.Hooks.onHeroTurn(hero); } catch (Throwable t) { /* optional */ }
             if (element == Element.WATER) {
                 // WATER 상태에서 수동 냉각
                 addGauge(hero, -2);

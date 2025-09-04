@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.shatteredpixel.shatteredpixeldungeon.indev",
+  "applicationId": "com.witchlingpixel.witchlingpixeltower.indev",
   "variantName": "debug",
   "elements": [
     {
