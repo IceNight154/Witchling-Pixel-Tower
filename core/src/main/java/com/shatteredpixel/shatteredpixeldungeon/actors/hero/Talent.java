@@ -1566,7 +1566,19 @@ public enum Talent {
 		tierTalents.clear();
 
 		//tier4
-		//TBD
+		switch (cls) {
+			case ARIA:
+			default:
+				Collections.addAll(tierTalents, GRAND_THESIS, IMMUTABLE_SCRIPT);
+				break;
+		}
+		for (Talent talent : tierTalents) {
+			if (replacements.containsKey(talent)) {
+				talent = replacements.get(talent);
+			}
+			talents.get(2).put(talent, 0);
+		}
+		tierTalents.clear();
 	}
 
 	public static void initSubclassTalents(Hero hero) {
@@ -1621,13 +1633,13 @@ public enum Talent {
 			case PALADIN:
 				Collections.addAll(tierTalents, LAY_ON_HANDS, AURA_OF_PROTECTION, WALL_OF_LIGHT);
 				break;
-			case ARCHMAGE_OF_HARMONY:
+			case ARIA_HARMONY:
 				Collections.addAll(tierTalents, HARMONIC_CYCLE, DUAL_ENGRAVING, GENTLE_FLOW);
 				break;
-			case ELEMENTAL_WEAVER:
+			case ARIA_OVERHEAT:
 				Collections.addAll(tierTalents, REDLINE, THERMAL_FEEDBACK, SAFETY_VALVE);
 				break;
-			case SAGE_OF_ELEMENTS:
+			case ARIA_GRIMOIRE_INK:
 				Collections.addAll(tierTalents, DEEP_INK, SIPHON_MARGIN, EDITORS_CUT);
 				break;
 		}
