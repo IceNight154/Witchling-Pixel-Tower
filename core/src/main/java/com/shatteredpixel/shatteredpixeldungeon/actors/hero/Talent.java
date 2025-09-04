@@ -322,44 +322,47 @@ public enum Talent {
 	RATFORCEMENTS(29, 5, 4),
 
 	//Aria T1
-	ELEMENTAL_RHYTHM(0, 6),
-	RUNIC_CONSERVATION(1, 6),
-	ELEMENTAL_MEMORY(2, 6),
-	PRISMATIC_INITIATION(3, 6),
+	QUICK_SWITCH(0, 6),
+	CAREFUL_SCHOLAR(1, 6),
+	CODEX_FUNDAMENTALS(2, 6),
+	ELEMENTAL_GUARD_I(3, 6),
+	PAGE_ECONOMY(4, 6),
 	//Aria T2
-	PRISMATIC_REBOUND(4, 6),
-	FLOW_STATE(5, 6),
-	IMPRINT_SPILLOVER(6, 6),
-	MANA_WEAVE(7, 6),
-	BARRIER_CORE(8, 6),
+	ELEMENTAL_RIDER(5, 6),
+	SNAP_CONTROL(6, 6),
+	INK_MARK(7, 6),
+	SCRIPTORIUM(8, 6),
+	ELEMENTAL_GUARD_II(9, 6),
 	//Aria T3
-	QUICKSHIFT_MASTERY(9, 6, 5),
-	IMPRINT_AMPLIFIER(10, 6, 5),
-	//Aria_Ab_1 T3
-	HARMONIC_LOOP(11, 6, 5),
-	CONCORD_PULSE(12, 6, 5),
-	HARMONIC_SURGE(13, 6, 5),
-	//Aria_Ab_2 T3
-	WEAVE_THREADS(14, 6, 5),
-	STITCH(15, 6, 5),
-	PRISMATIC_DETONATION(16, 6, 5),
-	//Aria_Ab_3 T3
-	EARTHEN_POISE(17, 6, 5),
-	STILL_WATER(18, 6, 5),
-	POISED_MIND(19, 6, 5),
-
-	//Aria_Ab_1 T4
-	PERFECT_CONCORD(24, 6, 5),
-	CONTINUUM_SLIP(25, 6, 5),
-	RESONANT_CYCLE(26, 6, 5),
-	//Aria_Ab_2 T4
-	TAUT_STRINGS(27, 6, 5),
-	LOOM_MASTER(28, 6, 5),
-	SEAMLESS_WEAVE(29, 6, 5),
-	//Aria_Ab_3 T4
-	STONE_READING(30, 6, 5),
-	DEEP_WELLS(31, 6, 5),
-	ANCIENT_STANCE(32, 6, 5);
+	BALANCED_SCRIPT(10, 6, 5),
+	SCRIBES_STANCE(11, 6, 5),
+	//Aria_Harmony T3
+	HARMONIC_CYCLE(12, 6, 5),
+	DUAL_ENGRAVING(13, 6, 5),
+	GENTLE_FLOW(14, 6, 5),
+	//Aria_Overheat T3
+	REDLINE(15, 6, 5),
+	THERMAL_FEEDBACK(16, 6, 5),
+	SAFETY_VALVE(17, 6, 5),
+	//Aria_Grimoire&Ink T3
+	DEEP_INK(18, 6, 5),
+	SIPHON_MARGIN(19, 6, 5),
+	EDITORS_CUT(20, 6, 5),
+	//Aria T4
+	GRAND_THESIS(21, 6, 5),
+	IMMUTABLE_SCRIPT(22, 6, 5),
+	//Aria_Harmony T4
+	ELEMENTAL_CHORD(23, 6, 5),
+	ROTATIONAL_MASTERY(24, 6, 5),
+	CONFLUENCE(25, 6, 5),
+	//Aria_Overheat T4
+	INFERNAL_THESIS(26, 6, 5),
+	WHITE_HEAT(27, 6, 5),
+	HEAT_SINK_II(28, 6, 5),
+	//Aria_Grimoire&Ink T4
+	BLACK_SUN_BRAND(29, 6, 5),
+	SCRIPTOR_KING(30, 6, 5),
+	SPREAD_THE_INK(31, 6, 5);
 
 /*
 	//Warrior T1
@@ -1485,7 +1488,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, SATIATED_SPELLS, HOLY_INTUITION, SEARING_LIGHT, SHIELD_OF_LIGHT);
 				break;
 			case ARIA:
-				Collections.addAll(tierTalents, ELEMENTAL_RHYTHM, RUNIC_CONSERVATION, ELEMENTAL_MEMORY, PRISMATIC_INITIATION);
+				Collections.addAll(tierTalents, QUICK_SWITCH, CAREFUL_SCHOLAR, CODEX_FUNDAMENTALS, ELEMENTAL_GUARD_I, PAGE_ECONOMY);
 				break;
 		}
 		for (Talent talent : tierTalents) {
@@ -1518,7 +1521,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, ENLIGHTENING_MEAL, RECALL_INSCRIPTION, SUNRAY, DIVINE_SENSE, BLESS);
 				break;
 			case ARIA:
-				Collections.addAll(tierTalents, PRISMATIC_REBOUND, FLOW_STATE, IMPRINT_SPILLOVER, MANA_WEAVE, BARRIER_CORE);
+				Collections.addAll(tierTalents, ELEMENTAL_RIDER, SNAP_CONTROL, INK_MARK, SCRIPTORIUM, ELEMENTAL_GUARD_II);
 				break;
 		}
 		for (Talent talent : tierTalents) {
@@ -1551,7 +1554,7 @@ public enum Talent {
 				Collections.addAll(tierTalents, CLEANSE, LIGHT_READING);
 				break;
 			case ARIA:
-				Collections.addAll(tierTalents, QUICKSHIFT_MASTERY, IMPRINT_AMPLIFIER);
+				Collections.addAll(tierTalents, BALANCED_SCRIPT, SCRIBES_STANCE);
 				break;
 		}
 		for (Talent talent : tierTalents) {
@@ -1619,13 +1622,13 @@ public enum Talent {
 				Collections.addAll(tierTalents, LAY_ON_HANDS, AURA_OF_PROTECTION, WALL_OF_LIGHT);
 				break;
 			case ARCHMAGE_OF_HARMONY:
-				Collections.addAll(tierTalents, HARMONIC_LOOP, CONCORD_PULSE, HARMONIC_SURGE);
+				Collections.addAll(tierTalents, HARMONIC_CYCLE, DUAL_ENGRAVING, GENTLE_FLOW);
 				break;
 			case ELEMENTAL_WEAVER:
-				Collections.addAll(tierTalents, WEAVE_THREADS, STITCH, PRISMATIC_DETONATION);
+				Collections.addAll(tierTalents, REDLINE, THERMAL_FEEDBACK, SAFETY_VALVE);
 				break;
 			case SAGE_OF_ELEMENTS:
-				Collections.addAll(tierTalents, EARTHEN_POISE, STILL_WATER, POISED_MIND);
+				Collections.addAll(tierTalents, DEEP_INK, SIPHON_MARGIN, EDITORS_CUT);
 				break;
 		}
 		for (Talent talent : tierTalents) {

@@ -201,9 +201,9 @@ public class Badges {
 		BOSS_SLAIN_3_MONK,
 		BOSS_SLAIN_3_PRIEST,
 		BOSS_SLAIN_3_PALADIN,
-		BOSS_SLAIN_3_ARCHMAGE_OF_HARMONY,
-		BOSS_SLAIN_3_ELEMENTAL_WEAVER,
-		BOSS_SLAIN_3_SAGE_OF_ELEMENTS,
+		BOSS_SLAIN_3_ARIA_HARMONY,
+		BOSS_SLAIN_3_ARIA_OVERHEAT,
+		BOSS_SLAIN_3_ARIA_GRIMOIRE_INK,
 		BOSS_SLAIN_3_ALL_SUBCLASSES ( 104, BadgeType.GLOBAL ),
 		BOSS_CHALLENGE_3            ( 105 ),
 		BOSS_CHALLENGE_4            ( 106 ),
@@ -841,9 +841,9 @@ public class Badges {
 		thirdBossSubclassBadges.put(HeroSubClass.MONK, Badge.BOSS_SLAIN_3_MONK);
 		thirdBossSubclassBadges.put(HeroSubClass.PRIEST, Badge.BOSS_SLAIN_3_PRIEST);
 		thirdBossSubclassBadges.put(HeroSubClass.PALADIN, Badge.BOSS_SLAIN_3_PALADIN);
-		thirdBossSubclassBadges.put(HeroSubClass.ARCHMAGE_OF_HARMONY, Badge.BOSS_SLAIN_3_ARCHMAGE_OF_HARMONY);
-		thirdBossSubclassBadges.put(HeroSubClass.ELEMENTAL_WEAVER, Badge.BOSS_SLAIN_3_ELEMENTAL_WEAVER);
-		thirdBossSubclassBadges.put(HeroSubClass.SAGE_OF_ELEMENTS, Badge.BOSS_SLAIN_3_SAGE_OF_ELEMENTS);
+		thirdBossSubclassBadges.put(HeroSubClass.ARIA_HARMONY, Badge.BOSS_SLAIN_3_ARIA_HARMONY);
+		thirdBossSubclassBadges.put(HeroSubClass.ARIA_OVERHEAT, Badge.BOSS_SLAIN_3_ARIA_OVERHEAT);
+		thirdBossSubclassBadges.put(HeroSubClass.ARIA_GRIMOIRE_INK, Badge.BOSS_SLAIN_3_ARIA_GRIMOIRE_INK);
 	}
 	
 	public static void validateBossSlain() {

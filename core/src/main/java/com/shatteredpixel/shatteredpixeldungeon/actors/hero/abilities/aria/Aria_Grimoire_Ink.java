@@ -75,7 +75,7 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
-public class Aria_Ab_3 extends ArmorAbility {
+public class Aria_Grimoire_Ink extends ArmorAbility {
 
 	{
 		baseChargeUse = 25;
@@ -107,8 +107,8 @@ public class Aria_Ab_3 extends ArmorAbility {
 	public class WndUseTrinity extends WndTitledMessage {
 
 		public WndUseTrinity(ClassArmor armor) {
-			super(new HeroIcon(Aria_Ab_3.this),
-					Messages.titleCase(Aria_Ab_3.this.name()),
+			super(new HeroIcon(Aria_Grimoire_Ink.this),
+					Messages.titleCase(Aria_Grimoire_Ink.this.name()),
 					Messages.get(WndUseTrinity.class, "text"));
 
 			int top = height;
@@ -125,7 +125,7 @@ public class Aria_Ab_3 extends ArmorAbility {
 							if (Dungeon.hero.belongings.weapon() != null &&
 									((Weapon)Dungeon.hero.belongings.weapon()).enchantment != null &&
 									((Weapon)Dungeon.hero.belongings.weapon()).enchantment.getClass().equals(bodyForm.getClass())){
-								GLog.w(Messages.get(Aria_Ab_3.class, "no_duplicate"));
+								GLog.w(Messages.get(Aria_Grimoire_Ink.class, "no_duplicate"));
 								hide();
 							} else {
 								Buff.prolong(Dungeon.hero, BodyForm.BodyFormBuff.class, BodyForm.duration()).setEffect(bodyForm);
@@ -159,7 +159,7 @@ public class Aria_Ab_3 extends ArmorAbility {
 							if (Dungeon.hero.belongings.armor() != null &&
 									Dungeon.hero.belongings.armor().glyph != null &&
 									(Dungeon.hero.belongings.armor()).glyph.getClass().equals(bodyForm.getClass())){
-								GLog.w(Messages.get(Aria_Ab_3.class, "no_duplicate"));
+								GLog.w(Messages.get(Aria_Grimoire_Ink.class, "no_duplicate"));
 								hide();
 							} else {
 								Buff.prolong(Dungeon.hero, BodyForm.BodyFormBuff.class, BodyForm.duration()).setEffect(bodyForm);
@@ -235,7 +235,7 @@ public class Aria_Ab_3 extends ArmorAbility {
 						if ((Dungeon.hero.belongings.ring() != null && Dungeon.hero.belongings.ring().getClass().equals(spiritForm.getClass()))
 								|| (Dungeon.hero.belongings.misc() != null && Dungeon.hero.belongings.misc().getClass().equals(spiritForm.getClass()))
 								|| (Dungeon.hero.belongings.artifact() != null && Dungeon.hero.belongings.artifact().getClass().equals(spiritForm.getClass()))){
-							GLog.w(Messages.get(Aria_Ab_3.class, "no_duplicate"));
+							GLog.w(Messages.get(Aria_Grimoire_Ink.class, "no_duplicate"));
 							hide();
 							return;
 						}
@@ -303,7 +303,7 @@ public class Aria_Ab_3 extends ArmorAbility {
 
 	@Override
 	public Talent[] talents() {
-		return new Talent[]{Talent.STONE_READING, Talent.DEEP_WELLS, Talent.ANCIENT_STANCE, Talent.HEROIC_ENERGY};
+		return new Talent[]{Talent.BLACK_SUN_BRAND, Talent.SCRIPTOR_KING, Talent.SPREAD_THE_INK};
 	}
 
 	public static class WndItemtypeSelect extends WndTitledMessage {
@@ -445,13 +445,13 @@ public class Aria_Ab_3 extends ArmorAbility {
 					WndItemConfirm.this.hide();
 
 					if (item instanceof MeleeWeapon) {
-						((Aria_Ab_3)Dungeon.hero.armorAbility).bodyForm = ((MeleeWeapon) item).enchantment;
+						((Aria_Grimoire_Ink)Dungeon.hero.armorAbility).bodyForm = ((MeleeWeapon) item).enchantment;
 					} else if (item instanceof Armor) {
-						((Aria_Ab_3)Dungeon.hero.armorAbility).bodyForm = ((Armor) item).glyph;
+						((Aria_Grimoire_Ink)Dungeon.hero.armorAbility).bodyForm = ((Armor) item).glyph;
 					} else if (item instanceof Wand || item instanceof MissileWeapon){
-						((Aria_Ab_3)Dungeon.hero.armorAbility).mindForm = item;
+						((Aria_Grimoire_Ink)Dungeon.hero.armorAbility).mindForm = item;
 					} else {
-						((Aria_Ab_3)Dungeon.hero.armorAbility).spiritForm = item;
+						((Aria_Grimoire_Ink)Dungeon.hero.armorAbility).spiritForm = item;
 					}
 					spell.onSpellCast(tome, Dungeon.hero);
 
@@ -493,30 +493,30 @@ public class Aria_Ab_3 extends ArmorAbility {
 		if (Weapon.Enchantment.class.isAssignableFrom(cls) || Armor.Glyph.class.isAssignableFrom(cls)) {
 			for (Class ench : Weapon.Enchantment.rare) {
 				if (ench.equals(cls)) {
-					return Messages.get(Aria_Ab_3.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+					return Messages.get(Aria_Grimoire_Ink.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 				}
 			}
 			for (Class glyph : Armor.Glyph.rare){
 				if (glyph.equals(cls)){
-					return Messages.get(Aria_Ab_3.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+					return Messages.get(Aria_Grimoire_Ink.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 				}
 			}
-			return Messages.get(Aria_Ab_3.class, "ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Grimoire_Ink.class, "ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (MissileWeapon.class.isAssignableFrom(cls)){
-			return Messages.get(Aria_Ab_3.class, "thrown_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Grimoire_Ink.class, "thrown_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Wand.class.isAssignableFrom(cls)){
 			if (cls.equals(WandOfFireblast.class) || cls.equals(WandOfRegrowth.class)){
-				return Messages.get(Aria_Ab_3.class, "wand_multi_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+				return Messages.get(Aria_Grimoire_Ink.class, "wand_multi_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 			}
-			return Messages.get(Aria_Ab_3.class, "wand_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Grimoire_Ink.class, "wand_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Ring.class.isAssignableFrom(cls)){
-			return Messages.get(Aria_Ab_3.class, "ring_use", SpiritForm.ringLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Grimoire_Ink.class, "ring_use", SpiritForm.ringLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Artifact.class.isAssignableFrom(cls)){
-			return Messages.get(Aria_Ab_3.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Grimoire_Ink.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		return "error!";
 

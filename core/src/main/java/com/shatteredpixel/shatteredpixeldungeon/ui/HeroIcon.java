@@ -51,9 +51,9 @@ public class HeroIcon extends Image {
 	public static final int MONK        				  = 9;
 	public static final int PRIEST      				  = 10;
 	public static final int PALADIN     				  = 11;
-	public static final int ELEMENTAL_WEAVER     		  = 12;
-	public static final int SAGE_OF_ELEMENTS     		  = 13;
-	public static final int ARCHMAGE_OF_HARMONY     	  = 14;
+	public static final int ARIA_HARMONY	     		  = 12;
+	public static final int ARIA_OVERHEAT	     		  = 13;
+	public static final int ARIA_GRIMOIRE_INK	     	  = 14;
 //	public static final int						      	  = 15;
 
 	//abilities

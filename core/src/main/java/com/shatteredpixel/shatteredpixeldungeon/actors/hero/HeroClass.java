@@ -28,9 +28,9 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Ab_1;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Ab_2;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Ab_3;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Harmony;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Overheat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Grimoire_Ink;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.AscendedForm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.PowerOfMany;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.cleric.Trinity;
@@ -78,11 +78,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.Magic
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSheildBash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSlash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.cast.SanctuaryManaField;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicArrow;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicBullet;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicCannon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicMissile;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicSingularity;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -105,7 +100,7 @@ public enum HeroClass {
 	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
 	DUELIST( HeroSubClass.CHAMPION, HeroSubClass.MONK ),
 	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN ),
-	ARIA( HeroSubClass.ELEMENTAL_WEAVER,HeroSubClass.SAGE_OF_ELEMENTS,HeroSubClass.ARCHMAGE_OF_HARMONY );
+	ARIA( HeroSubClass.ARIA_HARMONY,HeroSubClass.ARIA_OVERHEAT,HeroSubClass.ARIA_GRIMOIRE_INK );
 
 	private HeroSubClass[] subClasses;
 
@@ -352,7 +347,7 @@ public enum HeroClass {
 			case CLERIC:
 				return new ArmorAbility[]{new AscendedForm(), new Trinity(), new PowerOfMany()};
 			case ARIA:
-				return new ArmorAbility[]{new Aria_Ab_1(), new Aria_Ab_2(), new Aria_Ab_3()};
+				return new ArmorAbility[]{new Aria_Harmony(), new Aria_Overheat(), new Aria_Grimoire_Ink()};
 		}
 	}
 

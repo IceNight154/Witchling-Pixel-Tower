@@ -75,7 +75,7 @@ import com.watabou.utils.Reflection;
 
 import java.util.ArrayList;
 
-public class Aria_Ab_1 extends ArmorAbility {
+public class Aria_Overheat extends ArmorAbility {
 
 	{
 		baseChargeUse = 25;
@@ -107,8 +107,8 @@ public class Aria_Ab_1 extends ArmorAbility {
 	public class WndUseTrinity extends WndTitledMessage {
 
 		public WndUseTrinity(ClassArmor armor) {
-			super(new HeroIcon(Aria_Ab_1.this),
-					Messages.titleCase(Aria_Ab_1.this.name()),
+			super(new HeroIcon(Aria_Overheat.this),
+					Messages.titleCase(Aria_Overheat.this.name()),
 					Messages.get(WndUseTrinity.class, "text"));
 
 			int top = height;
@@ -125,7 +125,7 @@ public class Aria_Ab_1 extends ArmorAbility {
 							if (Dungeon.hero.belongings.weapon() != null &&
 									((Weapon)Dungeon.hero.belongings.weapon()).enchantment != null &&
 									((Weapon)Dungeon.hero.belongings.weapon()).enchantment.getClass().equals(bodyForm.getClass())){
-								GLog.w(Messages.get(Aria_Ab_1.class, "no_duplicate"));
+								GLog.w(Messages.get(Aria_Overheat.class, "no_duplicate"));
 								hide();
 							} else {
 								Buff.prolong(Dungeon.hero, BodyForm.BodyFormBuff.class, BodyForm.duration()).setEffect(bodyForm);
@@ -159,7 +159,7 @@ public class Aria_Ab_1 extends ArmorAbility {
 							if (Dungeon.hero.belongings.armor() != null &&
 									Dungeon.hero.belongings.armor().glyph != null &&
 									(Dungeon.hero.belongings.armor()).glyph.getClass().equals(bodyForm.getClass())){
-								GLog.w(Messages.get(Aria_Ab_1.class, "no_duplicate"));
+								GLog.w(Messages.get(Aria_Overheat.class, "no_duplicate"));
 								hide();
 							} else {
 								Buff.prolong(Dungeon.hero, BodyForm.BodyFormBuff.class, BodyForm.duration()).setEffect(bodyForm);
@@ -235,7 +235,7 @@ public class Aria_Ab_1 extends ArmorAbility {
 						if ((Dungeon.hero.belongings.ring() != null && Dungeon.hero.belongings.ring().getClass().equals(spiritForm.getClass()))
 								|| (Dungeon.hero.belongings.misc() != null && Dungeon.hero.belongings.misc().getClass().equals(spiritForm.getClass()))
 								|| (Dungeon.hero.belongings.artifact() != null && Dungeon.hero.belongings.artifact().getClass().equals(spiritForm.getClass()))){
-							GLog.w(Messages.get(Aria_Ab_1.class, "no_duplicate"));
+							GLog.w(Messages.get(Aria_Overheat.class, "no_duplicate"));
 							hide();
 							return;
 						}
@@ -298,12 +298,12 @@ public class Aria_Ab_1 extends ArmorAbility {
 
 	@Override
 	public int icon() {
-		return HeroIcon.ARIA_AB_1;
+		return HeroIcon.ARIA_AB_2;
 	}
 
 	@Override
 	public Talent[] talents() {
-		return new Talent[]{Talent.PERFECT_CONCORD, Talent.CONTINUUM_SLIP, Talent.RESONANT_CYCLE, Talent.HEROIC_ENERGY};
+		return new Talent[]{Talent.INFERNAL_THESIS, Talent.WHITE_HEAT, Talent.HEAT_SINK_II};
 	}
 
 	public static class WndItemtypeSelect extends WndTitledMessage {
@@ -445,13 +445,13 @@ public class Aria_Ab_1 extends ArmorAbility {
 					WndItemConfirm.this.hide();
 
 					if (item instanceof MeleeWeapon) {
-						((Aria_Ab_1)Dungeon.hero.armorAbility).bodyForm = ((MeleeWeapon) item).enchantment;
+						((Aria_Overheat)Dungeon.hero.armorAbility).bodyForm = ((MeleeWeapon) item).enchantment;
 					} else if (item instanceof Armor) {
-						((Aria_Ab_1)Dungeon.hero.armorAbility).bodyForm = ((Armor) item).glyph;
+						((Aria_Overheat)Dungeon.hero.armorAbility).bodyForm = ((Armor) item).glyph;
 					} else if (item instanceof Wand || item instanceof MissileWeapon){
-						((Aria_Ab_1)Dungeon.hero.armorAbility).mindForm = item;
+						((Aria_Overheat)Dungeon.hero.armorAbility).mindForm = item;
 					} else {
-						((Aria_Ab_1)Dungeon.hero.armorAbility).spiritForm = item;
+						((Aria_Overheat)Dungeon.hero.armorAbility).spiritForm = item;
 					}
 					spell.onSpellCast(tome, Dungeon.hero);
 
@@ -493,30 +493,30 @@ public class Aria_Ab_1 extends ArmorAbility {
 		if (Weapon.Enchantment.class.isAssignableFrom(cls) || Armor.Glyph.class.isAssignableFrom(cls)) {
 			for (Class ench : Weapon.Enchantment.rare) {
 				if (ench.equals(cls)) {
-					return Messages.get(Aria_Ab_1.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+					return Messages.get(Aria_Overheat.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 				}
 			}
 			for (Class glyph : Armor.Glyph.rare){
 				if (glyph.equals(cls)){
-					return Messages.get(Aria_Ab_1.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+					return Messages.get(Aria_Overheat.class, "rare_ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 				}
 			}
-			return Messages.get(Aria_Ab_1.class, "ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Overheat.class, "ench_glyph_use", BodyForm.duration(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (MissileWeapon.class.isAssignableFrom(cls)){
-			return Messages.get(Aria_Ab_1.class, "thrown_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Overheat.class, "thrown_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Wand.class.isAssignableFrom(cls)){
 			if (cls.equals(WandOfFireblast.class) || cls.equals(WandOfRegrowth.class)){
-				return Messages.get(Aria_Ab_1.class, "wand_multi_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+				return Messages.get(Aria_Overheat.class, "wand_multi_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 			}
-			return Messages.get(Aria_Ab_1.class, "wand_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Overheat.class, "wand_use", MindForm.itemLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Ring.class.isAssignableFrom(cls)){
-			return Messages.get(Aria_Ab_1.class, "ring_use", SpiritForm.ringLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Overheat.class, "ring_use", SpiritForm.ringLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		if (Artifact.class.isAssignableFrom(cls)){
-			return Messages.get(Aria_Ab_1.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(), Messages.decimalFormat("#.##", chargeUse));
+			return Messages.get(Aria_Overheat.class, cls.getSimpleName() + "_use", SpiritForm.artifactLevel(), Messages.decimalFormat("#.##", chargeUse));
 		}
 		return "error!";
 
