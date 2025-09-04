@@ -137,7 +137,7 @@ public class BuffIndicator extends Component {
 	public static final int SEAL_SHIELD = 84;
 	public static final int THROWN_WEP  = 85;
 	public static final int SHIELD      = 86;
-	public static final int MAGIC      = 86;
+	public static final int MAGIC       = 86;
 
 
 	public static final int SIZE_SMALL  = 7;
@@ -373,6 +373,18 @@ public class BuffIndicator extends Component {
 
 	public static void refreshBoss(){
 		if (bossInstance != null) {
+			bossInstance.needsRefresh = true;
+		}
+	}
+
+	public static void refresh(Char ch){
+		if (ch == null) return;
+		// 히어로 인디케이터가 이 캐릭터를 보여주는 중이면 갱신
+		if (heroInstance != null && heroInstance.ch == ch){
+			heroInstance.needsRefresh = true;
+		}
+		// 보스 인디케이터가 이 캐릭터를 보여주는 중이면 갱신
+		if (bossInstance != null && bossInstance.ch == ch){
 			bossInstance.needsRefresh = true;
 		}
 	}
