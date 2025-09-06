@@ -211,7 +211,7 @@ public class MagicGavel extends MeleeCodex {
             Buff.prolong(target, Roots.class, TICK + 0.01f);
             return true;
         }
-        @Override public int icon() { return BuffIndicator.MIND_VISION; }
+        @Override public int icon() { return BuffIndicator.CHARGE; }
         @Override public float iconFadePercent() { return 1f - (Math.min(5, Math.max(0, turns)) / 5f); }
         @Override public String iconTextDisplay() { return Integer.toString(Math.min(5, Math.max(1, turns))); }
         @Override public void detach(){ Buff.detach(target, Roots.class); super.detach(); }

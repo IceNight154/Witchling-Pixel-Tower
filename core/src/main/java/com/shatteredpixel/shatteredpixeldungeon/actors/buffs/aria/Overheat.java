@@ -1,282 +1,247 @@
-/*
- * Aria - Overheat Core Buff
- * Implements elemental Overheat gauge (0-100) with baseline effects and meltdown trigger.
- * Spec reference: GitHub Issue "아리아 #1" (Sep 4, 2025).
- *
- * This class focuses on clean game-logic and exposes small helper methods
- * so you can hook damage, evasion, and element-switch code from your existing systems.
- *
- * ⚠ Integration notes:
- * - Call onSameElementTurn(hero) once per hero turn if element unchanged.
- * - Call onSkillOrCodexUsed(hero) whenever Aria casts a skill/codex.
- * - Call onElementSwitch(hero, newElement, extraReductionFromTalents) when switching element.
- * - To apply baseline passives, query the helpers (e.g., getOutgoingDamageMultiplier(), getIncomingDamageMultiplier(), getEvasionBonusPct()).
- * - If meltdownTriggered() returns true after act()/tick or adjustments, consumeMeltdown()
- *   to get payload (radius, damage) and then do your AoE externally (dealDamageAround()).
- */
-/* (한국어 번역)
- * Aria - 과열(Overheat) 코어 버프
- * 원소 과열 게이지(0~100)와 기본 효과, 멜트다운(과열 폭주) 트리거를 구현합니다.
- * 명세 참조: GitHub 이슈 "아리아 #1" (2025-09-04).
- *
- * 이 클래스는 게임 로직을 간결하게 유지하며, 기존 시스템에 손쉽게 연동할 수 있도록
- * 작은 헬퍼 메서드들을 제공합니다(피해/회피/원소 전환 처리 등).
- *
- * ⚠ 연동 노트:
- * - 같은 원소를 유지한 턴마다 onSameElementTurn(hero) 호출.
- * - 스킬/코덱스 사용 시 onSkillOrCodexUsed(hero) 호출.
- * - 원소 전환 시 onElementSwitch(hero, newElement, extraReductionFromTalents) 호출.
- * - 기본 패시브 적용은 getOutgoingDamageMultiplier(), getIncomingDamageMultiplier(), getEvasionBonusPct() 등으로 조회.
- * - act()/tick 이후 또는 조정 결과 meltdownTriggered()가 true라면, consumeMeltdown()으로
- *   (반경, 피해) 페이로드를 받아 외부에서 광역 처리(dealDamageAround())를 수행하세요.
- */
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.utils.Bundle;
-import com.watabou.utils.Random;
+
 /**
- * 원소 상태(FIRE/WATER/WIND/EARTH)에 따라 과열 게이지를 축적/감소시키고,
- * 임계치(100)에 도달하면 멜트다운을 트리거하는 버프입니다.
- * - 게이지 축적: 같은 원소 유지, 스킬/코덱스 사용 시 증가.
- * - 원소 전환: 게이지가 감소하며, EARTH 전환 시 1턴 보호막 비율을 반환(외부에서 적용).
- * - 기본 패시브: FIRE 피해 증가, WATER 피해감소+자연냉각(+선택적 자힐), WIND 회피 보너스,
- *   EARTH 기절 확률 2배 및 전환 시 보호막.
- * - 멜트다운: 임계 도달 시 AoE 피해 페이로드를 노출하고, 게이지/원소를 리셋/변경합니다.
- * - 직렬화: 게이지/원소/코덱스최대피해를 저장/복원합니다.
+ * Aria's Overheat gauge controller.
+ *
+ * ✅ Key behaviors implemented per design:
+ *  - Gauge ranges 0..100, with meltdown at 100
+ *  - +8 on skill/codex use; +12/turn for up to 3 turns afterward while not idle
+ *  - When idle for 3+ full turns, -12/turn
+ *  - Element switch applies -25 (extraNegativeReduction lowers by additional amount)
+ *  - WATER: -2 natural cooling/turn (with heal applied externally)
+ *  - FIRE: +15% accumulation factor (applies to positive deltas only)
+ *  - Meltdown: random element swap, reset to 60, and a pending event is queued for external handling
+ *
+ *  This buff does not directly handle AoE/self-damage/Exhaust on meltdown;
+ *  instead it exposes a pending event via {@link #consumePendingMeltdown()}.
+ *  Your codex/hero logic should poll and apply those effects (see README).
  */
 public class Overheat extends Buff {
-    /** 원소 타입 열거형: FIRE, WATER, WIND, EARTH */
 
-    public enum Element {FIRE, WATER, WIND, EARTH}
+    public static final int MAX_OVERHEAT = 100;
 
-    public static final int MAX_OVERHEAT = 100;    // 과열 게이지 최대치.
-    private static final float TICK = 1f;          // 버프 틱 간격(초/턴). act() 호출 주기.
+    private static final String TAG_GAUGE = "gauge";
+    private static final String TAG_ELEM  = "element";
+    private static final String TAG_SINCE = "turnsSinceUse";
 
-// 게이지 및 기본 설정
-
-    private int gauge = 0;                     // 현재 과열 게이지(0~MAX_OVERHEAT).
-    private Element element = Element.FIRE;    // 현재 원소 상태(FIRE/WATER/WIND/EARTH).
-
-    // 스펙 훅(특성에 의해 조정 가능)
-    private int sameElementPerTurn = 12;       // 같은 원소 유지 시 턴당 증가량(기본 +12).
-    private int perSkillUse = 8;               // 스킬/코덱스 사용 시 증가량(기본 +8).
-    private int onSwitchReduction = 25;        // 원소 전환 시 감소량(기본 -25). 특성 보너스로 추가 감소.
-    private int resetOnMeltdown = 60;          // 멜트다운 후 게이지를 이 값으로 재설정.
-    private int meltdownRadius = 2;            // 멜트다운 광역 반경.
-    private int codexMaxDamage = 0;            // 코덱스 최대 피해(멜트다운 피해 계산에 사용). 외부에서 설정.
-
-
-    // 원소별 기본 패시브(명세: FIRE +10% 피해, WATER 피해감소 8%/턴당 자힐+1, WIND 회피 +8%, EARTH 기절 2배 & 전환 시 5% 보호막)
-    private float fireDamageBonus = 0.10f;          // FIRE: 아리아의 가하는 피해 증가율(+10% 기본).
-    private float waterDamageReduction = 0.08f;     // WATER: 받는 피해 감소율(-8% 기본).
-    private int waterHealPerTurn = 1;               // WATER: 자동 회복량(턴당, 기본 +1). 외부에서 실제 회복 처리 가능.
-    private float windEvasionBonus = 0.08f;         // WIND: 회피 보너스(+8% 기본).
-    private float earthSwitchShieldPct = 0.05f;     // EARTH: 원소 전환 시 1턴 보호막 비율(최대체력의 %).
-
-
-    // 외부 시스템에 멜트다운 정보를 전달하기 위한 내부 상태
-    private boolean meltdownPending = false;        // 멜트다운 페이로드 준비 상태 플래그.
-    private int meltdownDamageCached = 0;           // 멜트다운 피해 캐시값(외부 광역에 전달할 값).
-
-// ==== 공개 진입점 ====
-
-    public static Overheat get(Char ch) {
-        return ch == null ? null : ch.buff(Overheat.class);
+    /** Install or fetch the Overheat buff on a hero. */
+    public static Overheat install(Hero hero){
+        if (hero == null) return null;
+        Overheat existing = hero.buff(Overheat.class);
+        if (existing != null) return existing;
+        Buff.affect(hero, Overheat.class);
+        return hero.buff(Overheat.class);
     }
 
-    public void onSameElementTurn(Hero hero) {
-        int reduce = 0;
-        try {
-            reduce = com.shatteredpixel.shatteredpixeldungeon.actors.talents.AriaT1Talents.Hooks.sameElementAccumulationReduce(hero);
-        } catch (Throwable t) { /* optional dependency */ }
-        addGauge(hero, sameElementPerTurn - reduce);
+    private int gauge = 0;
+    private int turnsSinceUse = 999; // big = idle
+    private OverheatElement element = OverheatElement.FIRE;
+    private int codexMaxDamageRemembered = 0;
+
+    // meltdown notification
+    private MeltdownResult pendingMeltdown = null;
+
+    public Overheat(){ type = buffType.POSITIVE; }
+
+    public OverheatElement element(){ return element; }
+    public int gauge(){ return gauge; }
+
+    /** Optional helper so Codex can tell us its max damage for meltdown math. */
+    public void noteCodexMaxDamage(int max){
+        this.codexMaxDamageRemembered = Math.max(this.codexMaxDamageRemembered, Math.max(0, max));
     }
 
-    public void onSkillOrCodexUsed(Hero hero) {
-        int extra = 0;
-        try {
-            extra = com.shatteredpixel.shatteredpixeldungeon.actors.talents.AriaT1Talents.Hooks.onSkillOrCodexUsed(hero);
-        } catch (Throwable t) { /* optional dependency */ }
-        addGauge(hero, perSkillUse + extra);
+    /** Call this when Aria uses a skill or codex (without switching element). */
+    public void onSkillOrCodexUsed(Hero hero){
+        turnsSinceUse = 0;
+        applyDeltaInternal( Math.round( 8 * element.positiveOverheatAccumFactor() ) );
+        // UI refresh is handled by the engine each tick, but we can suggest it
+        try { com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator.refreshHero(); } catch (Throwable t){}
     }
 
-    public float onElementSwitch(Hero hero, Element newElement, int extraReductionFromTalents) {
-        // 기본 -25에 특성으로 인한 추가 감소를 합산
-        int delta = -onSwitchReduction;
-        // extraReductionFromTalents is negative (e.g., -5..-8): add as-is to increase reduction
-        delta += extraReductionFromTalents;
-        addGauge(hero, delta);
-
-        float shieldPct = 0f;
-        // EARTH: 전환 시 최대 체력 5% 보호막 1턴(외부 적용)
-        if (newElement == Element.EARTH) {
-            shieldPct = earthSwitchShieldPct;
-        }
-        this.element = newElement;
-        BuffIndicator.refreshHero();
-        return shieldPct;
-    }
-
-    public void setCodexMaxDamage(int maxDamage) {
-        codexMaxDamage = Math.max(0, maxDamage);
-    }
-
-    public float getOutgoingDamageMultiplier() {
-        if (element == Element.FIRE) {
-            return 1f + fireDamageBonus;
-        }
-        return 1f;
-    }
-
-    public float getIncomingDamageMultiplier() {
-        if (element == Element.WATER) {
-            return 1f - waterDamageReduction;
-        }
-        return 1f;
-    }
-
-    public float getEvasionBonusPct() {
-        return element == Element.WIND ? windEvasionBonus : 0f;
-    }
-
-    public boolean doubleStunChance() {
-        return element == Element.EARTH;
-    }
-
-    private int applyFireGainModifier(int delta) {
-        if (element == Element.FIRE && delta > 0) {
-            float mod = 1.15f;
-            return Math.round(delta * mod);
-        }
-        return delta;
-    }
-
+    /** Must be called once per actor turn; Buff.act() already does this. */
     @Override
     public boolean act() {
-        if (target instanceof Hero) {
-            Hero hero = (Hero) target;
-            try { com.shatteredpixel.shatteredpixeldungeon.actors.talents.AriaT1Talents.Hooks.onHeroTurn(hero); } catch (Throwable t) { /* optional */ }
-            if (element == Element.WATER) {
-                // WATER 상태에서 수동 냉각
-                addGauge(hero, -2);
-                // (선택) 자힐 +1 (일부 코드베이스에서 외부 처리)
-                onWaterAutoHeal(hero, waterHealPerTurn);
-            }
+        // Apply "active gain" or "idle cooling" depending on how long it's been since last use.
+        if (turnsSinceUse < 3){
+            // Not idle yet -> gain +12 per turn while maintaining element
+            applyDeltaInternal( Math.round(12 * element.positiveOverheatAccumFactor()) );
+        } else {
+            // Idle for 3 or more full turns -> -12 per turn
+            applyDeltaInternal(-12);
         }
+
+        // Elemental natural cooling (WATER: -2)
+        int natural = element.naturalCoolingDeltaPerTurn();
+        if (natural != 0) applyDeltaInternal(natural);
+
+        turnsSinceUse = Math.min(turnsSinceUse + 1, 999);
+
         spend(TICK);
         return true;
     }
 
-    protected void onWaterAutoHeal(Hero hero, int amount) {
-        // 의도적으로 비워둠 – 필요 시 영웅 틱 로직에 통합
+    /**
+     * Element switch: applies the -25 base reduction (plus any extraNegativeReduction),
+     * resets the active window, and returns the result (including EARTH shield %).
+     *
+     * @param extraNegativeReduction extra reduction to apply (e.g., from Quick Switch etc.)
+     */
+    public SwitchResult onElementSwitch(Hero hero, OverheatElement newElem, int extraNegativeReduction){
+        if (newElem == null) newElem = OverheatElement.FIRE;
+
+        OverheatElement prev = this.element;
+        this.element = newElem;
+        turnsSinceUse = 999; // reset to idle until next use
+
+        int applied = applyDeltaInternal(-25 - Math.max(0, extraNegativeReduction));
+
+        float shieldPct = newElem.onSwitchShieldPercent();
+        return new SwitchResult(prev, newElem, applied, shieldPct);
     }
 
-    // ==== 게이지 코어 ====
+    /** Internal: creates and queues a meltdown event + applies the reset/element flip. */
+    private MeltdownResult doMeltdown(){
+        OverheatElement prev = this.element;
+        this.element = OverheatElement.randomDifferent(prev);
+        this.gauge = 60; // reset
 
-    private void addGauge(Hero hero, int deltaRaw) {
-        int delta = applyFireGainModifier(deltaRaw);
+        MeltdownResult r = new MeltdownResult();
+        r.prev = prev;
+        r.now  = this.element;
+        r.aoeDamagePercentOfCodexMax = 25;
+        r.selfDamagePercentOfMaxHP   = 25;
+        r.exhaustTurns = 1;
+        r.codexMaxDamageRemembered = this.codexMaxDamageRemembered;
+
+        // queue for external handling
+        pendingMeltdown = r;
+        return r;
+    }
+
+    /** Retrieve and clear a pending meltdown (if any). */
+    public MeltdownResult consumePendingMeltdown(){
+        MeltdownResult m = pendingMeltdown;
+        pendingMeltdown = null;
+        return m;
+    }
+
+    /** Applies a raw delta, respecting clamping and triggering meltdown. */
+    private int applyDeltaInternal(int rawDelta){
+        if (rawDelta == 0) return 0;
         int before = gauge;
-        gauge = clamp(gauge + delta, 0, MAX_OVERHEAT);
+        gauge = Math.max(0, Math.min(MAX_OVERHEAT, gauge + rawDelta));
 
-        if (before < MAX_OVERHEAT && gauge >= MAX_OVERHEAT) {
-            triggerMeltdown(hero);
+        // Meltdown check
+        if (gauge >= MAX_OVERHEAT){
+            doMeltdown();
         }
-        BuffIndicator.refreshHero();
+
+        // Suggest a UI refresh
+        try { com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator.refreshHero(); } catch (Throwable t){}
+        return gauge - before;
     }
 
-    private void triggerMeltdown(Hero hero) {
-        // 멜트다운 시 원소를 무작위로 변경
-        Element[] vals = Element.values();
-        element = vals[Random.Int(vals.length)];
+    /* ========================== SPD overrides & UI ========================== */
 
-        // 광역 페이로드: codexMaxDamage의 25%를 반경 2에 적용(외부 처리)
-        meltdownDamageCached = Math.max(1, Math.round(codexMaxDamage * 0.25f));
-        meltdownPending = true;
-
-        // 코드베이스가 지원한다면 외부에서 탈진(Exhaust) 1턴을 적용
-        // 게이지 재설정
-        gauge = clamp(resetOnMeltdown, 0, MAX_OVERHEAT);
+    @Override
+    public int icon() {
+        // Prefer per-tier icons if your BuffIndicator defines them; otherwise fall back
+        // to a single generic Overheat icon or the per-element icon.
+        try {
+            if (gauge >= MAX_OVERHEAT) {
+                return (int) BuffIndicator.class.getField("OVERHEAT_MELTDOWN").get(null);
+            }
+            int g = clampInt(gauge, 0, MAX_OVERHEAT);
+            if      (g <= 0) return (int) BuffIndicator.class.getField("OVERHEAT_0").get(null);
+            else if (g < 25) return (int) BuffIndicator.class.getField("OVERHEAT_25").get(null);
+            else if (g < 50) return (int) BuffIndicator.class.getField("OVERHEAT_50").get(null);
+            else if (g < 75) return (int) BuffIndicator.class.getField("OVERHEAT_75").get(null);
+            else             return (int) BuffIndicator.class.getField("OVERHEAT_100").get(null);
+        } catch (Throwable missing){
+            // Fallback: show per-element icon if available, or NONE
+            try { return element.buffIconId(); } catch (Throwable t){ return BuffIndicator.NONE; }
+        }
     }
 
-    public boolean meltdownTriggered() {
-        return meltdownPending;
+    @Override
+    public String iconTextDisplay() {
+        // Show 0..100
+        int __pct = Math.max(0, Math.min((int)Math.round((gauge * 100.0) / (double)MAX_OVERHEAT), 100));
+        return Integer.toString(__pct);
+    }
+    private static int clampInt(int v, int min, int max){
+        return v < min ? min : (v > max ? max : v);
     }
 
-    public int[] consumeMeltdown() {
-        meltdownPending = false;
-        return new int[]{meltdownRadius, meltdownDamageCached};
+    @Override
+    public float iconFadePercent() { return 0f; }
+
+    @Override
+    public String toString() { return "Overheat (" + element.displayName() + ")"; }
+
+    @Override
+    public String desc() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Overheat Gauge: ").append(gauge).append("/").append(MAX_OVERHEAT).append('\n');
+        sb.append("Element: ").append(element.displayName()).append('\n');
+        sb.append(element.passiveSummary()).append('\n');
+        sb.append("Active gain: +12/turn after using a skill/codex; +8 on use.\n");
+        sb.append("Switch: -25 (improved by talents). Idle 3+ turns: -12/turn.\n");
+        sb.append("Water: -2 natural cooling/turn with small self-heal (apply externally).\n");
+        sb.append("Meltdown at 100: random element swap, AoE 25% of codex max (r=2), ");
+        sb.append("self-damage 25% MaxHP, Exhaust 1T, resets to 60 (effects applied externally).");
+        return sb.toString();
     }
-
-    // ==== 직렬화(Serialization) ====
-// 직렬화 키: gauge
-
-    private static final String GA = "ga";
-    // 직렬화 키: element
-    private static final String EL = "el";
-    // 직렬화 키: codexMaxDamage
-    private static final String CM = "cm";
 
     @Override
     public void storeInBundle(Bundle bundle) {
         super.storeInBundle(bundle);
-        bundle.put(GA, gauge);
-        bundle.put(EL, element.name());
-        bundle.put(CM, codexMaxDamage);
+        bundle.put(TAG_GAUGE, gauge);
+        bundle.put(TAG_SINCE, turnsSinceUse);
+        bundle.put(TAG_ELEM, OverheatElement.serialize(element));
     }
 
     @Override
     public void restoreFromBundle(Bundle bundle) {
         super.restoreFromBundle(bundle);
-        gauge = bundle.getInt(GA);
-        try {
-            element = Element.valueOf(bundle.getString(EL));
-        } catch (Throwable ignored) {}
-        codexMaxDamage = bundle.getInt(CM);
+        gauge = bundle.getInt(TAG_GAUGE);
+        turnsSinceUse = bundle.getInt(TAG_SINCE);
+        element = OverheatElement.deserialize(bundle.getString(TAG_ELEM));
     }
 
-    // ==== UI ====
+    /* ====================== External helpers for passives ====================== */
 
-    @Override
-    public int icon() {
-        return BuffIndicator.NONE; // 프로젝트의 실제 아이콘 ID로 교체
+    public float damageOutMul(){ return element.outgoingDamageMultiplier(); }
+    public float damageInMul(){  return element.incomingDamageMultiplier(); }
+    public int   evasionBonusPct(){ return element.evasionBonusPct(); }
+
+    /* ============================== DTO types ============================== */
+
+    public static class SwitchResult {
+        public final OverheatElement prev;
+        public final OverheatElement now;
+        public final int appliedGaugeDelta;
+        public final float shieldPercentOfMaxHP;
+        public SwitchResult(OverheatElement prev, OverheatElement now, int appliedGaugeDelta, float shieldPercentOfMaxHP){
+            this.prev = prev;
+            this.now = now;
+            this.appliedGaugeDelta = appliedGaugeDelta;
+            this.shieldPercentOfMaxHP = shieldPercentOfMaxHP;
+        }
     }
 
-    @Override
-    public float iconFadePercent() {
-        return gauge / (float) MAX_OVERHEAT;
-    }
-
-    @Override
-    public String toString() {
-        return "Overheat (" + element + ") " + gauge + "/" + MAX_OVERHEAT;
-    }
-// 현재 원소 상태(FIRE/WATER/WIND/EARTH).
-
-    public Element element() { return element; }
-    // 현재 과열 게이지(0~MAX_OVERHEAT).
-    public int gauge() { return gauge; }
-
-    // ==== 특성(Talent) 튜너 ====
-
-    public void setSameElementPerTurn(int v) { sameElementPerTurn = v; }
-    public void setPerSkillUse(int v) { perSkillUse = v; }
-    public void setOnSwitchReduction(int v) { onSwitchReduction = v; }
-    public void setResetOnMeltdown(int v) { resetOnMeltdown = v; }
-    public void setMeltdownRadius(int r) { meltdownRadius = r; }
-    public void setFireDamageBonus(float v) { fireDamageBonus = v; }
-    public void setWaterDamageReduction(float v) { waterDamageReduction = v; }
-    public void setWaterHealPerTurn(int v) { waterHealPerTurn = v; }
-    public void setWindEvasionBonus(float v) { windEvasionBonus = v; }
-    public void setEarthSwitchShieldPct(float v) { earthSwitchShieldPct = v; }
-
-    // ==== 유틸리티 ====
-
-    private static int clamp(int v, int min, int max) {
-        return Math.max(min, Math.min(max, v));
+    public static class MeltdownResult {
+        public OverheatElement prev, now;
+        public int aoeDamagePercentOfCodexMax;
+        public int selfDamagePercentOfMaxHP;
+        public int exhaustTurns;
+        public int codexMaxDamageRemembered;
     }
 }

@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.talents;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.OverheatElement;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.Overheat;
@@ -11,16 +12,16 @@ import com.watabou.utils.Bundle;
  * Spec source: GitHub issue "아리아 #1" (2025-09-04).
  *
  * 본 파일은 각 T1 특성을 Buff로 보관하면서, 외부 시스템에서 쉽게 연동하도록
- * 정적 Hooks를 제공합니다. 게임 쪽에서 다음 훅을 호출해 주세요.
+ * 정적 Hooks를 제공합니다. 게임 로직에서 아래 훅을 호출해 주세요.
  *
  * 1) 원소 전환 시:
  *    int extra = AriaT1Talents.Hooks.extraReductionOnSwitch(hero);
- *    // 전환 로직에서 과부하 감쇠치에 extra를 더하세요(음수).
+ *    // 전환 로직에서 과부하 감쇠치에 extra를 '더하세요'(음수).
  *    int haste = AriaT1Talents.Hooks.onElementSwitch(hero);
- *    // haste > 0이면 외부에서 Haste를 적용하세요.
+ *    // haste > 0이면 Haste 버프를 외부에서 적용하세요.
  *
- * 2) 영웅 턴 처리 1회:
- *    AriaT1Talents.Hooks.onHeroTurn(hero);
+ * 2) 매 턴 처리:
+ *    AriaT1Talents.Hooks.onHeroTurn(hero); // 내부 쿨다운 관리 용도
  *
  * 3) 스킬/코덱스 사용 직후:
  *    int delta = AriaT1Talents.Hooks.onSkillOrCodexUsed(hero);
@@ -35,9 +36,9 @@ import com.watabou.utils.Bundle;
  *    float bonus = AriaT1Talents.Hooks.statusResistBonus(hero, AriaT1Talents.Status.BURN, currentElem);
  *
  * 6) 코덱스 장탄/환급/층전환:
- *    baseCharges += AriaT1Talents.Hooks.codexBonusBaseCharges(hero);
- *    int refundPct = AriaT1Talents.Hooks.codexKillRefundChance(hero);
- *    int floorRefill = AriaT1Talents.Hooks.onFloorTransitionRefill(hero);
+ *    int baseAdd    = AriaT1Talents.Hooks.codexBonusBaseCharges(hero);
+ *    int refundPct  = AriaT1Talents.Hooks.codexKillRefundChance(hero);
+ *    int floorRefill= AriaT1Talents.Hooks.onFloorTransitionRefill(hero);
  */
 public class AriaT1Talents {
 
@@ -45,8 +46,10 @@ public class AriaT1Talents {
     public enum Status { BURN, POISON, SLOW, ROOT, STUN, OTHER }
 
     /** 공통 유틸: Buff 확보 */
+    @SuppressWarnings("unchecked")
     private static <T extends Buff> T ensure(Hero h, Class<T> c){
-        T b = Buff.affect(h, c);
+        T b = h.buff(c);
+        if (b == null) b = Buff.affect(h, c);
         return b;
     }
 
@@ -175,7 +178,7 @@ public class AriaT1Talents {
         private static final float[] RES_ALL = { 0f, 0.10f, 0.15f, 0.20f, 0.25f };
         private static final float   ELEM_MATCH_BONUS = 0.10f;
 
-        public float resistBonusFor(Status st, Overheat.Element current){
+        public float resistBonusFor(Status st, OverheatElement current){
             float base = RES_ALL[Math.max(0, Math.min(lvl, 4))];
             if (isElementMatched(current, st)) base += ELEM_MATCH_BONUS;
             if (base < 0f) base = 0f;
@@ -183,7 +186,7 @@ public class AriaT1Talents {
             return base;
         }
 
-        private boolean isElementMatched(Overheat.Element elem, Status st){
+        private boolean isElementMatched(OverheatElement elem, Status st){
             if (elem == null) return false;
             switch (elem){
                 case FIRE:  return st == Status.BURN;
@@ -215,6 +218,7 @@ public class AriaT1Talents {
     public static class PageEconomy extends Buff {
         private static final String L = "lvl";
         public int lvl;
+
         private static final int[] BONUS_BASE_CHARGES = { 0, 2, 3, 4, 5 };
         private static final int[] KILL_REFUND_PCT    = { 0, 25, 35, 45, 55 };
         private static final int[] FLOOR_REFILL       = { 0, 1, 1, 2, 3 };
@@ -240,7 +244,12 @@ public class AriaT1Talents {
     // ============================================================
     public static class Hooks {
         // -- 설치/레벨 세팅: 외부에서 각 재능 레벨을 알려줄 때 사용
-        public static void setLevels(Hero h, int quickSwitch, int carefulScholar, int codexFund, int elemGuard1, int pageEconomy){
+        public static void setLevels(Hero h,
+                                     int quickSwitch,
+                                     int carefulScholar,
+                                     int codexFund,
+                                     int elemGuard1,
+                                     int pageEconomy){
             ensure(h, QuickSwitch.class).lvl        = clamp01to04(quickSwitch);
             ensure(h, CarefulScholar.class).lvl     = clamp01to04(carefulScholar);
             ensure(h, CodexFundamentals.class).lvl  = clamp01to04(codexFund);
@@ -251,7 +260,6 @@ public class AriaT1Talents {
         // -- 매 턴 1회 호출
         public static void onHeroTurn(Hero h){
             // 내부 쿨다운 감소는 QuickSwitch.act()에서 처리됨
-            // 여기서는 아무 것도 하지 않아도 됨(유지 용도)
             ensure(h, QuickSwitch.class);
             ensure(h, CarefulScholar.class);
             ensure(h, CodexFundamentals.class);
@@ -260,11 +268,13 @@ public class AriaT1Talents {
         }
 
         // -- 원소 전환 훅
-        public static int onElementSwitch(Hero h){
-            return ensure(h, QuickSwitch.class).hasteOnSwitch();
-        }
+        /** 전환 시 줄 추가 감쇠치(음수). */
         public static int extraReductionOnSwitch(Hero h){
             return ensure(h, QuickSwitch.class).extraReductionOnSwitch();
+        }
+        /** 전환 시 부여할 Haste 턴수(0이면 미적용). */
+        public static int onElementSwitch(Hero h){
+            return ensure(h, QuickSwitch.class).hasteOnSwitch();
         }
 
         // -- 같은 속성 유지 축적 보정(기본 +12 등에서 이 값만큼 추가 감쇠)
@@ -286,10 +296,15 @@ public class AriaT1Talents {
         }
 
         // -- 상태이상 저항 보정
-        public static float statusResistBonus(Hero h, Status st, Overheat.Element currentElem){
+        public static float statusResistBonus(Hero h, Status st, OverheatElement currentElem){
             return ensure(h, ElementalGuardI.class).resistBonusFor(st, currentElem);
         }
 
+
+        /** Alias for docs: identical to statusResistBonus(...) */
+        public static float resistBonusFor(Hero h, Status st, OverheatElement currentElem){
+            return statusResistBonus(h, st, currentElem);
+        }
         // -- 코덱스 장탄/환급/층전환 훅
         public static int codexBonusBaseCharges(Hero h){
             return ensure(h, PageEconomy.class).bonusBaseCharges();

@@ -34,6 +34,12 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoBuff;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.Overheat;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.OverheatElement;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
+
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.ui.Component;
@@ -44,7 +50,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 
 public class BuffIndicator extends Component {
-	
+
 	//transparent icon
 	public static final int NONE    = 127;
 
@@ -136,36 +142,49 @@ public class BuffIndicator extends Component {
 	public static final int MANY_POWER  = 83;
 	public static final int SEAL_SHIELD = 84;
 	public static final int THROWN_WEP  = 85;
-	public static final int SHIELD      = 86;
-	public static final int MAGIC       = 86;
+	public static final int SHIELD      = 00;
+	public static final int CHARGE      = 86;
+	// ===== Aria Overheat buffet icons =====
+	public static final int OVERHEAT_0 	      = 87;
+	public static final int OVERHEAT_25       = 88;
+	public static final int OVERHEAT_50       = 89;
+	public static final int OVERHEAT_75       = 90;
+	public static final int OVERHEAT_100      = 91;
+	public static final int OVERHEAT_MELTDOWN = 92;
+	// Aria Element attunement overlay icons
+	public static final int OVERHEAT_FIRE 	  = 93;
+	public static final int OVERHEAT_WATER 	  = 94;
+	public static final int OVERHEAT_WIND 	  = 95;
+	public static final int OVERHEAT_EARTH    = 96;
 
 
 	public static final int SIZE_SMALL  = 7;
 	public static final int SIZE_LARGE  = 16;
-	
+
 	private static BuffIndicator heroInstance;
 	private static BuffIndicator bossInstance;
-	
+
 	private LinkedHashMap<Buff, BuffButton> buffButtons = new LinkedHashMap<>();
 	private boolean needsRefresh;
 	private Char ch;
 
 	private boolean large = false;
-	
+	private ElementPseudoBuff ariaElementBuff;
+
 	public BuffIndicator( Char ch, boolean large ) {
 		super();
-		
+
 		this.ch = ch;
 		this.large = large;
 		if (ch == Dungeon.hero) {
 			heroInstance = this;
 		}
 	}
-	
+
 	@Override
 	public void destroy() {
 		super.destroy();
-		
+
 		if (this == heroInstance) {
 			heroInstance = null;
 		}
@@ -194,6 +213,24 @@ public class BuffIndicator extends Component {
 
 		int size = large ? SIZE_LARGE : SIZE_SMALL;
 
+		// --- Aria: add element-attunement pseudo-buff icon next to Overheat gauge ---
+		// Find Overheat buff (if present) so we can show the element icon too.
+		Buff ariaOverheat = null;
+		for (Buff b : newBuffs){
+			if (b.getClass().getName().equals("com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.Overheat")){
+				ariaOverheat = b; break;
+			}
+		}
+		if (ariaOverheat != null){
+			if (ariaElementBuff == null) ariaElementBuff = new ElementPseudoBuff();
+			ariaElementBuff.updateFrom( readElementFromOverheat(ariaOverheat) );
+			if (!newBuffs.contains(ariaElementBuff)) newBuffs.add(ariaElementBuff);
+		} else {
+			// ensure we don't render stale element icon when Overheat is gone
+			if (ariaElementBuff != null) newBuffs.remove(ariaElementBuff);
+		}
+
+
 		//remove any icons no longer present
 		for (Buff buff : buffButtons.keySet().toArray(new Buff[0])){
 			if (!newBuffs.contains(buff)){
@@ -207,19 +244,19 @@ public class BuffIndicator extends Component {
 						super.updateValues( progress );
 						image.scale.set( 1 + 5 * progress );
 					}
-					
+
 					@Override
 					protected void onComplete() {
 						image.killAndErase();
 					}
 				} );
-				
+
 				buffButtons.get( buff ).destroy();
 				remove(buffButtons.get( buff ));
 				buffButtons.remove( buff );
 			}
 		}
-		
+
 		//add new icons
 		for (Buff buff : newBuffs) {
 			if (!buffButtons.containsKey(buff)) {
@@ -228,7 +265,7 @@ public class BuffIndicator extends Component {
 				buffButtons.put( buff, icon );
 			}
 		}
-		
+
 		//layout
 		int pos = 0;
 		float lastIconLeft = 0;
@@ -345,8 +382,16 @@ public class BuffIndicator extends Component {
 
 		@Override
 		protected void onClick() {
+			if (buff instanceof Overheat || buff instanceof ElementPseudoBuff){
+				final Hero hero = Dungeon.hero;
+				if (hero != null){
+					com.shatteredpixel.shatteredpixeldungeon.ui.aria.OverheatElementSwitch.show(hero);
+					return;
+				}
+			}
 			if (buff.icon() != NONE) GameScene.show(new WndInfoBuff(buff));
 		}
+
 
 		@Override
 		protected void onPointerDown() {
@@ -364,7 +409,7 @@ public class BuffIndicator extends Component {
 			return Messages.titleCase(buff.name());
 		}
 	}
-	
+
 	public static void refreshHero() {
 		if (heroInstance != null) {
 			heroInstance.needsRefresh = true;
@@ -392,4 +437,54 @@ public class BuffIndicator extends Component {
 	public static void setBossInstance(BuffIndicator boss){
 		bossInstance = boss;
 	}
+
+	// === Aria helpers ===
+	private static OverheatElement readElementFromOverheat(Buff overheatBuff){
+		if (overheatBuff == null) return null;
+		try {
+			// Prefer a public element() method if available
+			java.lang.reflect.Method m = overheatBuff.getClass().getMethod("element");
+			Object r = m.invoke(overheatBuff);
+			if (r instanceof OverheatElement) return (OverheatElement) r;
+		} catch (Exception ignored){}
+		try {
+			// Fallback to getElement()
+			java.lang.reflect.Method m = overheatBuff.getClass().getMethod("getElement");
+			Object r = m.invoke(overheatBuff);
+			if (r instanceof OverheatElement) return (OverheatElement) r;
+		} catch (Exception ignored){}
+		return null;
+	}
+
+	// A lightweight pseudo-buff so we can show an element icon in the indicator
+	private static class ElementPseudoBuff extends Buff {
+		private OverheatElement elem;
+
+		{
+			type = buffType.POSITIVE;
+			// no duration/fading, we just mirror current attunement
+		}
+
+		void updateFrom(OverheatElement e) {
+			this.elem = e;
+		}
+
+		@Override
+		public int icon() {
+			if (elem == null) return NONE;
+			switch (elem) {
+				case FIRE:
+					return OVERHEAT_FIRE;
+				case WATER:
+					return OVERHEAT_WATER;
+				case WIND:
+					return OVERHEAT_WIND;
+				case EARTH:
+					return OVERHEAT_EARTH;
+				default:
+					return NONE;
+			}
+		}
+	}
+
 }
