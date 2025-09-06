@@ -220,16 +220,16 @@ public class GameScene extends PixelScene {
 		}
 
 
-		// --- Aria Overheat auto-apply on level entry (idempotent) ---
-		try {
-			if (Dungeon.hero != null && Dungeon.hero.heroClass == HeroClass.ARIA
-					&& Dungeon.hero.buff(Overheat.class) == null) {
-				Buff.affect(Dungeon.hero, Overheat.class);
-			}
-		} catch (Throwable t) {
-			// Avoid breaking scene init if something goes wrong; log if your mod has a logger
-		}
-		// --- end Aria Overheat auto-apply ---
+//		// --- Aria Overheat auto-apply on level entry (idempotent) ---
+//		try {
+//			if (Dungeon.hero != null && Dungeon.hero.heroClass == HeroClass.ARIA
+//					&& Dungeon.hero.buff(Overheat.class) == null) {
+//				Buff.affect(Dungeon.hero, Overheat.class);
+//			}
+//		} catch (Throwable t) {
+//			// Avoid breaking scene init if something goes wrong; log if your mod has a logger
+//		}
+//		// --- end Aria Overheat auto-apply ---
 		Dungeon.level.playLevelMusic();
 
 		SPDSettings.lastClass(Dungeon.hero.heroClass.ordinal());

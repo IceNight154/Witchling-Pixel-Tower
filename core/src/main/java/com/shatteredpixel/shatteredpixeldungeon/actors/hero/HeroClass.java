@@ -27,6 +27,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.QuickSlot;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Harmony;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.aria.Aria_Overheat;
@@ -308,6 +310,8 @@ public enum HeroClass {
 		new SanctuaryManaField().random().collect();
 
  */
+
+		Buff.affect(hero, NewOverHeat.class);
 
 		new PotionOfStrength().random().collect();
 

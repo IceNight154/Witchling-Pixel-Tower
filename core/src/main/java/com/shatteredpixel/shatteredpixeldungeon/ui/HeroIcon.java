@@ -123,6 +123,11 @@ public class HeroIcon extends Image {
 	public static final int WEAPON_SWAP				      = 109;
 	public static final int MONK_ABILITIES				  = 110;
 
+	public static final int OVERHEAT_FIRE 	  = 112;
+	public static final int OVERHEAT_WATER 	  = 113;
+	public static final int OVERHEAT_WIND 	  = 114;
+	public static final int OVERHEAT_EARTH    = 115;
+
 	public HeroIcon(HeroSubClass subCls){
 		super( Assets.Interfaces.HERO_ICONS );
 		if (film == null){
