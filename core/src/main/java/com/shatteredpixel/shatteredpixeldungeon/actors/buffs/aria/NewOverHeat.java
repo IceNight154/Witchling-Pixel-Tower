@@ -284,9 +284,9 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
             case WATER:
                 return 0x05AAD3;
             case EARTH:
-                return 0x14EA83;
+                return 0xF5CB3F;
             case WIND:
-                return 0x5CB3F;
+                return 0x14EA83;
         }
     }
 
