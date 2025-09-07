@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
@@ -26,6 +27,8 @@ public class GrimoireAria extends Bag {
         image = ItemSpriteSheet.GRIMOIRE_ARIA;
 
         defaultAction = AC_SHOOT;
+
+        levelKnown = true;
     }
 
     @Override
@@ -77,6 +80,21 @@ public class GrimoireAria extends Bag {
         return Dungeon.hero == null ? 0 : Dungeon.hero.lvl/5;
     }
 
+    @Override
+    public int visiblyUpgraded() {
+        return level();
+    }
+
+    @Override
+    public int buffedVisiblyUpgraded() {
+        return buffedLvl();
+    }
+
+    @Override
+    public int buffedLvl() {
+        return level();
+    }
+
     public int min(int lvl) {
         return 5+lvl;
     }
@@ -86,7 +104,7 @@ public class GrimoireAria extends Bag {
     }
 
     public int magicDamage() {
-        return Hero.heroDamageIntRange(min(level()), max(level()));
+        return Hero.heroDamageIntRange(min(buffedLvl()), max(buffedLvl()));
     }
 
     public ManaBall knockBall(){
