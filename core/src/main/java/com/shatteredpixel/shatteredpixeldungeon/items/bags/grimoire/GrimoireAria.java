@@ -4,6 +4,8 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
@@ -121,6 +123,7 @@ public class GrimoireAria extends Bag {
             Char ch = Actor.findChar(cell);
             if (ch != null && ch != Dungeon.hero) {
                 ch.damage(GrimoireAria.this.magicDamage(), this);
+                Buff.affect(Dungeon.hero, NewOverHeat.class).heat(2);
             }
         }
 
