@@ -70,6 +70,9 @@ public class MagicRampage extends MeleeCodex {
                 RANGE);
     }
     protected void onCast(Hero hero, int cell) {
+        curItem = this;
+        beforeUse();
+
         if (hero == null) return;
 
         if (curUser == null) curUser = hero;
@@ -114,10 +117,7 @@ public class MagicRampage extends MeleeCodex {
         nextAnimStab = true;
 
         // 소모
-        // 사용 판정: curItem을 현재 코덱스로 설정하여 안전하게 onUse 실행
-        Item __prevItem = curItem;
-        try { beforeUse(); curItem = this; afterUse(); } finally { curItem = __prevItem; }
-        hero.spendAndNext(castDelay());
+        afterUse();
     }
 
     /**
