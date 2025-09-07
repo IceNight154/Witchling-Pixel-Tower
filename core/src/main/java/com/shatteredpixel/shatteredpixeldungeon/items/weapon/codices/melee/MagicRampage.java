@@ -116,7 +116,7 @@ public class MagicRampage extends MeleeCodex {
         // 소모
         // 사용 판정: curItem을 현재 코덱스로 설정하여 안전하게 onUse 실행
         Item __prevItem = curItem;
-        try { curItem = this; afterUse(); } finally { curItem = __prevItem; }
+        try { beforeUse(); curItem = this; afterUse(); } finally { curItem = __prevItem; }
         hero.spendAndNext(castDelay());
     }
 

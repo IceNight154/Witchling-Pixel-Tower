@@ -41,10 +41,13 @@ public class MagicBullet extends RangedCodex {
         final Char enemy = Actor.findChar(cell);
 
         if (enemy == null || enemy == curUser) {
+            beforeUse();
             parent = null;
 
             afterUse(); // 상위 클래스는 이 블록을 벗어나서 afterUse()를 실행하지만, 여기에서는 afterUse() 가 특수한 조건에서 작동하므로 여기서 실행합니다.
         } else {
+            beforeUse();
+
             onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
 
             final float DELAY = 0.05f; // 각 공격 간의 딜레이입니다.

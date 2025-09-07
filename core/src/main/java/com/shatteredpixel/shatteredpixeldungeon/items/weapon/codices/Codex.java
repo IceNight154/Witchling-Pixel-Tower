@@ -96,15 +96,15 @@ public class Codex extends Weapon {
             Sample.INSTANCE.play(Assets.Sounds.CURSED);
             GLog.w(Messages.get(Codex.class, "heavy_cursed"));
         }
+
+        // 오버히트 게이지를 올립니다.
+        Buff.affect(curUser, NewOverHeat.class).heat(8);
     }
 
     // 코덱스 사용 후 작동하는 코드입니다. 코덱스의 공격이나 작동 등 무언가 하고 나서 작동합니다.
     public void afterUse() {
         // 사용 시 턴 소모. 증강 시의 턴 변화를 반영합니다.
         curUser.spendAndNext(augment.delayFactor(castingTurn()));
-
-        // 오버히트 게이지를 올립니다.
-        Buff.affect(curUser, NewOverHeat.class).heat(8);
 
         // 사용 시 사용 횟수 감소
         decrementDurability();
