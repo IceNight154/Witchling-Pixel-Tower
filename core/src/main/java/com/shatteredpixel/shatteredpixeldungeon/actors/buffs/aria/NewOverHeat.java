@@ -1,16 +1,16 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
@@ -21,7 +21,6 @@ import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -70,6 +69,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     private int gauge = 0; // 현재 오버히트 게이지입니다. private이기 때문에 외부에서 접근할 수 없어요. 필요 시 cool()이나 heat()메서드로 조절해 주시면 됩니다.
     private ElementType element = ElementType.FIRE; // 버프 제공 당시 원소는 불로 지정했습니다.
+    private int meltdownDelay = 4; //멜트다운 시 act()에서 매 턴마다 1씩 감소합니다. 0이 되면 onMeltdown()을 호출합니다.
 
     public ElementType randomElement() { // 현재 원소를 랜덤한 원소로 바꾸되, 현재 원소와 달라질 때까지 반복하기 때문에 항상 현재 원소와 결과 원소는 같지 않습니다.
         ElementType newElement;
@@ -118,61 +118,28 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     public void heat(int amount) { // 게이지를 지정한 양만큼 늘리는 메서드입니다. 최대치 이상으로 늘어나지 않습니다.
         gauge = Math.min(OVERHEAT_MAX, gauge + amount);
         ActionIndicator.refresh();
-        //TODO: 필요한 경우 멜트다운 시 추가 동작을 구현해 주세요. 예시 코드는 다음과 같습니다.
-        if (isMeltDown()) {
-            // 멜트다운 이펙트 범위를 더 크게(1.6배), 강도를 약간 올려(1.2배) 0.25초 분사
-                        Emitter.Factory MELTDOWN = new ManaMeltdownParticle.Factory(1.3f, 1.2f);
-                        final int count = 12 + Random.Int(8); // 12~19개 정도로 분사
-                        CellEmitter.center(target.pos).burst(MELTDOWN, count);
-            //각종 이펙트 및 데미지 입히기, 버프 주기 등. target은 NewOverHeat 버프를 가진 Char 인스턴스를 의미합니다.
-            Buff.affect(target, Paralysis.class, 1f);
 
-            target.sprite.parent.add(new Tweener(target.sprite.parent, 1f) {
-                @Override
-                protected void updateValues(float progress) {
-                    Dungeon.hero.busy();
-                    if (Math.floor(100*progress/10f) == 1f) {
-                        setElement(ElementType.FIRE);
-                    }
-                    if (Math.floor(100*progress/10f) == 2f) {
-                        setElement(ElementType.WATER);
-                    }
-                    if (Math.floor(100*progress/10f) == 3f) {
-                        setElement(ElementType.EARTH);
-                    }
-                    if (Math.floor(100*progress/10f) == 4f) {
-                        setElement(ElementType.WIND);
-                    }
-                    if (Math.floor(100*progress/10f) == 5f) {
-                        setElement(ElementType.FIRE);
-                    }
-                    if (Math.floor(100*progress/10f) == 6f) {
-                        setElement(ElementType.WATER);
-                    }
-                    if (Math.floor(100*progress/10f) == 7f) {
-                        setElement(ElementType.EARTH);
-                    }
-                    if (Math.floor(100*progress/10f) == 8f) {
-                        setElement(ElementType.WIND);
-                    }
-                    if (Math.floor(100*progress/10f) == 9f) {
-                        setElement(ElementType.FIRE);
-                    }
-                    if (Math.floor(100*progress/10f) == 10f) {
-                        setElement(ElementType.WATER);
-                    }
-//                    if (Math.floor(100*progress % 20f) == 0 && progress < 1f) { // 0~1초 사이에서 0.1초 마다 실행
-//                        randomElement();
-//                    }
-                }
-
-                @Override
-                protected void onComplete() {
-                    randomElement();
-                    Dungeon.hero.next();
-                }
-            });
+        if (isMeltdown()) {
+            target.sprite.showStatus(CharSprite.WARNING, Messages.get(this, "meltdown"));
         }
+    }
+
+    public void onMeltdown() {
+        randomElement();
+
+        // 멜트다운 이펙트 범위를 더 크게(1.6배), 강도를 약간 올려(1.2배) 0.25초 분사
+        Emitter.Factory MELTDOWN = new ManaMeltdownParticle.Factory(1.3f, 1.2f);
+        final int count = 12 + Random.Int(8); // 12~19개 정도로 분사
+        CellEmitter.center(target.pos).burst(MELTDOWN, count);
+        //각종 이펙트 및 데미지 입히기, 버프 주기 등. target은 NewOverHeat 버프를 가진 Char 인스턴스를 의미합니다.
+        Buff.affect(target, Paralysis.class, 1f);
+
+        resetMeltdown();
+        gauge = 60;
+    }
+
+    public void resetMeltdown() {
+        meltdownDelay = 4;
     }
 
     public void cool(int amount) { // 게이지를 지정한 양만큼 줄이는 메서드입니다. 최소치 이하로 감소하지 않습니다.
@@ -196,7 +163,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         }
     }
 
-    public boolean isMeltDown() { // 현재 버프가 멜트다운인지 여부를 반환합니다.
+    public boolean isMeltdown() { // 현재 버프가 멜트다운인지 여부를 반환합니다.
         return heatLevel() == 5;
     }
 
@@ -215,8 +182,17 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     @Override
     public boolean act() {
         spend(TICK); //이게 없으면 무한로딩이 생기니 주의하세요.
-        gauge = Math.max(0, gauge - 1); //턴마다 1의 게이지를 감소시킵니다.
-        ActionIndicator.refresh();
+        if (isMeltdown()) {
+            meltdownDelay--;
+            if (meltdownDelay <= 0) {
+                onMeltdown();
+                return true;
+            }
+            target.sprite.showStatusWithIcon(CharSprite.WARNING, Integer.toString(meltdownDelay), FloatingText.TIME);
+        } else {
+            gauge = Math.max(0, gauge - 1); //턴마다 1의 게이지를 감소시킵니다.
+            ActionIndicator.refresh();
+        }
         return true;
     }
 
@@ -245,7 +221,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     @Override
     public String name() { // 버프의 이름입니다.
-        if (isMeltDown()) { // 멜트다운일 경우 다른 이름을 적용합니다.
+        if (isMeltdown()) { // 멜트다운일 경우 다른 이름을 적용합니다.
             return Messages.get(this, "name_meltDown", element.getName());
         } else { // 멜트다운이 아닐 경우 레벨에 따른 공통 이름을 적용합니다.
             return Messages.get(this, "name", heatLevel(), element.getName());
@@ -254,7 +230,11 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     @Override
     public String desc() { // 버프의 설명문입니다.
-        return Messages.get(this, "desc", heatLevel(), element.getName());
+        if (isMeltdown()) {
+            return Messages.get(this, "desc_meltdown", element.getName(), meltdownDelay);
+        } else {
+            return Messages.get(this, "desc", heatLevel(), element.getName());
+        }
     }
 
     @Override
@@ -266,6 +246,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     private static final String GAUGE = "gauge";
     private static final String ELEMENT = "element";
+    private static final String MELTDOWN_DELAY = "meltdownDelay";
 
     @Override
     public void storeInBundle(Bundle bundle) { // 변수들을 저장하는 메서드입니다.
@@ -273,6 +254,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
         bundle.put(GAUGE, gauge);
         bundle.put(ELEMENT, element);
+        bundle.put(MELTDOWN_DELAY, meltdownDelay);
     }
 
     @Override
@@ -281,6 +263,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
         gauge = bundle.getInt(GAUGE);
         element = bundle.getEnum(ELEMENT, ElementType.class);
+        meltdownDelay = bundle.getInt(MELTDOWN_DELAY);
 
         ActionIndicator.setAction(this);
     }
