@@ -204,6 +204,11 @@ public class Assets {
 		public static final String HEALTH_WARN      = "sounds/health_warn.mp3";
 		public static final String HEALTH_CRITICAL  = "sounds/health_critical.mp3";
 
+		public static final String ELEMENTAL_FIRE   = "sounds/elemental_fire.mp3";
+		public static final String ELEMENTAL_WATER  = "sounds/elemental_water.mp3";
+		public static final String ELEMENTAL_EARTH  = "sounds/elemental_earth.mp3";
+		public static final String ELEMENTAL_WIND   = "sounds/elemental_wind.mp3";
+
 		public static final String DESCEND  = "sounds/descend.mp3";
 		public static final String EAT      = "sounds/eat.mp3";
 		public static final String READ     = "sounds/read.mp3";
@@ -245,7 +250,7 @@ public class Assets {
 		public static final String CHAINS   = "sounds/chains.mp3";
 		public static final String SCAN     = "sounds/scan.mp3";
 		public static final String SHEEP    = "sounds/sheep.mp3";
-		public static final String MINE    = "sounds/mine.mp3";
+		public static final String MINE     = "sounds/mine.mp3";
 
 		public static final String[] all = new String[]{
 				CLICK, BADGE, GOLD,
@@ -255,6 +260,8 @@ public class Assets {
 				HIT, MISS, HIT_SLASH, HIT_STAB, HIT_CRUSH, HIT_MAGIC, HIT_STRONG, HIT_PARRY, HIT_BULLET, HIT_ARROW,
 				ATK_SPIRITBOW, ATK_CROSSBOW, ATK_GRIMOIRE, ATK_SWORD_SWEEP, ATK_SHEILD, ATK_SWORD_SLASH1, ATK_SWORD_SLASH2, ATK_SWORD_SLASH3, ATK_SWORD_STAB, ATK_CHARGE, ATK_SMASH, ATK_MELTDOWN,
 				HEALTH_WARN, HEALTH_CRITICAL,
+
+				ELEMENTAL_FIRE, ELEMENTAL_WATER, ELEMENTAL_EARTH, ELEMENTAL_WIND,
 
 				DESCEND, EAT, READ, LULLABY, DRINK, SHATTER, ZAP, LIGHTNING, LEVELUP, DEATH,
 				CHALLENGE, CURSED, TRAP, EVOKE, TOMB, ALERT, MELD, BOSS, BLAST, PLANT, RAY, BEACON,

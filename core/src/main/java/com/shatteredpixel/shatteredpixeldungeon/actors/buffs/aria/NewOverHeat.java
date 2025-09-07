@@ -115,6 +115,116 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     public static void onChangeElement() { //원소 변경 시 작동하는 코드입니다.
         //TODO: 원소 변경 시 나타나야 하는 이펙트, 사운드 출력 등을 추가해 주세요.
+        // Spawn an element-themed particle effect at the hero's position
+        com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero hero = com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
+        if (hero == null) return;
+
+        final int centerCell = hero.pos;
+
+        // Determine current element from the active NewOverHeat buff
+        ElementType elem = ElementType.FIRE;
+        try {
+            NewOverHeat oh = hero.buff(NewOverHeat.class);
+            if (oh != null) {
+                elem = oh.getElement();
+            }
+        } catch (Throwable ignored) {}
+
+        // Helper that tries different Emitter.start signatures at runtime,
+        // and falls back to burst(factory, count) when not available.
+        final com.watabou.noosa.particles.Emitter em =
+                com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell);
+
+        switch (elem) {
+            case FIRE: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_FIRE);
+                com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell)
+                        .burst(
+                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementFireBurstParticle.FACTORY,
+                                28
+                        );
+            } break;
+
+            case WATER: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WATER);
+                com.watabou.noosa.particles.Emitter.Factory factory =
+                        com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementWaterRippleParticle.FACTORY;
+                try {
+                    // Try: start(Factory, float interval, int count)
+                    try {
+                        em.getClass().getMethod(
+                                "start",
+                                com.watabou.noosa.particles.Emitter.Factory.class,
+                                float.class, int.class
+                        ).invoke(em, factory, 0.015f, 20);
+                    } catch (NoSuchMethodException e1) {
+                        // Try: start(Factory, float interval, float durationSec)
+                        try {
+                            em.getClass().getMethod(
+                                    "start",
+                                    com.watabou.noosa.particles.Emitter.Factory.class,
+                                    float.class, float.class
+                            ).invoke(em, factory, 0.015f, 0.30f);
+                        } catch (NoSuchMethodException e2) {
+                            // Fallback: burst
+                            em.getClass().getMethod(
+                                    "burst",
+                                    com.watabou.noosa.particles.Emitter.Factory.class,
+                                    int.class
+                            ).invoke(em, factory, 20);
+                        }
+                    }
+                } catch (Throwable ignored) {}
+            } break;
+
+            case EARTH: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_EARTH);
+                com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell)
+                        .burst(
+                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementEarthShardParticle.FACTORY,
+                                22
+                        );
+            } break;
+
+            case WIND: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WIND);
+                boolean ccw = com.watabou.utils.Random.Int(2) == 0;
+                com.watabou.noosa.particles.Emitter.Factory factory = ccw
+                        ? com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CCW
+                        : com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CW;
+
+                try {
+                    // Try: start(Factory, float interval, int count)
+                    try {
+                        em.getClass().getMethod(
+                                "start",
+                                com.watabou.noosa.particles.Emitter.Factory.class,
+                                float.class, int.class
+                        ).invoke(em, factory, 0.015f, 24);
+                    } catch (NoSuchMethodException e1) {
+                        // Try: start(Factory, float interval, float durationSec)
+                        try {
+                            em.getClass().getMethod(
+                                    "start",
+                                    com.watabou.noosa.particles.Emitter.Factory.class,
+                                    float.class, float.class
+                            ).invoke(em, factory, 0.015f, 0.30f);
+                        } catch (NoSuchMethodException e2) {
+                            // Fallback: burst
+                            em.getClass().getMethod(
+                                    "burst",
+                                    com.watabou.noosa.particles.Emitter.Factory.class,
+                                    int.class
+                            ).invoke(em, factory, 24);
+                        }
+                    }
+                } catch (Throwable ignored) {}
+            } break;
+
+            default:
+                // no-op
+                break;
+        }
     }
 
     public void heat(int amount) { // 게이지를 지정한 양만큼 늘리는 메서드입니다. 최대치 이상으로 늘어나지 않습니다.
