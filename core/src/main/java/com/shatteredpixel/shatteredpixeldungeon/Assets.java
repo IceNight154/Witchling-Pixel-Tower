@@ -200,6 +200,7 @@ public class Assets {
 		public static final String ATK_SMASH     	= "sounds/atk_smash.mp3";
 		public static final String ATK_GRIMOIRE     = "sounds/atk_grimoire.mp3";
 		public static final String ATK_CROSSBOW     = "sounds/atk_crossbow.mp3";
+		public static final String ATK_MELTDOWN     = "sounds/atk_meltdown.mp3";
 		public static final String HEALTH_WARN      = "sounds/health_warn.mp3";
 		public static final String HEALTH_CRITICAL  = "sounds/health_critical.mp3";
 
@@ -252,7 +253,7 @@ public class Assets {
 				OPEN, UNLOCK, ITEM, DEWDROP, STEP, WATER, GRASS, TRAMPLE, STURDY,
 
 				HIT, MISS, HIT_SLASH, HIT_STAB, HIT_CRUSH, HIT_MAGIC, HIT_STRONG, HIT_PARRY, HIT_BULLET, HIT_ARROW,
-				ATK_SPIRITBOW, ATK_CROSSBOW, ATK_GRIMOIRE, ATK_SWORD_SWEEP, ATK_SHEILD, ATK_SWORD_SLASH1, ATK_SWORD_SLASH2, ATK_SWORD_SLASH3, ATK_SWORD_STAB, ATK_CHARGE, ATK_SMASH,
+				ATK_SPIRITBOW, ATK_CROSSBOW, ATK_GRIMOIRE, ATK_SWORD_SWEEP, ATK_SHEILD, ATK_SWORD_SLASH1, ATK_SWORD_SLASH2, ATK_SWORD_SLASH3, ATK_SWORD_STAB, ATK_CHARGE, ATK_SMASH, ATK_MELTDOWN,
 				HEALTH_WARN, HEALTH_CRITICAL,
 
 				DESCEND, EAT, READ, LULLABY, DRINK, SHATTER, ZAP, LIGHTNING, LEVELUP, DEATH,

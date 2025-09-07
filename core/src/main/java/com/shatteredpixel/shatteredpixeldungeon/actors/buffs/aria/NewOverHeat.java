@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
@@ -20,6 +21,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PointF;
@@ -125,6 +127,8 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     }
 
     public void onMeltdown() {
+        Sample.INSTANCE.play(Assets.Sounds.ATK_MELTDOWN);
+
         randomElement();
 
         // 멜트다운 이펙트 범위를 더 크게(1.6배), 강도를 약간 올려(1.2배) 0.25초 분사
