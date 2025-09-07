@@ -1,10 +1,13 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -17,6 +20,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
+import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PointF;
@@ -114,13 +118,19 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     public void heat(int amount) { // 게이지를 지정한 양만큼 늘리는 메서드입니다. 최대치 이상으로 늘어나지 않습니다.
         gauge = Math.min(OVERHEAT_MAX, gauge + amount);
         ActionIndicator.refresh();
+        //TODO: 필요한 경우 멜트다운 시 추가 동작을 구현해 주세요. 예시 코드는 다음과 같습니다.
         if (isMeltDown()) {
+            // 멜트다운 이펙트 범위를 더 크게(1.6배), 강도를 약간 올려(1.2배) 0.25초 분사
+                        Emitter.Factory MELTDOWN = new ManaMeltdownParticle.Factory(1.3f, 1.2f);
+                        final int count = 12 + Random.Int(8); // 12~19개 정도로 분사
+                        CellEmitter.center(target.pos).burst(MELTDOWN, count);
+            //각종 이펙트 및 데미지 입히기, 버프 주기 등. target은 NewOverHeat 버프를 가진 Char 인스턴스를 의미합니다.
+            Buff.affect(target, Paralysis.class, 1f);
+
             target.sprite.parent.add(new Tweener(target.sprite.parent, 1f) {
                 @Override
                 protected void updateValues(float progress) {
                     Dungeon.hero.busy();
-                    gauge = 100;
-
                     if (Math.floor(100*progress/10f) == 1f) {
                         setElement(ElementType.FIRE);
                     }
@@ -158,18 +168,11 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
                 @Override
                 protected void onComplete() {
-                    onMeltDown();
+                    randomElement();
                     Dungeon.hero.next();
                 }
             });
         }
-    }
-
-    public void onMeltDown() { //멜트다운 시 각종 이펙트 및 효과.
-        Buff.affect(Dungeon.hero, Paralysis.class, 1f);
-        randomElement();
-        
-        //TODO: 필요한 경우 멜트다운 시 추가 동작을 구현해 주세요.
     }
 
     public void cool(int amount) { // 게이지를 지정한 양만큼 줄이는 메서드입니다. 최소치 이하로 감소하지 않습니다.
