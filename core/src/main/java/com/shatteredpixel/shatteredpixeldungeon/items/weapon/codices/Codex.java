@@ -3,6 +3,8 @@ package com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
@@ -100,6 +102,9 @@ public class Codex extends Weapon {
     public void afterUse() {
         // 사용 시 턴 소모. 증강 시의 턴 변화를 반영합니다.
         curUser.spendAndNext(augment.delayFactor(castingTurn()));
+
+        // 오버히트 게이지를 올립니다.
+        Buff.affect(curUser, NewOverHeat.class).heat(8);
 
         //사용 시 사용 횟수 감소
         decrementDurability();
