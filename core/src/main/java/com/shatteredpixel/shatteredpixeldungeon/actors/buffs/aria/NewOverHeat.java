@@ -108,6 +108,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     public void heat(int amount) { // 게이지를 지정한 양만큼 늘리는 메서드입니다. 최대치 이상으로 늘어나지 않습니다.
         gauge = Math.min(OVERHEAT_MAX, gauge + amount);
+        ActionIndicator.refresh();
         //TODO: 필요한 경우 멜트다운 시 추가 동작을 구현해 주세요. 예시 코드는 다음과 같습니다.
         /*
         if (isMeltDown()) {
@@ -119,6 +120,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     public void cool(int amount) { // 게이지를 지정한 양만큼 줄이는 메서드입니다. 최소치 이하로 감소하지 않습니다.
         gauge = Math.max(0, gauge - amount);
+        ActionIndicator.refresh();
     }
 
     public int heatLevel() { // 현재 게이지에 따른 오버히트 레벨을 반환합니다.
@@ -157,6 +159,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     public boolean act() {
         spend(TICK); //이게 없으면 무한로딩이 생기니 주의하세요.
         gauge = Math.max(0, gauge - 1); //턴마다 1의 게이지를 감소시킵니다.
+        ActionIndicator.refresh();
         return true;
     }
 
