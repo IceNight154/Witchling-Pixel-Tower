@@ -3,6 +3,8 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -15,6 +17,7 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndTitledMessage;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
+import com.watabou.noosa.tweeners.Tweener;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
@@ -84,11 +87,13 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         } while (newElement == element);
 
         element = newElement;
+        ActionIndicator.refresh();
         return element; // 바뀐 원소를 반환합니다. 예를 들어 Glog.i()를 사용해 원소를 %s로 바꾸었다. 등의 문구를 출력할 수 있겠네요.
     }
 
     public ElementType setElement(ElementType element) { // 원소를 매개변수에 들어온 값으로 변경하고 그 결과를 반환합니다.
         this.element = element;
+        ActionIndicator.refresh();
         return element;
     }
 
@@ -110,12 +115,56 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         gauge = Math.min(OVERHEAT_MAX, gauge + amount);
         ActionIndicator.refresh();
         //TODO: 필요한 경우 멜트다운 시 추가 동작을 구현해 주세요. 예시 코드는 다음과 같습니다.
-        /*
         if (isMeltDown()) {
             //각종 이펙트 및 데미지 입히기, 버프 주기 등. target은 NewOverHeat 버프를 가진 Char 인스턴스를 의미합니다.
-            Buff.affect(target, Exhaustion.class, 1f);
+            Buff.affect(target, Paralysis.class, 1f);
+
+            target.sprite.parent.add(new Tweener(target.sprite.parent, 1f) {
+                @Override
+                protected void updateValues(float progress) {
+                    Dungeon.hero.busy();
+                    if (Math.floor(100*progress/10f) == 1f) {
+                        setElement(ElementType.FIRE);
+                    }
+                    if (Math.floor(100*progress/10f) == 2f) {
+                        setElement(ElementType.WATER);
+                    }
+                    if (Math.floor(100*progress/10f) == 3f) {
+                        setElement(ElementType.EARTH);
+                    }
+                    if (Math.floor(100*progress/10f) == 4f) {
+                        setElement(ElementType.WIND);
+                    }
+                    if (Math.floor(100*progress/10f) == 5f) {
+                        setElement(ElementType.FIRE);
+                    }
+                    if (Math.floor(100*progress/10f) == 6f) {
+                        setElement(ElementType.WATER);
+                    }
+                    if (Math.floor(100*progress/10f) == 7f) {
+                        setElement(ElementType.EARTH);
+                    }
+                    if (Math.floor(100*progress/10f) == 8f) {
+                        setElement(ElementType.WIND);
+                    }
+                    if (Math.floor(100*progress/10f) == 9f) {
+                        setElement(ElementType.FIRE);
+                    }
+                    if (Math.floor(100*progress/10f) == 10f) {
+                        setElement(ElementType.WATER);
+                    }
+//                    if (Math.floor(100*progress % 20f) == 0 && progress < 1f) { // 0~1초 사이에서 0.1초 마다 실행
+//                        randomElement();
+//                    }
+                }
+
+                @Override
+                protected void onComplete() {
+                    randomElement();
+                    Dungeon.hero.next();
+                }
+            });
         }
-        */
     }
 
     public void cool(int amount) { // 게이지를 지정한 양만큼 줄이는 메서드입니다. 최소치 이하로 감소하지 않습니다.
