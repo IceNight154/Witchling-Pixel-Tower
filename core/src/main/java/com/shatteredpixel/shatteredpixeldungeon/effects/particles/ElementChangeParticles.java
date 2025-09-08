@@ -38,7 +38,7 @@ public final class ElementChangeParticles {
         };
 
         // 컬러(시작=노랑빛, 끝=불꽃 주황/붉은색)
-        private static final int COL_START = 0xFFE5A1; // 밝은 노랑
+        private static final int COL_START = 0xE24F2E; // 밝은 노랑
         private static final int COL_END   = 0xE24F2E; // 불꽃 주황/붉은색 (#e24f2e)
 
         private float baseSize;
@@ -180,12 +180,12 @@ public final class ElementChangeParticles {
     public static class ElementEarthChunkParticle extends PixelParticle {
 
         private static final int COLOR = 0xF5CB3F; // EARTH 베이스 컬러
-        private static final float SIZE_MIN = 1.4f;     // 덩어리 최소 픽셀 크기
-        private static final float SIZE_MAX = 2.6f;     // 덩어리 최대 픽셀 크기
-        private static final float UP_V_MIN = -28f;     // 초기 상승 속도 y (음수=위로)
-        private static final float UP_V_MAX = -42f;
-        private static final float OUT_V_MIN = 10f;     // 바깥으로 퍼지는 속도
-        private static final float OUT_V_MAX = 24f;
+        private static final float SIZE_MIN = 1.0f;     // 덩어리 최소 픽셀 크기
+        private static final float SIZE_MAX = 2.0f;     // 덩어리 최대 픽셀 크기
+        private static final float UP_V_MIN = -24f;     // 초기 상승 속도 y (음수=위로)
+        private static final float UP_V_MAX = -36f;
+        private static final float OUT_V_MIN = 4f;     // 바깥으로 퍼지는 속도
+        private static final float OUT_V_MAX = 10f;
         private static final float GRAVITY_MIN = 140f;  // 중력 가속도(아래로 +)
         private static final float GRAVITY_MAX = 200f;
 
@@ -205,10 +205,10 @@ public final class ElementChangeParticles {
 
             this.owner = owner;
             this.color(COLOR);
-            this.am = 1f;
+            this.am = 0.9f;
 
             // 시작 위치: 중심에서 짧은 반지름 링 범위
-            float r = Random.Float(ECfg.TARGET_RADIUS * 0.12f, ECfg.TARGET_RADIUS * 0.28f);
+            float r = Random.Float(ECfg.TARGET_RADIUS * 0.28f, ECfg.TARGET_RADIUS * 0.48f);
             float a = Random.Float(0f, 360f);
             float rad = (float)Math.toRadians(a);
             this.x = cx + (float)Math.cos(rad) * r;
@@ -228,7 +228,7 @@ public final class ElementChangeParticles {
             speed.y += Random.Float(UP_V_MIN, UP_V_MAX);
 
             // 중력
-            acc.set(0f, Random.Float(GRAVITY_MIN, GRAVITY_MAX));
+            acc.set(0f, -Random.Float(20f, 45f));
         }
 
         @Override
@@ -282,15 +282,15 @@ public final class ElementChangeParticles {
                 0xBEA044, 0xCFAF4C, 0xA98E3B, 0x8F7D33
         };
 
-        private static final float SIZE_MIN = 0.7f;
-        private static final float SIZE_MAX = 1.1f;
+        private static final float SIZE_MIN = 1.0f;
+        private static final float SIZE_MAX = 2.0f;
         private static final float LIFE_MIN = ECfg.LIFE_MIN * 0.65f;
         private static final float LIFE_MAX = ECfg.LIFE_MAX * 0.80f;
 
         // 미세한 확산 + 약한 중력, 빠른 페이드아웃 느낌
-        private static final float OUT_V_MIN = 6f;
-        private static final float OUT_V_MAX = 14f;
-        private static final float GRAVITY = 110f;
+        private static final float OUT_V_MIN = 4f;
+        private static final float OUT_V_MAX = 10f;
+        private static final float GRAVITY = -18f;
 
         @Override
         public void update() {
@@ -299,7 +299,35 @@ public final class ElementChangeParticles {
             speed.scale(0.985f);
         }
 
+
+        public void resetAroundCenter(float cx, float cy) {
+            revive();
+
+            this.color(PALETTE[Random.Int(PALETTE.length)]);
+            this.am = 1f;
+
+            // 시작 위치: 캐릭터 주변의 링(고리)에서 생성되도록
+            float r = Random.Float(ECfg.TARGET_RADIUS * 0.32f, ECfg.TARGET_RADIUS * 0.55f);
+            float a = Random.Float(0f, 360f);
+            float rad = (float)Math.toRadians(a);
+            this.x = cx + (float)Math.cos(rad) * r;
+            this.y = cy + (float)Math.sin(rad) * r;
+
+            size(Random.Float(SIZE_MIN, SIZE_MAX));
+            lifespan = Random.Float(LIFE_MIN, LIFE_MAX);
+            left = lifespan;
+
+            // 은은히 바깥쪽 + 위로 떠오르는 초깃속도
+            float v = Random.Float(OUT_V_MIN, OUT_V_MAX);
+            speed.polar(a, v);
+            speed.y += Random.Float(ElementEarthChunkParticle.UP_V_MIN, ElementEarthChunkParticle.UP_V_MAX);
+
+            // 아주 약한 '상승 감쇠/부력' 가속
+            acc.set(0f, GRAVITY);
+        }
+
         public void resetAtPoint(float x, float y) {
+
             revive();
 
             this.color(PALETTE[Random.Int(PALETTE.length)]);
@@ -325,7 +353,7 @@ public final class ElementChangeParticles {
             @Override
             public void emit(Emitter emitter, int index, float x, float y) {
                 ((ElementEarthDustParticle) emitter.recycle(ElementEarthDustParticle.class))
-                        .resetAtPoint(x, y);
+                        .resetAroundCenter(x, y);
             }
 
             @Override
