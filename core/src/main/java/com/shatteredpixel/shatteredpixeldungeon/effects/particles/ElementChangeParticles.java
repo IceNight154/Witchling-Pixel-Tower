@@ -10,7 +10,7 @@ import com.watabou.utils.Random;
 public final class ElementChangeParticles {
 
     /**
-     * 🔧 공통 설정: 여기 숫자만 고치면 4원소가 모두 같은 톤으로 맞춰짐
+     *  공통 설정: 여기 숫자만 고치면 4원소가 모두 같은 톤으로 맞춰짐
      */
     public static final class ECfg {
         public static final float LIFE_MIN = 0.36f;   // 개별 파티클 수명(최소)
@@ -21,61 +21,94 @@ public final class ElementChangeParticles {
         public static final float SPEED_BOOST = 1.10f; // 1.0~1.2 권장
     }
 
-    /* ===================== FIRE (방사 스파크) ===================== */
+    /* ===================== FIRE (타오름) ===================== */
 
-    public static class ElementFireBurstParticle extends PixelParticle {
-        private static final int COLOR = 0xE24F2E;
-        public static final Emitter.Factory FACTORY = new Factory();
+    public static class ElementFireMantleParticle extends PixelParticle {
 
-        private float baseSize, phase, freq;
+        public static final Emitter.Factory FACTORY = new Emitter.Factory() {
+            @Override
+            public void emit(Emitter emitter, int index, float x, float y) {
+                ((ElementFireMantleParticle) emitter.recycle(ElementFireMantleParticle.class))
+                        .resetAtCenter(x, y);
+            }
+            @Override
+            public boolean lightMode() { // additive 느낌
+                return true;
+            }
+        };
 
-        public ElementFireBurstParticle() {
-            super();
-            color(COLOR);
-            am = 0f;
-        }
+        // 컬러(시작=노랑빛, 끝=불꽃 주황/붉은색)
+        private static final int COL_START = 0xFFE5A1; // 밝은 노랑
+        private static final int COL_END   = 0xE24F2E; // 불꽃 주황/붉은색 (#e24f2e)
 
-        public void reset(float cx, float cy) {
+        private float baseSize;
+        private float phase, wobbleAmp, wobbleFreq;
+
+        // 수직 상승 속도/감쇠 계수 (공통 ECfg와 조화)
+        private static final float UPSPEED_MIN = 22f;
+        private static final float UPSPEED_MAX = 32f;
+        private static final float DRAG        = 1.15f;  // 숫자 올릴수록 몸 주변 링이 커짐
+
+        public void resetAtCenter(float cx, float cy) {
             revive();
-            // 통일: 시작 난수
-            this.x = cx + Random.Float(-ECfg.SPAWN_JITTER, ECfg.SPAWN_JITTER);
-            this.y = cy + Random.Float(-ECfg.SPAWN_JITTER, ECfg.SPAWN_JITTER);
 
+            // 캐릭터 몸 가까이에서 시작 (작은 링)
+            float ang = Random.Float(0f, (float)(Math.PI * 2.0));
+            float r0  = Random.Float(3.5f, 7.5f); // 너무 바깥으로 안 나가게
+            this.x = cx + (float)Math.cos(ang) * r0;
+            this.y = cy + (float)Math.sin(ang) * r0;
+
+            // 공통 수명 사용(파일 상단 ECfg의 값에 맞춰 동일 톤 유지)
             left = lifespan = Random.Float(ECfg.LIFE_MIN, ECfg.LIFE_MAX);
 
-            float ang = Random.Float(0f, (float) (Math.PI * 2.0));
-            float v = (ECfg.TARGET_RADIUS / left) * ECfg.SPEED_BOOST;
-            speed.polar(ang, v);
+            // 위로 떠오르는 기본 속도 + 약간의 좌우 무작위
+            float vy = -Random.Float(UPSPEED_MIN, UPSPEED_MAX); // 화면 좌표계 기준 위쪽은 보통 -Y
+            float vx = Random.Float(-6f, 6f);
+            speed.set(vx, vy);
 
-            // 불: 꼬리 짧게 (감쇠 강)
-            acc.set(-speed.x * 2.4f, -speed.y * 2.4f);
+            // 감쇠(마찰) - speed 반대 방향으로 서서히 느려지게
+            acc.set(-speed.x * (DRAG - 1f), -speed.y * (DRAG - 1f));
 
-            baseSize = Random.Float(1.2f, 2.0f);
+            // 크기/깜빡임 파라미터
+            baseSize   = Random.Float(1.5f, 2.4f);
             size(baseSize);
-            phase = Random.Float(0f, (float) (Math.PI * 2.0));
-            freq = Random.Float(10f, 16f);
+            am = 1.0f;
+
+            wobbleAmp  = Random.Float(2.0f, 5.0f);   // 좌우 요동 폭
+            wobbleFreq = Random.Float(7.0f, 11.0f);  // 요동 주기
+            phase      = Random.Float(0f, (float)(Math.PI * 2.0));
+
+            // 시작 색은 밝은 노랑
+            hardlight(COL_START);
         }
 
         @Override
         public void update() {
             super.update();
-            float p = left / lifespan, age = lifespan - left;
-            float env = (p < 0.12f) ? (p / 0.12f) : (p > 0.82f ? (1f - p) / 0.18f : 1f);
-            float flicker = 0.80f + 0.20f * (float) Math.sin(phase + age * freq);
-            am = Math.min(1f, flicker * env);
-            size(baseSize * (0.95f + 0.30f * (1f - p)));
+
+            // 진행도 0→1
+            float t = 1f - (left / lifespan);
+
+            // 좌우 요동 (시간에 따라 흔들리게)
+            x += (float)Math.sin(Game.timeTotal * wobbleFreq + phase) * Game.elapsed * wobbleAmp;
+
+            // 크기/투명도(불꽃이 위로 가며 수축/사라짐)
+            float sz = baseSize * (1.05f - 0.85f * t); // 서서히 작아짐
+            size(Math.max(0.75f, sz));
+            am = 1.0f - t; // 천천히 페이드아웃
+
+            // 색상 그라데이션: 노랑→주황/붉은색
+            hardlight(lerpColor(COL_START, COL_END, t));
         }
 
-        public static class Factory extends Emitter.Factory {
-            @Override
-            public void emit(Emitter emitter, int index, float x, float y) {
-                ((ElementFireBurstParticle) emitter.recycle(ElementFireBurstParticle.class)).reset(x, y);
-            }
-
-            @Override
-            public boolean lightMode() {
-                return true;
-            }
+        private static int lerpColor(int c1, int c2, float t) {
+            t = Math.max(0f, Math.min(1f, t));
+            int r1 = (c1 >> 16) & 0xFF, g1 = (c1 >> 8) & 0xFF, b1 = c1 & 0xFF;
+            int r2 = (c2 >> 16) & 0xFF, g2 = (c2 >> 8) & 0xFF, b2 = c2 & 0xFF;
+            int r = (int)(r1 + (r2 - r1) * t);
+            int g = (int)(g1 + (g2 - g1) * t);
+            int b = (int)(b1 + (b2 - b1) * t);
+            return (r << 16) | (g << 8) | b;
         }
     }
 
@@ -144,62 +177,162 @@ public final class ElementChangeParticles {
 
     /* ===================== EARTH (파편/먼지) ===================== */
 
-    public static class ElementEarthShardParticle extends PixelParticle {
-        private static final int COLOR = 0xF5CB3F;
-        public static final Emitter.Factory FACTORY = new Factory();
+    public static class ElementEarthChunkParticle extends PixelParticle {
 
-        private float baseSize, phase, freq;
+        private static final int COLOR = 0xF5CB3F; // EARTH 베이스 컬러
+        private static final float SIZE_MIN = 1.4f;     // 덩어리 최소 픽셀 크기
+        private static final float SIZE_MAX = 2.6f;     // 덩어리 최대 픽셀 크기
+        private static final float UP_V_MIN = -28f;     // 초기 상승 속도 y (음수=위로)
+        private static final float UP_V_MAX = -42f;
+        private static final float OUT_V_MIN = 10f;     // 바깥으로 퍼지는 속도
+        private static final float OUT_V_MAX = 24f;
+        private static final float GRAVITY_MIN = 140f;  // 중력 가속도(아래로 +)
+        private static final float GRAVITY_MAX = 200f;
 
-        public ElementEarthShardParticle() {
-            super();
-            color(COLOR);
-            am = 0f;
-        }
+        // 덩어리 수명: 공통 톤에 맞추되, 후반부에 "부서짐"을 연출하려고 살짝 길게
+        private static final float LIFE_MIN = ECfg.LIFE_MIN + 0.08f;
+        private static final float LIFE_MAX = ECfg.LIFE_MAX + 0.10f;
 
-        public void reset(float cx, float cy) {
+        private float baseSize;
+        private boolean shattered = false;
+        private Emitter owner;
+        private static final float DEG2RAD = (float)(Math.PI / 180f);
+
+
+        // 중심을 기준으로 리셋 (캐릭터 중심에서 살짝 퍼지게)
+        public void resetAtCenter(float cx, float cy, Emitter owner) {
             revive();
-            this.x = cx + Random.Float(-ECfg.SPAWN_JITTER, ECfg.SPAWN_JITTER);
-            this.y = cy + Random.Float(-ECfg.SPAWN_JITTER, ECfg.SPAWN_JITTER);
 
-            left = lifespan = Random.Float(ECfg.LIFE_MIN, ECfg.LIFE_MAX);
+            this.owner = owner;
+            this.color(COLOR);
+            this.am = 1f;
 
-            float ang = Random.Float(0f, (float) (Math.PI * 2.0));
-            float v = (ECfg.TARGET_RADIUS / left) * (ECfg.SPEED_BOOST * 0.95f);
-            speed.polar(ang, v);
-            // 땅: 낮게 깔리도록 약간 아래 컴포넌트
-            speed.y += v * 0.30f;
+            // 시작 위치: 중심에서 짧은 반지름 링 범위
+            float r = Random.Float(ECfg.TARGET_RADIUS * 0.12f, ECfg.TARGET_RADIUS * 0.28f);
+            float a = Random.Float(0f, 360f);
+            float rad = (float)Math.toRadians(a);
+            this.x = cx + (float)Math.cos(rad) * r;
+            this.y = cy + (float)Math.sin(rad) * r;
 
-            // 땅: 비가산 + 감쇠 강 (무게감)
-            acc.set(-speed.x * 2.0f, -speed.y * 2.0f);
-
-            baseSize = Random.Float(1.2f, 2.0f);
+            // 크고 작은 조각 섞이도록 사이즈 랜덤
+            baseSize = Random.Float(SIZE_MIN, SIZE_MAX);
             size(baseSize);
-            phase = Random.Float(0f, (float) (Math.PI * 2.0));
-            freq = Random.Float(7f, 10f);
+
+            // 수명
+            lifespan = Random.Float(LIFE_MIN, LIFE_MAX);
+            left = lifespan;
+
+            // 바깥으로 살짝 + 위로 상승
+            float out = Random.Float(OUT_V_MIN, OUT_V_MAX);
+            speed.polar(a, out);
+            speed.y += Random.Float(UP_V_MIN, UP_V_MAX);
+
+            // 중력
+            acc.set(0f, Random.Float(GRAVITY_MIN, GRAVITY_MAX));
         }
 
         @Override
         public void update() {
             super.update();
-            float p = left / lifespan, age = lifespan - left;
-            float t = 1f - p;
-            float env = Math.max(0f, 1f - t * 1.1f);
-            float flicker = 0.65f + 0.15f * (float) Math.sin(phase + age * freq);
-            am = Math.min(1f, flicker * env);
-            size(baseSize * (0.95f + 0.22f * (1f - p)));
+
+            // 진행도 0→1
+            float t = 1f - (left / lifespan);
+
+            // 덩어리 점차 작아지며 마찰감(질량감) 표현
+            // 초반에는 거의 유지, 후반으로 갈수록 40~60% 정도까지 축소
+            float shrink = 1f - 0.6f * t;
+            size(Math.max(0.6f, baseSize * shrink));
+
+            // 거의 끝나갈 때 한 번만 "부서짐" 판정
+            if (!shattered && left <= lifespan * 0.20f) {
+                shattered = true;
+                if (owner != null) {
+                    owner.burst(ElementEarthDustParticle.FACTORY, Random.IntRange(6, 10));
+                }
+            }
         }
 
-        public static class Factory extends Emitter.Factory {
+        @Override
+        public void kill() {
+            // 혹시 못 터졌다면 여기서라도 모래를 생성
+            if (!shattered && owner != null) {
+                owner.burst(ElementEarthDustParticle.FACTORY, Random.IntRange(4, 7));
+            }
+            super.kill();
+        }
+
+        public static final Emitter.Factory FACTORY = new Emitter.Factory() {
             @Override
             public void emit(Emitter emitter, int index, float x, float y) {
-                ((ElementEarthShardParticle) emitter.recycle(ElementEarthShardParticle.class)).reset(x, y);
+                ((ElementEarthChunkParticle) emitter.recycle(ElementEarthChunkParticle.class))
+                        .resetAtCenter(x, y, emitter);
             }
 
             @Override
             public boolean lightMode() {
                 return false;
-            } // 땅은 비가산
+            }
+        };
+    }
+
+    public static class ElementEarthDustParticle extends PixelParticle {
+
+        // 모래는 본색보다 어둡고 밝은 톤을 섞어서 질감
+        private static final int[] PALETTE = new int[]{
+                0xBEA044, 0xCFAF4C, 0xA98E3B, 0x8F7D33
+        };
+
+        private static final float SIZE_MIN = 0.7f;
+        private static final float SIZE_MAX = 1.1f;
+        private static final float LIFE_MIN = ECfg.LIFE_MIN * 0.65f;
+        private static final float LIFE_MAX = ECfg.LIFE_MAX * 0.80f;
+
+        // 미세한 확산 + 약한 중력, 빠른 페이드아웃 느낌
+        private static final float OUT_V_MIN = 6f;
+        private static final float OUT_V_MAX = 14f;
+        private static final float GRAVITY = 110f;
+
+        @Override
+        public void update() {
+            super.update();
+            // 아주 약간의 감속으로 공기 저항감
+            speed.scale(0.985f);
         }
+
+        public void resetAtPoint(float x, float y) {
+            revive();
+
+            this.color(PALETTE[Random.Int(PALETTE.length)]);
+            this.am = 1f;
+
+            this.x = x;
+            this.y = y;
+
+            size(Random.Float(SIZE_MIN, SIZE_MAX));
+            lifespan = Random.Float(LIFE_MIN, LIFE_MAX);
+            left = lifespan;
+
+            // 사방으로 흩뿌려지되 수평 확산 비중 ↑
+            float a = Random.Float(0f, 360f);
+            float v = Random.Float(OUT_V_MIN, OUT_V_MAX);
+            speed.polar(a, v);
+
+            // 약한 중력으로 아래로 가라앉음
+            acc.set(0f, GRAVITY);
+        }
+
+        public static final Emitter.Factory FACTORY = new Emitter.Factory() {
+            @Override
+            public void emit(Emitter emitter, int index, float x, float y) {
+                ((ElementEarthDustParticle) emitter.recycle(ElementEarthDustParticle.class))
+                        .resetAtPoint(x, y);
+            }
+
+            @Override
+            public boolean lightMode() {
+                return false;
+            }
+        };
     }
 
     /* ===================== WIND (소용돌이) ===================== */

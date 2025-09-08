@@ -140,7 +140,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
                 Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_FIRE);
                 com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell)
                         .burst(
-                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementFireBurstParticle.FACTORY,
+                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementFireMantleParticle.FACTORY,
                                 28
                         );
             } break;
@@ -181,7 +181,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
                 Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_EARTH);
                 com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell)
                         .burst(
-                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementEarthShardParticle.FACTORY,
+                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementEarthChunkParticle.FACTORY,
                                 22
                         );
             } break;
