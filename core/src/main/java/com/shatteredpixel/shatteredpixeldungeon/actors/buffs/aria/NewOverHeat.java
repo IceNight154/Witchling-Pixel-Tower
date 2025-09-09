@@ -5,9 +5,11 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.AriaTalents;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -121,8 +123,10 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     public static void onChangeElement() { //원소 변경 시 작동하는 코드입니다.
         //TODO: 원소 변경 시 나타나야 하는 이펙트, 사운드 출력 등을 추가해 주세요.
         // Spawn an element-themed particle effect at the hero's position
-        com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero hero = com.shatteredpixel.shatteredpixeldungeon.Dungeon.hero;
+        Hero hero = Dungeon.hero;
         if (hero == null) return;
+
+        AriaTalents.onElementSwitch(getBuff(hero));
 
         final int centerCell = hero.pos;
 
@@ -138,22 +142,22 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         // Helper that tries different Emitter.start signatures at runtime,
         // and falls back to burst(factory, count) when not available.
         final com.watabou.noosa.particles.Emitter em =
-                com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell);
+                CellEmitter.center(centerCell);
 
         switch (elem) {
             case FIRE: {
                 Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_FIRE);
-                com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell)
+                CellEmitter.center(centerCell)
                         .burst(
-                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementFireMantleParticle.FACTORY,
+                                ElementChangeParticles.ElementFireMantleParticle.FACTORY,
                                 28
                         );
             } break;
 
             case WATER: {
                 Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WATER);
-                com.watabou.noosa.particles.Emitter.Factory factory =
-                        com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementWaterRippleParticle.FACTORY;
+                Emitter.Factory factory =
+                        ElementChangeParticles.ElementWaterRippleParticle.FACTORY;
                 try {
                     // Try: start(Factory, float interval, int count)
                     try {
@@ -184,9 +188,9 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
             case EARTH: {
                 Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_EARTH);
-                com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter.center(centerCell)
+                CellEmitter.center(centerCell)
                         .burst(
-                                com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementEarthChunkParticle.FACTORY,
+                                ElementChangeParticles.ElementEarthChunkParticle.FACTORY,
                                 22
                         );
             } break;
@@ -195,8 +199,8 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
                 Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WIND);
                 boolean ccw = com.watabou.utils.Random.Int(2) == 0;
                 com.watabou.noosa.particles.Emitter.Factory factory = ccw
-                        ? com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CCW
-                        : com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CW;
+                        ? ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CCW
+                        : ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CW;
 
                 try {
                     // Try: start(Factory, float interval, int count)
