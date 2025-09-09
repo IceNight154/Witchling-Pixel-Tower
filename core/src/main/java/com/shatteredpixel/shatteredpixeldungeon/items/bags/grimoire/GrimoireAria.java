@@ -127,9 +127,9 @@ public class GrimoireAria extends Bag {
             Char ch = Actor.findChar(cell);
             if (ch != null && ch != Dungeon.hero) {
                 ch.damage(GrimoireAria.this.magicDamage(), this);
-                Buff.affect(Dungeon.hero, NewOverHeat.class).heat(2);
-                usesTargeting = false;
             }
+            Buff.affect(Dungeon.hero, NewOverHeat.class).heat(2);
+            usesTargeting = false;
         }
 
         @Override
