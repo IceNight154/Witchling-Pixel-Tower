@@ -101,18 +101,6 @@ public class GrimoireAria extends Bag {
         return level();
     }
 
-    public int min(int lvl) {
-        return 5+lvl;
-    }
-
-    public int max(int lvl) {
-        return 25+5*lvl;
-    }
-
-    public int magicDamage() {
-        return Hero.heroDamageIntRange(min(buffedLvl()), max(buffedLvl()));
-    }
-
     public ManaBall knockBall(){
         return new ManaBall();
     }
@@ -126,7 +114,7 @@ public class GrimoireAria extends Bag {
         protected void onThrow(int cell) {
             Char ch = Actor.findChar(cell);
             if (ch != null && ch != Dungeon.hero) {
-                ch.damage(GrimoireAria.this.magicDamage(), this);
+                Dungeon.hero.codexAttack(ch, attackInstance());
             }
             Buff.affect(Dungeon.hero, NewOverHeat.class).heat(2);
             usesTargeting = false;
@@ -171,6 +159,43 @@ public class GrimoireAria extends Bag {
             int particles = Math.max(0, 6-Math.round(0.5f*Dungeon.level.distance(from, cell)));
             if (particles == 0) continue;
             CellEmitter.center(cell).burst(ManaballElementTrailParticles.factory(buff.getElement()), particles);
+        }
+    }
+
+    public VirtualCodex attackInstance() {
+        VirtualCodex codex = new VirtualCodex();
+        codex.level(this.buffedLvl());
+        return codex;
+    }
+
+    public static class VirtualCodex extends Codex {
+        {
+            tier = 1;
+        }
+
+        @Override
+        public int defaultQuantity() {
+            return 1;
+        }
+
+        @Override
+        public int STRReq(int lvl) {
+            return 0;
+        }
+
+        @Override
+        public int min(int lvl) {
+            return 5+lvl;
+        }
+
+        @Override
+        public int max(int lvl) {
+            return 25+5*lvl;
+        }
+
+        @Override
+        public void hitSound() {
+            Sample.INSTANCE.play(Assets.Sounds.HIT);
         }
     }
 }
