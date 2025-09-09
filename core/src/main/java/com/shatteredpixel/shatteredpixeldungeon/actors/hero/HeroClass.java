@@ -102,7 +102,7 @@ public enum HeroClass {
 	HUNTRESS( HeroSubClass.SNIPER, HeroSubClass.WARDEN ),
 	DUELIST( HeroSubClass.CHAMPION, HeroSubClass.MONK ),
 	CLERIC( HeroSubClass.PRIEST, HeroSubClass.PALADIN ),
-	ARIA( HeroSubClass.ARIA_HARMONY,HeroSubClass.ARIA_OVERHEAT,HeroSubClass.ARIA_GRIMOIRE_INK );
+	ARIA( HeroSubClass.ARIA_HARMONY, HeroSubClass.ARIA_OVERHEAT, HeroSubClass.ARIA_GRIMOIRE_INK );
 
 	private HeroSubClass[] subClasses;
 
