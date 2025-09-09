@@ -98,7 +98,6 @@ public class ItemSpriteSheet {
 	public static final int PETAL           = UNCOLLECTIBLE+idx(4);
 	public static final int SANDBAG         = UNCOLLECTIBLE+idx(5);
 	public static final int SPIRIT_ARROW    = UNCOLLECTIBLE+idx(6);
-	public static final int MANA_BALL	    = UNCOLLECTIBLE+idx(7);
 
 
 	public static final int TENGU_BOMB      = UNCOLLECTIBLE+idx(8);
@@ -112,7 +111,6 @@ public class ItemSpriteSheet {
 		assignItemRect(PETAL,       8,  8);
 		assignItemRect(SANDBAG,     10, 10);
 		assignItemRect(SPIRIT_ARROW,11, 11);
-		assignItemRect(MANA_BALL,	11, 11);
 
 		assignItemRect(TENGU_BOMB,      10, 10);
 		assignItemRect(TENGU_SHOCKER,   10, 10);
@@ -874,6 +872,18 @@ public class ItemSpriteSheet {
 		assignItemRect(MAGIC_RAMPAGE, 16, 16);
 		assignItemRect(MAGIC_SHEILD_S, 16, 16);
 		assignItemRect(MAGIC_GAVEL, 16, 16);
+	}
+
+	private static final int MANA_BALL = xy(1, 39);
+	public static final int MANA_BALL_FIRE = MANA_BALL+idx(0);
+	public static final int MANA_BALL_WATER = MANA_BALL+idx(1);
+	public static final int MANA_BALL_EARTH = MANA_BALL+idx(2);
+	public static final int MANA_BALL_WIND = MANA_BALL+idx(3);
+	static {
+		assignItemRect(MANA_BALL_FIRE, 11, 11);
+		assignItemRect(MANA_BALL_WATER, 11, 11);
+		assignItemRect(MANA_BALL_EARTH, 11, 11);
+		assignItemRect(MANA_BALL_WIND, 11, 11);
 	}
 
 	//for smaller 8x8 icons that often accompany an item sprite

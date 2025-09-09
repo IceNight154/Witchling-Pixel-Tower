@@ -107,7 +107,27 @@ public class GrimoireAria extends Bag {
 
     public class ManaBall extends Item {
         {
-            image = ItemSpriteSheet.MANA_BALL;
+            image = ItemSpriteSheet.MANA_BALL_FIRE;
+        }
+
+        @Override
+        public int image() {
+            if (Dungeon.hero == null) {
+                return super.image();
+            }
+            NewOverHeat buff = NewOverHeat.getBuff(Dungeon.hero);
+            switch (buff.getElement()) {
+                case FIRE:
+                    return ItemSpriteSheet.MANA_BALL_FIRE;
+                case WATER:
+                    return ItemSpriteSheet.MANA_BALL_WATER;
+                case EARTH:
+                    return ItemSpriteSheet.MANA_BALL_EARTH;
+                case WIND:
+                    return ItemSpriteSheet.MANA_BALL_WIND;
+                default:
+                    return super.image();
+            }
         }
 
         @Override
