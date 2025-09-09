@@ -7,10 +7,13 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaballElementTrailParticles;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -132,6 +135,7 @@ public class GrimoireAria extends Bag {
         @Override
         public void cast(Hero user, int dst) {
             super.cast(user, dst);
+            leaveEffect(user.pos, throwPos( user, dst ), user);
         }
 
         @Override
@@ -157,4 +161,16 @@ public class GrimoireAria extends Bag {
             return Messages.get(SpiritBow.class, "prompt");
         }
     };
+
+    public void leaveEffect(int from, int to, Hero hero) {
+        NewOverHeat buff = NewOverHeat.getBuff(hero);
+        if (buff == null) return;
+
+        Ballistica path = new Ballistica(from, to, Ballistica.STOP_TARGET);
+        for (int cell : path.subPath(0, path.dist)) {
+            int particles = Math.max(0, 6-Math.round(0.5f*Dungeon.level.distance(from, cell)));
+            if (particles == 0) continue;
+            CellEmitter.center(cell).burst(ManaballElementTrailParticles.factory(buff.getElement()), particles);
+        }
+    }
 }

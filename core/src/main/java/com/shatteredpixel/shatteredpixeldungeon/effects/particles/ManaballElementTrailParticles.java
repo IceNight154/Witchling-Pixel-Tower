@@ -1,5 +1,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.effects.particles;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.Random;
@@ -19,14 +20,17 @@ public final class ManaballElementTrailParticles {
     public static final Emitter.Factory WIND  = new WindTrail.Factory();
 
     // (선택) 문자열 매핑 유틸: "fire/water/earth/wind"
-    public static Emitter.Factory factoryFor(String elementKey){
-        if (elementKey == null) return FIRE;
-        switch (elementKey.toLowerCase()){
-            case "fire":  case "불":  return FIRE;
-            case "water": case "물":  return WATER;
-            case "earth": case "땅":  return EARTH;
-            case "wind":  case "바람":return WIND;
-            default: return FIRE;
+    public static Emitter.Factory factory(NewOverHeat.ElementType element){
+        if (element == null) return FIRE;
+        switch (element){
+            case FIRE: default:
+                return FIRE;
+            case WATER:
+                return WATER;
+            case EARTH:
+                return EARTH;
+            case WIND:
+                return WIND;
         }
     }
 

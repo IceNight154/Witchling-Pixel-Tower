@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
@@ -111,6 +112,10 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     // 다만 이 메서드는 어느 클래스에서든 사용할 수 있습니다. Dungeon.hero.buff(NewOverHeat.class)등을 통해 따로 버프 인스턴스를 찾을 필요가 없어요.
     public static ElementType changeElement(Char target, ElementType element) {
         return Buff.affect(target, NewOverHeat.class).setElement(element);
+    }
+
+    public static NewOverHeat getBuff(Hero hero) {
+        return hero.buff(NewOverHeat.class);
     }
 
     public static void onChangeElement() { //원소 변경 시 작동하는 코드입니다.
