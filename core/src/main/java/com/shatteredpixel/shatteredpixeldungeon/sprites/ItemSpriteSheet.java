@@ -877,13 +877,13 @@ public class ItemSpriteSheet {
 	private static final int MANA_BALL = xy(1, 39);
 	public static final int MANA_BALL_FIRE = MANA_BALL+idx(0);
 	public static final int MANA_BALL_WATER = MANA_BALL+idx(1);
-	public static final int MANA_BALL_WIND = MANA_BALL+idx(2);
-	public static final int MANA_BALL_EARTH = MANA_BALL+idx(3);
+	public static final int MANA_BALL_EARTH = MANA_BALL+idx(2);
+	public static final int MANA_BALL_WIND = MANA_BALL+idx(3);
 	static {
 		assignItemRect(MANA_BALL_FIRE, 11, 11);
 		assignItemRect(MANA_BALL_WATER, 11, 11);
-		assignItemRect(MANA_BALL_WIND, 11, 11);
 		assignItemRect(MANA_BALL_EARTH, 11, 11);
+		assignItemRect(MANA_BALL_WIND, 11, 11);
 	}
 
 	//for smaller 8x8 icons that often accompany an item sprite
