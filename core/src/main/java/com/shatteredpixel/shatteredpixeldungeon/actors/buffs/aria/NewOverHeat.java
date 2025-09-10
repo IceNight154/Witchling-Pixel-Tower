@@ -2,16 +2,23 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.AriaTalents;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -27,7 +34,9 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
@@ -253,6 +262,22 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     public void onMeltdown() {
         Sample.INSTANCE.play(Assets.Sounds.ATK_MELTDOWN);
 
+        PathFinder.buildDistanceMap( target.pos, BArray.not( Dungeon.level.solid, null ), 3 );
+        for (int i = 0; i < PathFinder.distance.length; i++) {
+            if (PathFinder.distance[i] < Integer.MAX_VALUE) {
+                CellEmitter.get(i).burst(FlameParticle.FACTORY, 5);
+                Char ch = Actor.findChar(i);
+                if (ch instanceof Mob && target.buff(Codex.LastCodex.class) != null) {
+                    ch.damage(target.buff(Codex.LastCodex.class).getCodex().max(), this);
+                }
+                if (ch instanceof Hero) {
+                    ch.damage(Math.round(ch.HT*0.25f), this);
+                }
+            }
+
+            // TODO: 멜트다운 시 이펙트 추가
+        }
+
         randomElement();
 
         // 멜트다운 이펙트 범위를 더 크게(1.6배), 강도를 약간 올려(1.2배) 0.25초 분사
@@ -318,18 +343,25 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
             }
             target.sprite.showStatusWithIcon(CharSprite.WARNING, Integer.toString(meltdownDelay), FloatingText.TIME);
         } else {
+            int amount = 0;
             if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
-                heat(HEAT_PER_TURN); // +12/턴
+                amount += 12; // +12/턴
             }
             if (element == ElementType.WATER) { // 현재 원소가 물일 경우
-                cool(WATER_COOL_PER_TURN); // -2/턴
+                amount -= 2; // -2/턴
             } else { // 현재 원소가 물이 아닐 경우
-                heat(ELEMENT_HEAT_PER_TURN); // +12/턴
+                amount += 12; // +12/턴
             }
             if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
-                heat(HEAT_PER_TURN); // +12/턴
+                amount += 12; // +12/턴
             } else { // 코덱스 사용 후 3턴이 지난 경우
-                cool(HEAT_PER_TURN); // -12/턴
+                amount -= 12; // -12/턴
+            }
+
+            if (amount > 0) {
+                heat(amount);
+            } else {
+                cool(-amount);
             }
 
             ActionIndicator.refresh();

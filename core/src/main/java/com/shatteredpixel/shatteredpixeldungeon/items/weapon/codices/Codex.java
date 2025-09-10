@@ -118,6 +118,7 @@ public class Codex extends Weapon {
         curUser.spendAndNext(augment.delayFactor(castingTurn()));
 
         Buff.affect(curUser, NewOverHeat.CodexUsed.class, NewOverHeat.CodexUsed.DURATION);
+        Buff.affect(curUser, LastCodex.class).set(this);
 
         // 사용 시 사용 횟수 감소
         decrementDurability();
@@ -340,6 +341,39 @@ public class Codex extends Weapon {
         @Override
         public String info() {
             return "";
+        }
+    }
+
+    public static class LastCodex extends Buff {
+        {
+            type = buffType.NEUTRAL;
+            revivePersists = true;
+        }
+
+        Codex codex = null;
+
+        public void set(Codex codex) {
+            this.codex = codex;
+        }
+
+        public Codex getCodex() {
+            return codex;
+        }
+
+        private static final String CODEX = "codex";
+
+        @Override
+        public void storeInBundle(Bundle bundle) {
+            super.storeInBundle(bundle);
+
+            bundle.put(CODEX, codex);
+        }
+
+        @Override
+        public void restoreFromBundle(Bundle bundle) {
+            super.restoreFromBundle(bundle);
+
+            codex = (Codex) bundle.get(CODEX);
         }
     }
 }
