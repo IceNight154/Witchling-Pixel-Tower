@@ -40,7 +40,7 @@ public class TalentIcon extends Image {
 
 		if (film == null) film = new TextureFilm(texture, SIZE, SIZE);
 
-		frame(film.get(icon));
+		scaledFrame(film.get(icon));
 	}
 
 }
