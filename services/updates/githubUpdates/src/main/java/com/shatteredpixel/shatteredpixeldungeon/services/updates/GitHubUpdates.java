@@ -60,7 +60,7 @@ public class GitHubUpdates extends UpdateService {
 		}
 
 		Net.HttpRequest httpGet = new Net.HttpRequest(Net.HttpMethods.GET);
-		httpGet.setUrl("https://api.github.com/repos/IceNight154/shattered-pixel-dungeon-mod/releases");
+		httpGet.setUrl("https://api.github.com/repos/IceNight154/Witchling-Pixel-Tower/releases");
 		httpGet.setHeader("Accept", "application/vnd.github.v3+json");
 
 		Gdx.net.sendHttpRequest(httpGet, new Net.HttpResponseListener() {
