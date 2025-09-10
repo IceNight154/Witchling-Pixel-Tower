@@ -29,7 +29,7 @@ import com.watabou.noosa.TextureFilm;
 public class TalentIcon extends Image {
 
 	private static TextureFilm film;
-	private static final int SIZE = 16;
+	private static final int SIZE = 16*2;
 
 	public TalentIcon(Talent talent){
 		this(talent.icon());
