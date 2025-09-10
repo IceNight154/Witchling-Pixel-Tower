@@ -888,7 +888,7 @@ public enum Talent {
 		this(x, y, 2);
 	}
 
-	int TALENT_NUMBER = 32;
+	int TALENT_NUMBER = 33;
 
 	Talent(int x, int y, int maxPoints) {
 		this.icon = x + TALENT_NUMBER * y;
