@@ -4,6 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.AriaTalents;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -71,9 +72,13 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     private static final int OVERHEAT_MAX = 100; // 오버히트 게이지 최대치
     private static final String TXT_STATUS = "%d/%d"; // 오버히트 게이지 표기 방식. 액션 인디케이터(버튼)에서 사용됩니다.
+    private final int HEAT_PER_TURN = 12;
+    private final int ELEMENT_HEAT_PER_TURN = 12;
+    private final int WATER_COOL_PER_TURN = 2;
 
     private int gauge = 0; // 현재 오버히트 게이지입니다. private이기 때문에 외부에서 접근할 수 없어요. 필요 시 cool()이나 heat()메서드로 조절해 주시면 됩니다.
     private ElementType element = ElementType.FIRE; // 버프 제공 당시 원소는 불로 지정했습니다.
+    private ElementType previousElement = element; // 이전 턴의 원소입니다. 원소가 바뀌었는지 확인하는 용도입니다.
     private int meltdownDelay = 4; //멜트다운 시 act()에서 매 턴마다 1씩 감소합니다. 0이 되면 onMeltdown()을 호출합니다.
 
     public ElementType randomElement() { // 현재 원소를 랜덤한 원소로 바꾸되, 현재 원소와 달라질 때까지 반복하기 때문에 항상 현재 원소와 결과 원소는 같지 않습니다.
@@ -313,8 +318,22 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
             }
             target.sprite.showStatusWithIcon(CharSprite.WARNING, Integer.toString(meltdownDelay), FloatingText.TIME);
         } else {
-            gauge = Math.max(0, gauge - 1); //턴마다 1의 게이지를 감소시킵니다.
+            if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
+                heat(HEAT_PER_TURN); // +12/턴
+            }
+            if (element == ElementType.WATER) { // 현재 원소가 물일 경우
+                cool(WATER_COOL_PER_TURN); // -2/턴
+            } else { // 현재 원소가 물이 아닐 경우
+                heat(ELEMENT_HEAT_PER_TURN); // +12/턴
+            }
+            if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
+                heat(HEAT_PER_TURN); // +12/턴
+            } else { // 코덱스 사용 후 3턴이 지난 경우
+                cool(HEAT_PER_TURN); // -12/턴
+            }
+
             ActionIndicator.refresh();
+            previousElement = element; // 이전 턴의 원소를 이번 턴의 원소로 바꾸고 턴을 넘깁니다.
         }
         return true;
     }
@@ -369,6 +388,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     private static final String GAUGE = "gauge";
     private static final String ELEMENT = "element";
+    private static final String PREVIOUS_ELEMENT = "previousElement";
     private static final String MELTDOWN_DELAY = "meltdownDelay";
 
     @Override
@@ -377,6 +397,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
         bundle.put(GAUGE, gauge);
         bundle.put(ELEMENT, element);
+        bundle.put(PREVIOUS_ELEMENT, previousElement);
         bundle.put(MELTDOWN_DELAY, meltdownDelay);
     }
 
@@ -386,6 +407,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
         gauge = bundle.getInt(GAUGE);
         element = bundle.getEnum(ELEMENT, ElementType.class);
+        previousElement = bundle.getEnum(PREVIOUS_ELEMENT, ElementType.class);
         meltdownDelay = bundle.getInt(MELTDOWN_DELAY);
 
         ActionIndicator.setAction(this);
@@ -526,5 +548,22 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
                     Messages.titleCase(Messages.get(WndElementSelect.class, "info_title", ElementType.getElementByIndex(index).getName())), // 설명 윈도우의 제목입니다.
                     Messages.get(WndElementSelect.class, "info_"+ElementType.getElementByIndex(index).name))); // 설명 윈도우의 각 원소에 따른 설명문입니다.
         }
+    }
+
+    public static class CodexUsed extends FlavourBuff {
+        public static final float DURATION = 3f;
+    }
+
+    public static float CodexDamageMultiplier(Hero hero) {
+        NewOverHeat buff = getBuff(hero);
+        if (buff == null) return 1f;
+
+        float multi = 1f;
+
+        if (buff.element == ElementType.FIRE) {
+            multi += 0.1f;
+        }
+
+        return multi;
     }
 }

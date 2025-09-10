@@ -72,6 +72,17 @@ public class Codex extends Weapon {
         return 0;
     }
 
+    @Override
+    public int proc(Char attacker, Char defender, int damage) {
+        int result = super.proc(attacker, defender, damage);
+        float dmgMulti = 1f;
+        int dmgBonus = 0;
+
+        dmgMulti *= NewOverHeat.CodexDamageMultiplier(Dungeon.hero); // 과부하 버프의 코덱스 데미지 피해 배율
+
+        return Math.round(result*dmgMulti) + dmgBonus;
+    }
+
     // 코덱스 사용 시 사용하는 턴 수입니다.
     protected float castingTurn() {
         return 1f;
@@ -105,6 +116,8 @@ public class Codex extends Weapon {
     public void afterUse() {
         // 사용 시 턴 소모. 증강 시의 턴 변화를 반영합니다.
         curUser.spendAndNext(augment.delayFactor(castingTurn()));
+
+        Buff.affect(curUser, NewOverHeat.CodexUsed.class, NewOverHeat.CodexUsed.DURATION);
 
         // 사용 시 사용 횟수 감소
         decrementDurability();
