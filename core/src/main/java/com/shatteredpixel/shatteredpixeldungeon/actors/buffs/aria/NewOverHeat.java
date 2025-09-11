@@ -519,11 +519,27 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         }
     }
 
-    public float evasionMultiplier(Hero hero) {
+    public static float evasionMultiplier(Hero hero) {
+        NewOverHeat overHeat = NewOverHeat.getBuff(hero);
+        if (overHeat == null) return 1;
+
         float multi = 1f;
 
-        if (element == ElementType.WIND) {
+        if (overHeat.getElement() == ElementType.WIND) {
             multi += 0.08f;
+        }
+
+        return multi;
+    }
+
+    public static float damageMultiplier(Hero hero) {
+        NewOverHeat overHeat = NewOverHeat.getBuff(hero);
+        if (overHeat == null) return 1;
+
+        float multi = 1f;
+
+        if (overHeat.getElement() == ElementType.EARTH) {
+            multi -= 0.08f;
         }
 
         return multi;

@@ -593,11 +593,7 @@ public class Hero extends Char {
 		float evasion = defenseSkill;
 
 		evasion *= RingOfEvasion.evasionMultiplier( this );
-
-		NewOverHeat overHeat = NewOverHeat.getBuff(this);
-		if (overHeat != null) {
-			evasion *= overHeat.evasionMultiplier(this);
-		}
+		evasion *= NewOverHeat.evasionMultiplier(this);
 
 		if (buff(Talent.LiquidAgilEVATracker.class) != null){
 			if (pointsInTalent(Talent.LIQUID_AGILITY) == 1){
@@ -1635,6 +1631,7 @@ public class Hero extends Char {
 
 		//we ceil this one to avoid letting the player easily take 0 dmg from tenacity early
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
+		dmg = (int)Math.ceil(dmg * NewOverHeat.damageMultiplier( this ));
 
 		int preHP = HP + shielding();
 		if (src instanceof Hunger) preHP -= shielding();
