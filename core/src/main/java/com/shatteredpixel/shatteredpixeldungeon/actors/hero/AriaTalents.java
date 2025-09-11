@@ -28,7 +28,7 @@ public class AriaTalents {
         {
             type = buffType.NEUTRAL;
 
-            announced = true;
+            announced = false;
         }
 
         public static final float DURATION = 8f; // 최대 시간
