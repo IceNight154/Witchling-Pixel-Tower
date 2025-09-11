@@ -1416,7 +1416,7 @@ public abstract class Char extends Actor {
 	public void heal(int amount) {
 		HP = Math.min(HT, HP + amount);
 		if (sprite != null) {
-			sprite.showStatusWithIcon(CharSprite.POSITIVE, "+"+amount, FloatingText.HEALING);
+			sprite.showStatusWithIcon(CharSprite.POSITIVE, amount, FloatingText.HEALING);
 		}
 	}
 }
