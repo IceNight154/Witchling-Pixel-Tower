@@ -352,7 +352,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
             if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
                 amount += 2; // +2/턴
             } else { // 코덱스 사용 후 3턴이 지난 경우
-                amount -= 2; // -2/턴
+                amount -= 1; // -1/턴
             }
 
             if (amount > 0) {
