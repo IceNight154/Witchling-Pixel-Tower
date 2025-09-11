@@ -10,6 +10,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaballElementTrailParticles;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
@@ -18,25 +19,28 @@ import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.utils.Bundle;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
 
 public class Grimoire extends Bag {
 
-    private static final String AC_SHOOT = "SHOOT";
+    public static final String AC_USE = "USE";
 
     {
-        defaultAction = AC_SHOOT;
+        defaultAction = AC_USE;
 
         usesTargeting = false;
         levelKnown = true;
     }
 
+    public int capacity = 5;
+
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
-        actions.add(AC_SHOOT);
+        actions.add(AC_USE);
         return actions;
     }
 
@@ -45,7 +49,7 @@ public class Grimoire extends Bag {
 
         super.execute(hero, action);
 
-        if (action.equals(AC_SHOOT)) {
+        if (action.equals(AC_USE)) {
 
             curUser = hero;
             curItem = this;
@@ -64,8 +68,28 @@ public class Grimoire extends Bag {
         }
     }
 
+    @Override
+    public String info() {
+        String desc = super.info();
+
+        VirtualCodex codex = attackInstance();
+
+        desc += "\n\n" + Messages.get(Grimoire.class, "stats", codex.min(), codex.max(), codex.STRReq(), capacity());
+
+        return desc;
+    }
+
     public int capacity(){
-        return 5;
+        return capacity;
+    }
+
+    public Grimoire capacityUpgrade() {
+        capacity++;
+        return this;
+    }
+
+    public int capacityUpgradeEnergyCost() {
+        return 6;
     }
 
     @Override
@@ -96,6 +120,22 @@ public class Grimoire extends Bag {
     @Override
     public int buffedLvl() {
         return level();
+    }
+
+    private static final String CAPACITY = "capacity";
+
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        super.storeInBundle(bundle);
+
+        bundle.put(CAPACITY, capacity);
+    }
+
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        super.restoreFromBundle(bundle);
+
+        capacity = bundle.getInt(CAPACITY);
     }
 
     public ManaBall knockBall(){
@@ -179,6 +219,33 @@ public class Grimoire extends Bag {
         @Override
         public void hitSound() {
             Sample.INSTANCE.play(Assets.Sounds.HIT);
+        }
+    }
+
+    public static class UpgradeGrimoire extends Recipe {
+
+        @Override
+        public boolean testIngredients(ArrayList<Item> ingredients) {
+            return ingredients.size() == 1 && ingredients.get(0) instanceof Grimoire;
+        }
+
+        @Override
+        public int cost(ArrayList<Item> ingredients) {
+            return ((Grimoire)ingredients.get(0)).capacityUpgradeEnergyCost();
+        }
+
+        @Override
+        public Item brew(ArrayList<Item> ingredients) {
+            Item result = ingredients.get(0).duplicate();
+            ingredients.get(0).quantity(0);
+            ((Grimoire)result).capacityUpgrade();
+
+            return result;
+        }
+
+        @Override
+        public Item sampleOutput(ArrayList<Item> ingredients) {
+            return ((Grimoire) ingredients.get(0).duplicate()).capacityUpgrade();
         }
     }
 }
