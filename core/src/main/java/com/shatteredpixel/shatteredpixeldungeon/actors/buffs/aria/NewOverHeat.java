@@ -609,8 +609,10 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         }
 
         if (element == ElementType.WATER) {
-            target.heal(amount);
+            target.heal(1);
         }
+
+        
     }
 
 }
