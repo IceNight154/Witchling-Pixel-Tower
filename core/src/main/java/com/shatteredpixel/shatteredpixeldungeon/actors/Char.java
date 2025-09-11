@@ -1412,4 +1412,11 @@ public abstract class Char extends Actor {
 	public static boolean hasProp( Char ch, Property p){
 		return (ch != null && ch.properties().contains(p));
 	}
+
+	public void heal(int amount) {
+		HP = Math.min(HT, HP + amount);
+		if (sprite != null) {
+			sprite.showStatusWithIcon(CharSprite.POSITIVE, "+"+amount, FloatingText.HEALING);
+		}
+	}
 }
