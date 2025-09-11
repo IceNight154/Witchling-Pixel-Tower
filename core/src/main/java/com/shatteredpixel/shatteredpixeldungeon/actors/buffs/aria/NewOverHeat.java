@@ -12,10 +12,12 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
+import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -30,6 +32,7 @@ import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Sample;
+
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
@@ -128,120 +131,22 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         return hero.buff(NewOverHeat.class);
     }
 
-    public static void onChangeElement() { //원소 변경 시 작동하는 코드입니다.
+    public static void onChangeElement(ElementType resultElement) { //원소 변경 시 작동하는 코드입니다.
         //TODO: 원소 변경 시 나타나야 하는 이펙트, 사운드 출력 등을 추가해 주세요.
-        // Spawn an element-themed particle effect at the hero's position
         Hero hero = Dungeon.hero;
         if (hero == null) return;
 
         AriaTalents.onElementSwitch(getBuff(hero));
 
-        final int centerCell = hero.pos;
-
-        // Determine current element from the active NewOverHeat buff
-        ElementType elem = ElementType.FIRE;
-        try {
-            NewOverHeat oh = hero.buff(NewOverHeat.class);
-            if (oh != null) {
-                elem = oh.getElement();
-            }
-        } catch (Throwable ignored) {}
-
-        // Helper that tries different Emitter.start signatures at runtime,
-        // and falls back to burst(factory, count) when not available.
-        final com.watabou.noosa.particles.Emitter em =
-                CellEmitter.center(centerCell);
-
-        switch (elem) {
-            case FIRE: {
-                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_FIRE);
-                CellEmitter.center(centerCell)
-                        .burst(
-                                ElementChangeParticles.ElementFireMantleParticle.FACTORY,
-                                28
-                        );
-            } break;
-
-            case WATER: {
-                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WATER);
-                Emitter.Factory factory =
-                        ElementChangeParticles.ElementWaterRippleParticle.FACTORY;
-                try {
-                    // Try: start(Factory, float interval, int count)
-                    try {
-                        em.getClass().getMethod(
-                                "start",
-                                com.watabou.noosa.particles.Emitter.Factory.class,
-                                float.class, int.class
-                        ).invoke(em, factory, 0.015f, 20);
-                    } catch (NoSuchMethodException e1) {
-                        // Try: start(Factory, float interval, float durationSec)
-                        try {
-                            em.getClass().getMethod(
-                                    "start",
-                                    com.watabou.noosa.particles.Emitter.Factory.class,
-                                    float.class, float.class
-                            ).invoke(em, factory, 0.015f, 0.30f);
-                        } catch (NoSuchMethodException e2) {
-                            // Fallback: burst
-                            em.getClass().getMethod(
-                                    "burst",
-                                    com.watabou.noosa.particles.Emitter.Factory.class,
-                                    int.class
-                            ).invoke(em, factory, 20);
-                        }
-                    }
-                } catch (Throwable ignored) {}
-            } break;
-
-            case EARTH: {
-                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_EARTH);
-                CellEmitter.center(centerCell)
-                        .burst(
-                                ElementChangeParticles.ElementEarthChunkParticle.FACTORY,
-                                22
-                        );
-            } break;
-
-            case WIND: {
-                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WIND);
-                boolean ccw = com.watabou.utils.Random.Int(2) == 0;
-                com.watabou.noosa.particles.Emitter.Factory factory = ccw
-                        ? ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CCW
-                        : ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CW;
-
-                try {
-                    // Try: start(Factory, float interval, int count)
-                    try {
-                        em.getClass().getMethod(
-                                "start",
-                                com.watabou.noosa.particles.Emitter.Factory.class,
-                                float.class, int.class
-                        ).invoke(em, factory, 0.015f, 24);
-                    } catch (NoSuchMethodException e1) {
-                        // Try: start(Factory, float interval, float durationSec)
-                        try {
-                            em.getClass().getMethod(
-                                    "start",
-                                    com.watabou.noosa.particles.Emitter.Factory.class,
-                                    float.class, float.class
-                            ).invoke(em, factory, 0.015f, 0.30f);
-                        } catch (NoSuchMethodException e2) {
-                            // Fallback: burst
-                            em.getClass().getMethod(
-                                    "burst",
-                                    com.watabou.noosa.particles.Emitter.Factory.class,
-                                    int.class
-                            ).invoke(em, factory, 24);
-                        }
-                    }
-                } catch (Throwable ignored) {}
-            } break;
-
-            default:
-                // no-op
-                break;
+        if (resultElement == ElementType.EARTH) {
+            Blocking.BlockBuff b = Buff.affect(hero, Blocking.BlockBuff.class);
+            int shield = Math.round(hero.HT * 0.05f);
+            b.setShield(shield);
+            hero.sprite.showStatusWithIcon(CharSprite.POSITIVE, Integer.toString(shield), FloatingText.SHIELDING);
+            hero.sprite.emitter().burst(Speck.factory(Speck.LIGHT), 5);
         }
+
+        onChangeElementEffect(hero);
     }
 
     public void heat(int amount) { // 게이지를 지정한 양만큼 늘리는 메서드입니다. 최대치 이상으로 늘어나지 않습니다.
@@ -251,6 +156,11 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         if (isMeltdown()) {
             target.sprite.showStatus(CharSprite.WARNING, Messages.get(this, "meltdown"));
         }
+    }
+
+    public void cool(int amount) { // 게이지를 지정한 양만큼 줄이는 메서드입니다. 최소치 이하로 감소하지 않습니다.
+        gauge = Math.max(0, gauge - amount);
+        ActionIndicator.refresh();
     }
 
     public void onMeltdown() {
@@ -287,11 +197,6 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     public void resetMeltdown() {
         meltdownDelay = 4;
-    }
-
-    public void cool(int amount) { // 게이지를 지정한 양만큼 줄이는 메서드입니다. 최소치 이하로 감소하지 않습니다.
-        gauge = Math.max(0, gauge - amount);
-        ActionIndicator.refresh();
     }
 
     public int heatLevel() { // 현재 게이지에 따른 오버히트 레벨을 반환합니다.
@@ -343,6 +248,36 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
             previousElement = element; // 이전 턴의 원소를 이번 턴의 원소로 바꾸고 턴을 넘깁니다.
         }
         return true;
+    }
+
+    public void actionPerTurn() { // 멜트다운이 아닐 경우 매 턴마다 작동하는 코드
+        int amount = 0;
+        if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
+            amount += 1; // +1/턴
+        }
+        if (element == ElementType.WATER) { // 현재 원소가 물일 경우
+            amount -= 2; // -2/턴
+        } else if (element == ElementType.FIRE) { // 현재 원소가 불일 경우
+            amount += 1; // +1/턴
+            amount += (int)(gauge * 0.15f); // +현재 게이지의 15%/턴 (소수점 버림)
+        } else { // 현재 원소가 그 이외의 것일 경우
+            amount += 1; // +1/턴
+        }
+        if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
+            amount += 2; // +2/턴
+        } else { // 코덱스 사용 후 3턴이 지난 경우
+            amount -= 1; // -1/턴
+        }
+
+        if (amount > 0) {
+            heat(amount);
+        } else {
+            cool(-amount);
+        }
+
+        if (element == ElementType.WATER) {
+            target.heal(1);
+        }
     }
 
     @Override
@@ -507,23 +442,24 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         protected void onSelect(int index) {
             if (index < 4) { // 취소 버튼 이외의 버튼을 누를 경우 이하 코드가 작동합니다.
                 if (Dungeon.hero == null) return;
+                ElementType elementType;
 
                 switch (index) { // 누른 버튼의 인덱스에 따라 다른 동작을 수행합니다.
                     case 0: default:
-                        NewOverHeat.changeElement(Dungeon.hero, ElementType.FIRE);
+                        elementType = NewOverHeat.changeElement(Dungeon.hero, ElementType.FIRE);
                         break;
                     case 1:
-                        NewOverHeat.changeElement(Dungeon.hero, ElementType.WATER);
+                        elementType = NewOverHeat.changeElement(Dungeon.hero, ElementType.WATER);
                         break;
                     case 2:
-                        NewOverHeat.changeElement(Dungeon.hero, ElementType.EARTH);
+                        elementType = NewOverHeat.changeElement(Dungeon.hero, ElementType.EARTH);
                         break;
                     case 3:
-                        NewOverHeat.changeElement(Dungeon.hero, ElementType.WIND);
+                        elementType = NewOverHeat.changeElement(Dungeon.hero, ElementType.WIND);
                         break;
                 }
 
-                NewOverHeat.onChangeElement();
+                onChangeElement(elementType);
 
                 BuffIndicator.refresh(Dungeon.hero); // 버프창을 새로고침합니다.
                 ActionIndicator.refresh(); // 액션 버튼을 새로고침합니다.
@@ -583,36 +519,110 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         }
     }
 
-    public void actionPerTurn() { // 멜트다운이 아닐 경우 매 턴마다 작동하는 코드
-        int amount = 0;
-        if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
-            amount += 1; // +1/턴
-        }
-        if (element == ElementType.WATER) { // 현재 원소가 물일 경우
-            amount -= 2; // -2/턴
-        } else if (element == ElementType.FIRE) { // 현재 원소가 불일 경우
-            amount += 1; // +1/턴
-            amount += (int)(gauge * 0.15f); // +현재 게이지의 15%/턴 (소수점 버림)
-        } else { // 현재 원소가 그 이외의 것일 경우
-            amount += 1; // +1/턴
-        }
-        if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
-            amount += 2; // +2/턴
-        } else { // 코덱스 사용 후 3턴이 지난 경우
-            amount -= 1; // -1/턴
+    public static void onChangeElementEffect(Hero hero) {
+        final int centerCell = hero.pos;
+
+        // Determine current element from the active NewOverHeat buff
+        ElementType elem = ElementType.FIRE;
+        NewOverHeat oh = hero.buff(NewOverHeat.class);
+        if (oh != null) {
+            elem = oh.getElement();
         }
 
-        if (amount > 0) {
-            heat(amount);
-        } else {
-            cool(-amount);
-        }
+        // Helper that tries different Emitter.start signatures at runtime,
+        // and falls back to burst(factory, count) when not available.
+        final Emitter em = CellEmitter.center(centerCell);
 
-        if (element == ElementType.WATER) {
-            target.heal(1);
-        }
+        switch (elem) {
+            case FIRE: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_FIRE);
+                CellEmitter.center(centerCell)
+                        .burst(
+                                ElementChangeParticles.ElementFireMantleParticle.FACTORY,
+                                28
+                        );
+            } break;
 
-        
+            case WATER: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WATER);
+                Emitter.Factory factory =
+                        ElementChangeParticles.ElementWaterRippleParticle.FACTORY;
+                try {
+                    // Try: start(Factory, float interval, int count)
+                    try {
+                        em.getClass().getMethod(
+                                "start",
+                                Emitter.Factory.class,
+                                float.class, int.class
+                        ).invoke(em, factory, 0.015f, 20);
+                    } catch (NoSuchMethodException e1) {
+                        // Try: start(Factory, float interval, float durationSec)
+                        try {
+                            em.getClass().getMethod(
+                                    "start",
+                                    Emitter.Factory.class,
+                                    float.class, float.class
+                            ).invoke(em, factory, 0.015f, 0.30f);
+                        } catch (NoSuchMethodException e2) {
+                            // Fallback: burst
+                            em.getClass().getMethod(
+                                    "burst",
+                                    Emitter.Factory.class,
+                                    int.class
+                            ).invoke(em, factory, 20);
+                        }
+                    }
+                } catch (Throwable ignored) {}
+            } break;
+
+            case EARTH: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_EARTH);
+                CellEmitter.center(centerCell)
+                        .burst(
+                                ElementChangeParticles.ElementEarthChunkParticle.FACTORY,
+                                22
+                        );
+            } break;
+
+            case WIND: {
+                Sample.INSTANCE.play(Assets.Sounds.ELEMENTAL_WIND);
+                boolean ccw = com.watabou.utils.Random.Int(2) == 0;
+                Emitter.Factory factory = ccw
+                        ? ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CCW
+                        : ElementChangeParticles.ElementWindSwirlParticle.FACTORY_CW;
+
+                try {
+                    // Try: start(Factory, float interval, int count)
+                    try {
+                        em.getClass().getMethod(
+                                "start",
+                                Emitter.Factory.class,
+                                float.class, int.class
+                        ).invoke(em, factory, 0.015f, 24);
+                    } catch (NoSuchMethodException e1) {
+                        // Try: start(Factory, float interval, float durationSec)
+                        try {
+                            em.getClass().getMethod(
+                                    "start",
+                                    Emitter.Factory.class,
+                                    float.class, float.class
+                            ).invoke(em, factory, 0.015f, 0.30f);
+                        } catch (NoSuchMethodException e2) {
+                            // Fallback: burst
+                            em.getClass().getMethod(
+                                    "burst",
+                                    Emitter.Factory.class,
+                                    int.class
+                            ).invoke(em, factory, 24);
+                        }
+                    }
+                } catch (Throwable ignored) {}
+            } break;
+
+            default:
+                // no-op
+                break;
+        }
     }
 
 }
