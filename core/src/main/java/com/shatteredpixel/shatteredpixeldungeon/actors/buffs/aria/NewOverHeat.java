@@ -81,9 +81,6 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
     private static final int OVERHEAT_MAX = 100; // 오버히트 게이지 최대치
     private static final String TXT_STATUS = "%d/%d"; // 오버히트 게이지 표기 방식. 액션 인디케이터(버튼)에서 사용됩니다.
-    private final int HEAT_PER_TURN = 12;
-    private final int ELEMENT_HEAT_PER_TURN = 12;
-    private final int WATER_COOL_PER_TURN = 2;
 
     private int gauge = 0; // 현재 오버히트 게이지입니다. private이기 때문에 외부에서 접근할 수 없어요. 필요 시 cool()이나 heat()메서드로 조절해 주시면 됩니다.
     private ElementType element = ElementType.FIRE; // 버프 제공 당시 원소는 불로 지정했습니다.
@@ -345,17 +342,17 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         } else {
             int amount = 0;
             if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
-                amount += 12; // +12/턴
+                amount += 1; // +1/턴
             }
             if (element == ElementType.WATER) { // 현재 원소가 물일 경우
                 amount -= 2; // -2/턴
             } else { // 현재 원소가 물이 아닐 경우
-                amount += 12; // +12/턴
+                amount += 1; // +1/턴
             }
             if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
-                amount += 12; // +12/턴
+                amount += 2; // +2/턴
             } else { // 코덱스 사용 후 3턴이 지난 경우
-                amount -= 12; // -12/턴
+                amount -= 2; // -2/턴
             }
 
             if (amount > 0) {
