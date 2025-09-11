@@ -78,7 +78,10 @@ public class Codex extends Weapon {
         float dmgMulti = 1f;
         int dmgBonus = 0;
 
-        dmgMulti *= NewOverHeat.CodexDamageMultiplier(Dungeon.hero); // 과부하 버프의 코덱스 데미지 피해 배율
+        dmgMulti *= NewOverHeat.codexDamageMultiplier(Dungeon.hero); // 과부하 버프의 코덱스 데미지 피해 배율
+        if (attacker instanceof Hero) {
+            NewOverHeat.codexProc((Hero) attacker, defender);
+        }
 
         return Math.round(result*dmgMulti) + dmgBonus;
     }

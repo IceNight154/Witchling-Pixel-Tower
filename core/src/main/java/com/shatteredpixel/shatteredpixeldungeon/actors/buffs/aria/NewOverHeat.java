@@ -4,8 +4,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
-import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
@@ -18,7 +16,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeP
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -340,26 +337,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
             }
             target.sprite.showStatusWithIcon(CharSprite.WARNING, Integer.toString(meltdownDelay), FloatingText.TIME);
         } else {
-            int amount = 0;
-            if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
-                amount += 1; // +1/턴
-            }
-            if (element == ElementType.WATER) { // 현재 원소가 물일 경우
-                amount -= 2; // -2/턴
-            } else { // 현재 원소가 물이 아닐 경우
-                amount += 1; // +1/턴
-            }
-            if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
-                amount += 2; // +2/턴
-            } else { // 코덱스 사용 후 3턴이 지난 경우
-                amount -= 1; // -1/턴
-            }
-
-            if (amount > 0) {
-                heat(amount);
-            } else {
-                cool(-amount);
-            }
+            actionPerTurn();
 
             ActionIndicator.refresh();
             previousElement = element; // 이전 턴의 원소를 이번 턴의 원소로 바꾸고 턴을 넘깁니다.
@@ -583,7 +561,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         public static final float DURATION = 3f;
     }
 
-    public static float CodexDamageMultiplier(Hero hero) {
+    public static float codexDamageMultiplier(Hero hero) {
         NewOverHeat buff = getBuff(hero);
         if (buff == null) return 1f;
 
@@ -595,4 +573,44 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
         return multi;
     }
+
+    public static void codexProc(Hero hero, Char enemy) {
+        NewOverHeat buff = getBuff(hero);
+        if (buff == null) return;
+
+        if (buff.getElement() == ElementType.EARTH && Random.Float() < 0.25f) { // 땅 원소 중 공격 시 25% 확률로 기절 1턴
+            Buff.affect(enemy, Paralysis.class, 1f);
+        }
+    }
+
+    public void actionPerTurn() { // 멜트다운이 아닐 경우 매 턴마다 작동하는 코드
+        int amount = 0;
+        if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
+            amount += 1; // +1/턴
+        }
+        if (element == ElementType.WATER) { // 현재 원소가 물일 경우
+            amount -= 2; // -2/턴
+        } else if (element == ElementType.FIRE) { // 현재 원소가 불일 경우
+            amount += 1; // +1/턴
+            amount += (int)(gauge * 0.15f); // +현재 게이지의 15%/턴 (소수점 버림)
+        } else { // 현재 원소가 그 이외의 것일 경우
+            amount += 1; // +1/턴
+        }
+        if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
+            amount += 2; // +2/턴
+        } else { // 코덱스 사용 후 3턴이 지난 경우
+            amount -= 1; // -1/턴
+        }
+
+        if (amount > 0) {
+            heat(amount);
+        } else {
+            cool(-amount);
+        }
+
+        if (element == ElementType.WATER) {
+            target.heal(amount);
+        }
+    }
+
 }
