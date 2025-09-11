@@ -192,11 +192,11 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         Buff.affect(target, Paralysis.class, 1f);
 
         resetMeltdown();
-        gauge = 60;
     }
 
     public void resetMeltdown() {
         meltdownDelay = 4;
+        gauge = 60;
     }
 
     public int heatLevel() { // 현재 게이지에 따른 오버히트 레벨을 반환합니다.
@@ -517,6 +517,16 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         if (buff.getElement() == ElementType.EARTH && Random.Float() < 0.25f) { // 땅 원소 중 공격 시 25% 확률로 기절 1턴
             Buff.affect(enemy, Paralysis.class, 1f);
         }
+    }
+
+    public float evasionMultiplier(Hero hero) {
+        float multi = 1f;
+
+        if (element == ElementType.WIND) {
+            multi += 0.08f;
+        }
+
+        return multi;
     }
 
     public static void onChangeElementEffect(Hero hero) {
