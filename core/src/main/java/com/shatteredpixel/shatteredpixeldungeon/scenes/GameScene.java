@@ -150,9 +150,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.Overheat;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 public class GameScene extends PixelScene {
 
 	static GameScene scene;

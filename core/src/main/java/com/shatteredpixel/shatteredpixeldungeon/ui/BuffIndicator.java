@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.OverheatElement;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -34,12 +35,6 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndInfoBuff;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Image;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.Overheat;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.OverheatElement;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
-
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.tweeners.AlphaTweener;
 import com.watabou.noosa.ui.Component;
@@ -382,13 +377,6 @@ public class BuffIndicator extends Component {
 
 		@Override
 		protected void onClick() {
-			if (buff instanceof Overheat || buff instanceof ElementPseudoBuff){
-				final Hero hero = Dungeon.hero;
-				if (hero != null){
-					com.shatteredpixel.shatteredpixeldungeon.ui.aria.OverheatElementSwitch.show(hero);
-					return;
-				}
-			}
 			if (buff.icon() != NONE) GameScene.show(new WndInfoBuff(buff));
 		}
 
