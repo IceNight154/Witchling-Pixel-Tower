@@ -195,7 +195,7 @@ public class Assets {
 		public static final String ATK_SWORD_SLASH3 = "sounds/atk_sword_slash3.mp3";
 		public static final String ATK_SWORD_STAB   = "sounds/atk_sword_stab.mp3";
 		public static final String ATK_SWORD_SWEEP  = "sounds/atk_sword_sweep.mp3";
-		public static final String ATK_SHEILD     	= "sounds/atk_sheild.mp3";
+		public static final String ATK_SHIELD     	= "sounds/atk_shield.mp3";
 		public static final String ATK_CHARGE     	= "sounds/atk_charge.mp3";
 		public static final String ATK_SMASH     	= "sounds/atk_smash.mp3";
 		public static final String ATK_GRIMOIRE     = "sounds/atk_grimoire.mp3";
@@ -258,7 +258,7 @@ public class Assets {
 				OPEN, UNLOCK, ITEM, DEWDROP, STEP, WATER, GRASS, TRAMPLE, STURDY,
 
 				HIT, MISS, HIT_SLASH, HIT_STAB, HIT_CRUSH, HIT_MAGIC, HIT_STRONG, HIT_PARRY, HIT_BULLET, HIT_ARROW,
-				ATK_SPIRITBOW, ATK_CROSSBOW, ATK_GRIMOIRE, ATK_SWORD_SWEEP, ATK_SHEILD, ATK_SWORD_SLASH1, ATK_SWORD_SLASH2, ATK_SWORD_SLASH3, ATK_SWORD_STAB, ATK_CHARGE, ATK_SMASH, ATK_MELTDOWN,
+				ATK_SPIRITBOW, ATK_CROSSBOW, ATK_GRIMOIRE, ATK_SWORD_SWEEP, ATK_SHIELD, ATK_SWORD_SLASH1, ATK_SWORD_SLASH2, ATK_SWORD_SLASH3, ATK_SWORD_STAB, ATK_CHARGE, ATK_SMASH, ATK_MELTDOWN,
 				HEALTH_WARN, HEALTH_CRITICAL,
 
 				ELEMENTAL_FIRE, ELEMENTAL_WATER, ELEMENTAL_EARTH, ELEMENTAL_WIND,
