@@ -465,6 +465,7 @@ public class Hero extends Char {
 		if (hit) {
 			codex.hitSound();
 			int damage = codex.proc(this, enemy, codex.damageRoll(this));
+			enemy.sprite.flash();
 			enemy.damage(damage, codex);
 		} else {
 			Sample.INSTANCE.play(Assets.Sounds.MISS);
