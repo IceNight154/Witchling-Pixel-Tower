@@ -77,6 +77,19 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
                     return WIND;
             }
         }
+
+        public static int getIndexByElement(ElementType type) { // int 숫자로 ElementType을 반환해 주는 메서드입니다. 0번째는 불, 1번째는 물, 2번째는 땅, 3번째는 바람이에요.
+            switch (type) {
+                case FIRE: default:
+                    return 0;
+                case WATER:
+                    return 1;
+                case EARTH:
+                    return 2;
+                case WIND:
+                    return 3;
+            }
+        }
     }
 
     private static final int OVERHEAT_MAX = 100; // 오버히트 게이지 최대치
@@ -255,6 +268,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
             amount += 1; // +1/턴
         }
+
         if (element == ElementType.WATER) { // 현재 원소가 물일 경우
             amount -= 2; // -2/턴
         } else if (element == ElementType.FIRE) { // 현재 원소가 불일 경우
@@ -263,6 +277,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         } else { // 현재 원소가 그 이외의 것일 경우
             amount += 1; // +1/턴
         }
+
         if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
             amount += 2; // +2/턴
         } else { // 코덱스 사용 후 3턴이 지난 경우
