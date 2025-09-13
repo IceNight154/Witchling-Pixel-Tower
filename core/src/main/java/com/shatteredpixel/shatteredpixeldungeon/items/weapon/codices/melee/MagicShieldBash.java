@@ -26,12 +26,12 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaBackShockw
  * - 연출상 ‘맞고 → 밀림’이 아니라 ‘밀리기 시작하면서 데미지’가 보이도록
  *   넉백을 먼저 시작하고, 데미지는 다음 프레임에 적용
  */
-public class MagicSheildBash extends MeleeCodex {
+public class MagicShieldBash extends MeleeCodex {
 
     {
         tier = 1;
-        image = ItemSpriteSheet.CODEX_SHEILD_S;
-        magicImage = ItemSpriteSheet.MAGIC_SHEILD_S;
+        image = ItemSpriteSheet.CODEX_SHIELD_S;
+        magicImage = ItemSpriteSheet.MAGIC_SHIELD_S;
         baseUses = 50;
     }
 
@@ -64,9 +64,9 @@ public class MagicSheildBash extends MeleeCodex {
             // 다음 프레임에서 피해를 적용하여, 시각적으로 넉백이 이미 시작된 상태에서 대미지가 뜨도록
             Actor.add(new Actor() {
                 @Override protected boolean act() {
-                    boolean h = curUser.codexAttack(enemy, MagicSheildBash.this);
+                    boolean h = curUser.codexAttack(enemy, MagicShieldBash.this);
                     if (h) {
-                        Sample.INSTANCE.play(Assets.Sounds.ATK_SHEILD, 0.9f, 1.15f);
+                        Sample.INSTANCE.play(Assets.Sounds.ATK_SHIELD, 0.9f, 1.15f);
                         spawnBackShock(enemy.pos, dir8, 8);
                     } else {
                         Sample.INSTANCE.play(Assets.Sounds.MISS, 0.9f, 1.0f);
