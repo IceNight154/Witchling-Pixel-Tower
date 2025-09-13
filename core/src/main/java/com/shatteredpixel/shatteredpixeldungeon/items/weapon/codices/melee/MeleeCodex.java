@@ -67,7 +67,9 @@ public class MeleeCodex extends Codex {
 
     // 코덱스 공격 시 작동하는 메서드입니다.
     protected void onCodexAttack(Char enemy, int cell) {
+        beforeUse();
         onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
+        affectElement(cell);
         afterUse();
     }
 

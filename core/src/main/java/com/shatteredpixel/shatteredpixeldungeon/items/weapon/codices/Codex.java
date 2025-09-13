@@ -4,6 +4,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.ElementArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -84,6 +85,16 @@ public class Codex extends Weapon {
         }
 
         return Math.round(result*dmgMulti) + dmgBonus;
+    }
+
+    public void affectElement(ArrayList<Integer> cells) {
+        Buff.affect(curUser, ElementArea.class).setup(cells, NewOverHeat.getBuff(curUser).getElement() == null ? NewOverHeat.ElementType.FIRE : NewOverHeat.getBuff(curUser).getElement());
+    }
+
+    public void affectElement(int cell) {
+        ArrayList<Integer> cells = new ArrayList<>();
+        cells.add(cell);
+        affectElement(cells);
     }
 
     // 코덱스 사용 시 사용하는 턴 수입니다.

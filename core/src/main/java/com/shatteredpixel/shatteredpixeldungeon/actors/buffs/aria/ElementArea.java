@@ -1,11 +1,22 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
+import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blob;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.GeyserTrap;
+import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
 import com.watabou.noosa.particles.PixelParticle;
-import com.watabou.utils.BArray;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -13,10 +24,10 @@ import com.watabou.utils.Random;
 import java.util.ArrayList;
 
 public class ElementArea extends Buff {
-    private ArrayList<Integer> arenaPositions = new ArrayList<>();
-    private ArrayList<Emitter> arenaEmitters = new ArrayList<>();
+    private final ArrayList<Integer> areaPositions = new ArrayList<>();
+    private final ArrayList<Emitter> areaEmitters = new ArrayList<>();
 
-    private static final float DURATION = 100;
+    private static final float DURATION = 3;
     int left = 0;
 
     {
@@ -25,21 +36,125 @@ public class ElementArea extends Buff {
 
     NewOverHeat.ElementType element;
 
-    public void setup(int pos, int dist, NewOverHeat.ElementType type){
-        this.element = type;
-
-        PathFinder.buildDistanceMap( pos, BArray.or( Dungeon.level.passable, Dungeon.level.avoid, null ), dist );
-        for (int i = 0; i < PathFinder.distance.length; i++) {
-            if (PathFinder.distance[i] < Integer.MAX_VALUE && !arenaPositions.contains(i)) {
-                arenaPositions.add(i);
+    public void setup(ArrayList<Integer> cells, NewOverHeat.ElementType type) {
+        for (int cell : cells) {
+            if (areaPositions.contains(cell)) {
+                interaction(cell, type);
             }
         }
+
+        this.element = type;
+
+        areaPositions.clear();
+        areaPositions.addAll(cells);
+
         if (target != null) {
             fx(false);
             fx(true);
         }
 
         left = (int) DURATION;
+    }
+
+    public void switchTerrain(int cell, NewOverHeat.ElementType prevType, NewOverHeat.ElementType currType) {
+        int prevTerrain;
+        switch (prevType) {
+            case FIRE:
+            default:
+                prevTerrain = Terrain.EMBERS;
+                break;
+            case WATER:
+                prevTerrain = Terrain.WATER;
+                break;
+            case WIND:
+                prevTerrain = Terrain.EMPTY;
+                break;
+            case EARTH:
+                prevTerrain = Terrain.GRASS;
+                break;
+        }
+
+        int currTerrain;
+        switch (currType) {
+            case FIRE:
+            default:
+                currTerrain = Terrain.EMBERS;
+                break;
+            case WATER:
+                currTerrain = Terrain.WATER;
+                break;
+            case WIND:
+                currTerrain = Terrain.EMPTY;
+                break;
+            case EARTH:
+                currTerrain = Terrain.GRASS;
+                break;
+        }
+
+        if (Dungeon.level.map[cell] == prevTerrain) {
+            Level.set(cell, currTerrain);
+            //TODO: 타일 전환 시 이펙트
+            GameScene.updateMap(cell);
+        }
+    }
+
+    public void interaction(int center, NewOverHeat.ElementType type) {
+        for (int i : PathFinder.NEIGHBOURS9) {
+            int cell = center + i;
+            if (element == type) {
+                switch (element) {
+                    case FIRE: default:
+                        boolean burnt = false;
+                        if (Dungeon.level.map[cell] == Terrain.EMBERS) {
+                            Level.set(cell, Terrain.EMPTY);
+                            GameScene.add(Blob.seed(cell, 2, Fire.class));
+                            GameScene.updateMap(cell);
+                            burnt = true;
+                        }
+                        if (burnt) Sample.INSTANCE.play(Assets.Sounds.BURNING);
+                        break;
+                    case WATER:
+                        if (Dungeon.level.map[center] == Terrain.WATER) {
+                            GeyserTrap geyser = new GeyserTrap();
+                            geyser.pos = center;
+                            geyser.source = this;
+
+                            int userPos = target == null ? center : target.pos;
+                            if (userPos != center){
+                                Ballistica aim = new Ballistica(userPos, center, Ballistica.STOP_TARGET);
+                                if (aim.path.size() > aim.dist+1) {
+                                    geyser.centerKnockBackDirection = aim.path.get(aim.dist + 1);
+                                }
+                            }
+                            geyser.activate();
+                        }
+                        break;
+                    case WIND:
+                        int centerTerrain = Dungeon.level.map[center];
+                        if (Dungeon.level.map[cell] != Terrain.EMBERS
+                                && Dungeon.level.map[cell] != Terrain.WATER
+                                && Dungeon.level.map[cell] != Terrain.EMPTY
+                                && Dungeon.level.map[cell] != Terrain.GRASS) {
+                            break;
+                        }
+                        if (Dungeon.level.map[cell] == Terrain.EMBERS
+                                || Dungeon.level.map[cell] == Terrain.WATER
+                                || Dungeon.level.map[cell] == Terrain.EMPTY
+                                || Dungeon.level.map[cell] == Terrain.GRASS) {
+                            Level.set(cell, centerTerrain);
+                        }
+                        break;
+                    case EARTH:
+                        if (Dungeon.level.map[cell] == Terrain.GRASS) {
+                            Level.set(cell, Terrain.HIGH_GRASS);
+                            GameScene.updateMap(cell);
+                        }
+                        break;
+                }
+            } else {
+                switchTerrain(cell, element, type);
+            }
+        }
     }
 
     public void extend( float duration ) {
@@ -60,7 +175,7 @@ public class ElementArea extends Buff {
     @Override
     public void fx(boolean on) {
         if (on){
-            for (int i : arenaPositions){
+            for (int i : areaPositions){
                 Emitter e = CellEmitter.get(i);
                 switch (element) {
                     case FIRE: default:
@@ -76,13 +191,13 @@ public class ElementArea extends Buff {
                         e.pour(EarthElementParticle.FACTORY, 0.05f);
                         break;
                 }
-                arenaEmitters.add(e);
+                areaEmitters.add(e);
             }
         } else {
-            for (Emitter e : arenaEmitters){
+            for (Emitter e : areaEmitters){
                 e.on = false;
             }
-            arenaEmitters.clear();
+            areaEmitters.clear();
         }
     }
 
@@ -94,9 +209,9 @@ public class ElementArea extends Buff {
     public void storeInBundle(Bundle bundle) {
         super.storeInBundle(bundle);
 
-        int[] values = new int[arenaPositions.size()];
+        int[] values = new int[areaPositions.size()];
         for (int i = 0; i < values.length; i ++)
-            values[i] = arenaPositions.get(i);
+            values[i] = areaPositions.get(i);
         bundle.put(ARENA_POSITIONS, values);
 
         bundle.put(LEFT, left);
@@ -109,7 +224,7 @@ public class ElementArea extends Buff {
 
         int[] values = bundle.getIntArray( ARENA_POSITIONS );
         for (int value : values) {
-            arenaPositions.add(value);
+            areaPositions.add(value);
         }
 
         left = bundle.getInt(LEFT);
@@ -201,7 +316,7 @@ public class ElementArea extends Buff {
         public WindElementParticle() {
             super();
 
-            color(0x000000);
+            color(0xFFFFFF);
         }
     }
 

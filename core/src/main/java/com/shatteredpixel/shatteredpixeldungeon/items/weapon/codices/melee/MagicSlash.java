@@ -77,6 +77,7 @@ public class MagicSlash extends MeleeCodex {
         beforeUse();
         // 먼저 처음에 지정한 대상에게 1타를 구사합니다.
         onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
+        affectElement(cell);
 
         // 더 나은 이펙트를 위해 0.1초의 딜레이를 가지고 두번째 적을 공격합니다.
         curUser.busy(); //이 딜레이 동안 영웅은 움직일 수 없습니다.

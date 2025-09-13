@@ -5,6 +5,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.ElementArea;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -149,7 +150,11 @@ public class Grimoire extends Bag {
             if (ch != null && ch != Dungeon.hero) {
                 Dungeon.hero.codexAttack(ch, attackInstance());
             }
+
+            attackInstance().affectElement(cell);
+
             Buff.affect(Dungeon.hero, NewOverHeat.class).heat(2);
+
             usesTargeting = false;
         }
 
