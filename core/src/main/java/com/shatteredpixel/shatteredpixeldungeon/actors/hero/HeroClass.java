@@ -80,6 +80,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.Magic
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicShieldBash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.melee.MagicSlash;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.cast.SanctuaryManaField;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicArrow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicBullet;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicCannon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicMissile;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.ranged.MagicSingularity;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -302,14 +307,12 @@ public enum HeroClass {
 		new MagicGavel().random().collect();
 
 		//원거리형 코덱스
-/*		new MagicArrow().random().collect();
+		new MagicArrow().random().collect();
 		new MagicBullet().random().collect();
 		new MagicCannon().random().collect();
 		new MagicMissile().random().collect();
 		new MagicSingularity().random().collect();
 		new SanctuaryManaField().random().collect();
-
- */
 
 		Buff.affect(hero, NewOverHeat.class);
 
