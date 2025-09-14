@@ -36,8 +36,6 @@ public class Grimoire extends Bag {
         levelKnown = true;
     }
 
-    public int capacity = 5;
-
     @Override
     public ArrayList<String> actions(Hero hero) {
         ArrayList<String> actions = super.actions(hero);
@@ -81,16 +79,7 @@ public class Grimoire extends Bag {
     }
 
     public int capacity(){
-        return capacity;
-    }
-
-    public Grimoire capacityUpgrade() {
-        capacity++;
-        return this;
-    }
-
-    public int capacityUpgradeEnergyCost() {
-        return 6;
+        return 5+level();
     }
 
     @Override
@@ -121,22 +110,6 @@ public class Grimoire extends Bag {
     @Override
     public int buffedLvl() {
         return level();
-    }
-
-    private static final String CAPACITY = "capacity";
-
-    @Override
-    public void storeInBundle(Bundle bundle) {
-        super.storeInBundle(bundle);
-
-        bundle.put(CAPACITY, capacity);
-    }
-
-    @Override
-    public void restoreFromBundle(Bundle bundle) {
-        super.restoreFromBundle(bundle);
-
-        capacity = bundle.getInt(CAPACITY);
     }
 
     public ManaBall knockBall(){
@@ -178,7 +151,11 @@ public class Grimoire extends Bag {
                 return;
             }
 
-            if(cell == curUser.pos) return;
+            if (cell == curUser.pos) {
+                execute(curUser, AC_OPEN);
+                return;
+            }
+
             knockBall().cast(Dungeon.hero, cell);
         }
 
@@ -224,33 +201,6 @@ public class Grimoire extends Bag {
         @Override
         public void hitSound() {
             Sample.INSTANCE.play(Assets.Sounds.HIT);
-        }
-    }
-
-    public static class UpgradeGrimoire extends Recipe {
-
-        @Override
-        public boolean testIngredients(ArrayList<Item> ingredients) {
-            return ingredients.size() == 1 && ingredients.get(0) instanceof Grimoire;
-        }
-
-        @Override
-        public int cost(ArrayList<Item> ingredients) {
-            return ((Grimoire)ingredients.get(0)).capacityUpgradeEnergyCost();
-        }
-
-        @Override
-        public Item brew(ArrayList<Item> ingredients) {
-            Item result = ingredients.get(0).duplicate();
-            ingredients.get(0).quantity(0);
-            ((Grimoire)result).capacityUpgrade();
-
-            return result;
-        }
-
-        @Override
-        public Item sampleOutput(ArrayList<Item> ingredients) {
-            return ((Grimoire) ingredients.get(0).duplicate()).capacityUpgrade();
         }
     }
 }
