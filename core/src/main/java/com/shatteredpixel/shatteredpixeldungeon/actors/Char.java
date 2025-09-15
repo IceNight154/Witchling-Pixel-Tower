@@ -74,6 +74,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria.NewOverHeat;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
@@ -1014,6 +1015,7 @@ public abstract class Char extends Actor {
 			if (src instanceof Viscosity.DeferedDamage)                 icon = FloatingText.DEFERRED;
 			if (src instanceof Corruption)                              icon = FloatingText.CORRUPTION;
 			if (src instanceof AscensionChallenge)                      icon = FloatingText.AMULET;
+			if (src == NewOverHeat.ElementType.WIND)					icon = FloatingText.PHYS_DMG_NO_BLOCK;
 
 			if ((icon == FloatingText.PHYS_DMG || icon == FloatingText.PHYS_DMG_NO_BLOCK) && hitMissIcon != -1){
 				if (icon == FloatingText.PHYS_DMG_NO_BLOCK) hitMissIcon += 18; //extra row
@@ -1334,7 +1336,8 @@ public abstract class Char extends Actor {
 		if (glyphLevel(Brimstone.class) >= 0){
 			immunes.add(Burning.class);
 		}
-		
+        immunes.addAll(NewOverHeat.elementImmunity(this));
+
 		for (Class c : immunes){
 			if (c.isAssignableFrom(effect)){
 				return true;

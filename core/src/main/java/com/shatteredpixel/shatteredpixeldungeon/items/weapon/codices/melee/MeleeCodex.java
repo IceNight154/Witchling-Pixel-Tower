@@ -69,7 +69,6 @@ public class MeleeCodex extends Codex {
     protected void onCodexAttack(Char enemy, int cell) {
         beforeUse();
         onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
-        affectElement(cell);
         afterUse();
     }
 

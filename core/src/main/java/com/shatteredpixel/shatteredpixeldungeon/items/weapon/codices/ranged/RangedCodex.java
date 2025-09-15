@@ -208,8 +208,6 @@ public class RangedCodex extends Codex {
             onAttackComplete(enemy, cell, curUser.codexAttack(enemy, this));
         }
 
-        affectElement(cell);
-
         afterUse();
 
         if (durabilityLeft() > 0) {

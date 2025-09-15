@@ -1,10 +1,26 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs.aria;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Blizzard;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ConfusionGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.CorrosiveGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Freezing;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Inferno;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ParalyticGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Regrowth;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.SmokeScreen;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StenchGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Web;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.AriaTalents;
@@ -16,8 +32,12 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ElementChangeParticles;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ManaMeltdownParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.Dewdrop;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.codices.Codex;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
+import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.special.MagicalFireRoom;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -39,6 +59,9 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class NewOverHeat extends Buff implements ActionIndicator.Action {
 
@@ -145,7 +168,6 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     }
 
     public static void onChangeElement(ElementType resultElement) { //원소 변경 시 작동하는 코드입니다.
-        //TODO: 원소 변경 시 나타나야 하는 이펙트, 사운드 출력 등을 추가해 주세요.
         Hero hero = Dungeon.hero;
         if (hero == null) return;
 
@@ -160,15 +182,16 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         }
 
         onChangeElementEffect(hero);
+
+        NewOverHeat overHeat = getBuff(hero);
+        if (overHeat != null) {
+            overHeat.cool(Math.round(overHeat.gauge/4f));
+        }
     }
 
     public void heat(int amount) { // 게이지를 지정한 양만큼 늘리는 메서드입니다. 최대치 이상으로 늘어나지 않습니다.
         gauge = Math.min(OVERHEAT_MAX, gauge + amount);
         ActionIndicator.refresh();
-
-        if (isMeltdown()) {
-            target.sprite.showStatus(CharSprite.WARNING, Messages.get(this, "meltdown"));
-        }
     }
 
     public void cool(int amount) { // 게이지를 지정한 양만큼 줄이는 메서드입니다. 최소치 이하로 감소하지 않습니다.
@@ -247,8 +270,12 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     @Override
     public boolean act() {
         spend(TICK); //이게 없으면 무한로딩이 생기니 주의하세요.
+
         if (isMeltdown()) {
             meltdownDelay--;
+            if (meltdownDelay == 3) {
+                target.sprite.showStatus(CharSprite.WARNING, Messages.get(this, "meltdown"));
+            }
             if (meltdownDelay <= 0) {
                 onMeltdown();
                 return true;
@@ -266,16 +293,7 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
     public void actionPerTurn() { // 멜트다운이 아닐 경우 매 턴마다 작동하는 코드
         int amount = 0;
         if (previousElement == element) { // 이전 턴의 원소와 현재 원소가 같을 경우
-            amount += 1; // +1/턴
-        }
-
-        if (element == ElementType.WATER) { // 현재 원소가 물일 경우
-            amount -= 2; // -2/턴
-        } else if (element == ElementType.FIRE) { // 현재 원소가 불일 경우
-            amount += 1; // +1/턴
-            amount += (int)(gauge * 0.15f); // +현재 게이지의 15%/턴 (소수점 버림)
-        } else { // 현재 원소가 그 이외의 것일 경우
-            amount += 1; // +1/턴
+            amount += 2; // +1/턴
         }
 
         if (target.buff(CodexUsed.class) != null) { // 코덱스 사용 후(3턴) 버프가 남아 있는 경우
@@ -284,14 +302,17 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
             amount -= 1; // -1/턴
         }
 
+        if (element == ElementType.EARTH && // 땅 원소일 때 현재 위치가 잔디 및 풀 타일이 아닐 경우
+            (Dungeon.level.map[target.pos] != Terrain.GRASS &&
+                Dungeon.level.map[target.pos] != Terrain.HIGH_GRASS &&
+                Dungeon.level.map[target.pos] != Terrain.FURROWED_GRASS)) {
+            amount += 2; // +2/턴
+        }
+
         if (amount > 0) {
             heat(amount);
         } else {
             cool(-amount);
-        }
-
-        if (element == ElementType.WATER) {
-            target.heal(1);
         }
     }
 
@@ -512,52 +533,141 @@ public class NewOverHeat extends Buff implements ActionIndicator.Action {
         public static final float DURATION = 3f;
     }
 
-    public static float codexDamageMultiplier(Hero hero) {
-        NewOverHeat buff = getBuff(hero);
-        if (buff == null) return 1f;
+    public static float codexDamageMultiplier(Hero hero) { // 코덱스 데미지 배율
+        NewOverHeat overHeat = getBuff(hero);
+        if (overHeat == null) return 1f;
 
         float multi = 1f;
 
-        if (buff.element == ElementType.FIRE) {
-            multi += 0.1f;
+        if (overHeat.element == ElementType.FIRE) {
+            multi *= overHeat.gauge/2f/100f;
         }
 
         return multi;
     }
 
-    public static void codexProc(Hero hero, Char enemy) {
-        NewOverHeat buff = getBuff(hero);
-        if (buff == null) return;
+    public static void codexProc(Hero hero, Char enemy) { // 코덱스 명중 시 작동
+        NewOverHeat overHeat = getBuff(hero);
+        if (overHeat == null) return;
 
-        if (buff.getElement() == ElementType.EARTH && Random.Float() < 0.25f) { // 땅 원소 중 공격 시 25% 확률로 기절 1턴
-            Buff.affect(enemy, Paralysis.class, 1f);
+        affectElement(enemy.pos);
+
+        if (overHeat.getElement() == ElementType.FIRE) {
+            overHeat.heat(4);
+        }
+        if (overHeat.getElement() == ElementType.WATER) {
+            overHeat.cool(2);
+            if (Dungeon.level.map[hero.pos] == Terrain.WATER) {
+                overHeat.cool(overHeat.gauge/10);
+            }
+        }
+        if (overHeat.getElement() == ElementType.WIND) {
+            int hits = Random.IntRange(1, 3);
+            for (int i = 0; i < hits; i++) {
+                enemy.damage(Hero.heroDamageIntRange(2, 4), ElementType.WIND);
+            }
         }
     }
 
-    public static float evasionMultiplier(Hero hero) {
+    public static float evasionMultiplier(Hero hero) { // 기본 회피 배율
         NewOverHeat overHeat = NewOverHeat.getBuff(hero);
         if (overHeat == null) return 1;
 
         float multi = 1f;
 
         if (overHeat.getElement() == ElementType.WIND) {
-            multi += 0.08f;
+            multi *= overHeat.gauge*2/100f;
         }
 
         return multi;
     }
 
-    public static float damageMultiplier(Hero hero) {
+    public static float damageMultiplier(Hero hero) { // 받는 피해 배율
         NewOverHeat overHeat = NewOverHeat.getBuff(hero);
         if (overHeat == null) return 1;
 
         float multi = 1f;
 
         if (overHeat.getElement() == ElementType.EARTH) {
-            multi -= 0.08f;
+            multi *= 1-overHeat.gauge/4f/100f;
         }
 
         return multi;
+    }
+
+    public static HashSet<Class> elementImmunity(Char ch) {
+        HashSet<Class> immunities = new HashSet<>();
+
+        if (ch instanceof Hero) {
+            NewOverHeat overHeat = NewOverHeat.getBuff((Hero) ch);
+            if (overHeat != null) {
+                if (overHeat.getElement() == ElementType.FIRE && overHeat.gauge >= 50) {
+                    // 불에 면역
+                    immunities.add(Fire.class);
+                    immunities.add(Burning.class);
+                    immunities.add( MagicalFireRoom.EternalFire.class );
+                }
+                if (overHeat.getElement() == ElementType.WIND && overHeat.gauge >= 75) {
+                    // 각종 가스에 면역
+                    immunities.add( Blizzard.class );
+                    immunities.add( ConfusionGas.class );
+                    immunities.add( CorrosiveGas.class );
+                    immunities.add( Electricity.class );
+                    immunities.add( Freezing.class );
+                    immunities.add( Inferno.class );
+                    immunities.add( ParalyticGas.class );
+                    immunities.add( SmokeScreen.class );
+                    immunities.add( StenchGas.class );
+                    immunities.add( StormCloud.class );
+                    immunities.add( ToxicGas.class );
+                }
+            }
+        }
+
+        return immunities;
+    }
+
+    public static void affectElement(ArrayList<Integer> cells) { // 여러 타일에 영향을 주는 코드
+        NewOverHeat overHeat = NewOverHeat.getBuff(Dungeon.hero);
+        if (overHeat == null) return;
+
+        NewOverHeat.ElementType element = overHeat.getElement();
+        switch (element) {
+            case FIRE: default:
+                for (int cell : cells) {
+                    GameScene.add(Fire.seed(cell, 2, Fire.class));
+                }
+                break;
+            case WATER:
+                for (int cell : cells) {
+                    Level.set(cell, Terrain.WATER);
+                    GameScene.updateMap(cell);
+                }
+                break;
+            case WIND:
+                for (int cell : cells) {
+                    if (Dungeon.level.map[cell] == Terrain.EMBERS) {
+                        GameScene.add(Fire.seed(cell, 1, Fire.class));
+                    }
+                }
+                break;
+            case EARTH:
+                for (int cell : cells) {
+                    Dewdrop dew = new Dewdrop();
+                    if (Random.Float() < 0.02f && Dungeon.level.map[cell] == Terrain.WATER && !Challenges.isItemBlocked(dew)) {
+                        Dungeon.level.drop(dew, cell).sprite.drop();
+                    }
+                    Level.set(cell, Terrain.GRASS);
+                    GameScene.updateMap(cell);
+                }
+                break;
+        }
+    }
+
+    public static void affectElement(int cell) { // 단일 타일에 영향을 주는 코드
+        ArrayList<Integer> cells = new ArrayList<>();
+        cells.add(cell);
+        affectElement(cells);
     }
 
     public static void onChangeElementEffect(Hero hero) {
